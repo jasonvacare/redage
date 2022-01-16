@@ -1,13 +1,13 @@
 {
-  "REDAGE.AbilityVig": "Vigor",
-  "REDAGE.AbilityDex": "Dexterity",
-  "REDAGE.AbilityWit": "Wits",
-  "REDAGE.AbilitySpt": "Spirit",
+  "REDAGE.AbilityVigor": "Vigor",
+  "REDAGE.AbilityDexterity": "Dexterity",
+  "REDAGE.AbilityWits": "Wits",
+  "REDAGE.AbilitySpirit": "Spirit",
 
-  "REDAGE.AbilityVigAbbr": "vig",
-  "REDAGE.AbilityDexAbbr": "dex",
-  "REDAGE.AbilityWitAbbr": "wit",
-  "REDAGE.AbilitySptAbbr": "spt",
+  "REDAGE.AbilityVigorAbbr": "vig",
+  "REDAGE.AbilityDexterityAbbr": "dex",
+  "REDAGE.AbilityWitsAbbr": "wit",
+  "REDAGE.AbilitySpiritAbbr": "spt",
 
   "REDAGE.EffectCreate": "Create Effect",
   "REDAGE.EffectToggle": "Toggle Effect",

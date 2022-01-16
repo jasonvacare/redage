@@ -64,13 +64,30 @@
           use both the "grid" and "grid-Ncol" class where "N" can be any number
           from 1 to 12 and will create that number of columns.  --}}
           <div class="abilities flexcol">
-            {{#each data.abilities as |ability key|}}
             <div class="ability flexrow flex-group-center">
-              <label for="data.abilities.{{key}}.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{ability.label}}</label>
-              <input type="text" name="data.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number"/>
-              <span class="ability-mod rollable" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{numberFormat ability.mod decimals=0 sign=true}}</span>
+              <label for="data.abilities.vigor.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.vigor.mod" data-label="{{data.abilities.vigor.label}}">{{data.abilities.vigor.label}}</label>
+              <input type="text" name="data.abilities.vigor.value" value="{{data.abilities.vigor.value}}" data-dtype="Number"/>
+              <span class="ability-bonus rollable" data-roll="d20+@abilities.vigor.bonus" data-label="{{data.abilities.vigor.label}} Bonus">{{numberFormat data.abilities.vigor.bonus decimals=0 sign=true}}</span>
+              <span class="ability-mod rollable" data-roll="d20+@abilities.vigor.mod" data-label="{{data.abilities.vigor.label}} Mod">{{numberFormat data.abilities.vigor.mod decimals=0 sign=true}}</span>
             </div>
-            {{/each}}
+            <div class="ability flexrow flex-group-center">
+              <label for="data.abilities.dexterity.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.dexterity.mod" data-label="{{data.abilities.dexterity.label}}">{{data.abilities.dexterity.label}}</label>
+              <input type="text" name="data.abilities.dexterity.value" value="{{data.abilities.dexterity.value}}" data-dtype="Number"/>
+              <span class="ability-bonus rollable" data-roll="d20+@abilities.dexterity.bonus" data-label="{{data.abilities.dexterity.label}} Bonus">{{numberFormat data.abilities.dexterity.bonus decimals=0 sign=true}}</span>
+              <span class="ability-mod rollable" data-roll="d20+@abilities.dexterity.mod" data-label="{{data.abilities.dexterity.label}} Mod">{{numberFormat data.abilities.dexterity.mod decimals=0 sign=true}}</span>
+            </div>
+            <div class="ability flexrow flex-group-center">
+              <label for="data.abilities.wits.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.wits.mod" data-label="{{data.abilities.wits.label}}">{{data.abilities.wits.label}}</label>
+              <input type="text" name="data.abilities.wits.value" value="{{data.abilities.wits.value}}" data-dtype="Number"/>
+              <span class="ability-bonus rollable" data-roll="d20+@abilities.wits.bonus" data-label="{{data.abilities.wits.label}} Bonus">{{numberFormat data.abilities.wits.bonus decimals=0 sign=true}}</span>
+              <span class="ability-mod rollable" data-roll="d20+@abilities.wits.mod" data-label="{{data.abilities.wits.label}} Mod">{{numberFormat data.abilities.wits.mod decimals=0 sign=true}}</span>
+            </div>
+            <div class="ability flexrow flex-group-center">
+              <label for="data.abilities.spirit.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.spirit.mod" data-label="{{data.abilities.spirit.label}}">{{data.abilities.spirit.label}}</label>
+              <input type="text" name="data.abilities.spirit.value" value="{{data.abilities.spirit.value}}" data-dtype="Number"/>
+              <span class="ability-bonus rollable" data-roll="d20+@abilities.spirit.bonus" data-label="{{data.abilities.spirit.label}} Bonus">{{numberFormat data.abilities.spirit.bonus decimals=0 sign=true}}</span>
+              <span class="ability-mod rollable" data-roll="d20+@abilities.spirit.mod" data-label="{{data.abilities.spirit.label}} Mod">{{numberFormat data.abilities.spirit.mod decimals=0 sign=true}}</span>
+            </div>
           </div>
         </aside>
 

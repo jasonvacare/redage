@@ -68,9 +68,10 @@ export class RedAgeActorSheet extends ActorSheet {
    */
   _prepareCharacterData(context) {
     // Handle ability scores.
-    for (let [k, v] of Object.entries(context.data.abilities)) {
-      v.label = game.i18n.localize(CONFIG.REDAGE.abilities[k]) ?? k;
-    }
+    context.data.abilities.vigor.label = game.i18n.localize(CONFIG.REDAGE.abilities.vigor);
+    context.data.abilities.dexterity.label = game.i18n.localize(CONFIG.REDAGE.abilities.dexterity);
+    context.data.abilities.wits.label = game.i18n.localize(CONFIG.REDAGE.abilities.wits);
+    context.data.abilities.spirit.label = game.i18n.localize(CONFIG.REDAGE.abilities.spirit);
   }
 
   /**
@@ -214,9 +215,9 @@ export class RedAgeActorSheet extends ActorSheet {
     }
 
     // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
-      let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
+    if (dataset.roll) {      
+      let label = dataset.label ? `${dataset.label}` : '';
+      let roll = new Roll(dataset.roll, this.actor.getRollData());
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,

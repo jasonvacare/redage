@@ -48,11 +48,23 @@ export class RedAgeActor extends Actor {
     // Make modifications to data here. For example:
     const data = actorData.data;
 
-    // Loop through ability scores, and add their modifiers to our sheet output.
-    for (let [key, ability] of Object.entries(data.abilities)) {
-      // Calculate the modifier using d20 rules.
-      ability.mod = Math.floor((ability.value - 10) / 2);
-    }
+    data.abilities.vigor.mod = this._calculateMod(data.abilities.vigor.value);
+    data.abilities.dexterity.mod = this._calculateMod(data.abilities.dexterity.value);
+    data.abilities.wits.mod = this._calculateMod(data.abilities.wits.value);
+    data.abilities.spirit.mod = this._calculateMod(data.abilities.spirit.value);
+
+    data.abilities.vigor.bonus = this._calculateBonus(data.abilities.vigor.value);
+    data.abilities.dexterity.bonus = this._calculateBonus(data.abilities.dexterity.value);
+    data.abilities.wits.bonus = this._calculateBonus(data.abilities.wits.value);
+    data.abilities.spirit.bonus = this._calculateBonus(data.abilities.spirit.value);
+  }
+
+  _calculateMod(value) {
+    return Math.floor(value / 3) - 3;
+  }
+
+  _calculateBonus(value) {
+    return value - 10;
   }
 
   /**
@@ -85,13 +97,10 @@ export class RedAgeActor extends Actor {
   _getCharacterRollData(data) {
     if (this.data.type !== 'character') return;
 
-    // Copy the ability scores to the top level, so that rolls can use
-    // formulas like `@str.mod + 4`.
-    if (data.abilities) {
-      for (let [k, v] of Object.entries(data.abilities)) {
-        data[k] = foundry.utils.deepClone(v);
-      }
-    }
+    data.vigor = foundry.utils.deepClone(data.abilities.vigor);
+    data.dexterity = foundry.utils.deepClone(data.abilities.dexterity);
+    data.wits = foundry.utils.deepClone(data.abilities.wits);
+    data.spirit = foundry.utils.deepClone(data.abilities.spirit);
 
     // Add level for easier access, or fall back to 0.
     if (data.attributes.level) {
