@@ -33,7 +33,7 @@ export class RedAgeActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = this.actor.data.toObject(false);
+    const actorData = context.actor.data;
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = actorData.data;
@@ -120,7 +120,7 @@ export class RedAgeActorSheet extends ActorSheet {
     context.gear = gear;
     context.features = features;
     context.spells = spells;
-  }
+   }
 
   /* -------------------------------------------- */
 
@@ -157,7 +157,7 @@ export class RedAgeActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.isOwner) {
+    if (this.actor.owner) {
       let handler = ev => this._onDragStart(ev);
       html.find('li.item').each((i, li) => {
         if (li.classList.contains("inventory-header")) return;
@@ -216,7 +216,7 @@ export class RedAgeActorSheet extends ActorSheet {
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,

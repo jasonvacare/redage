@@ -2,9 +2,9 @@
   "name": "redage",
   "title": "RedAge",
   "description": "The RedAge system for FoundryVTT!",
-  "version": "1.0.0",
-  "minimumCoreVersion": "0.8.6",
-  "compatibleCoreVersion": "9",
+  "version": "1.1.0",
+  "minimumCoreVersion": "0.8.3",
+  "compatibleCoreVersion": "0.8.6",
   "author": "Asacolips",
   "esmodules": ["module/redage.mjs"],
   "styles": ["css/redage.css"],
@@ -17,8 +17,8 @@
       "path": "lang/en.json"
     }
   ],
-  "gridDistance": 1,
-  "gridUnits": "m",
+  "gridDistance": 5,
+  "gridUnits": "ft",
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "power",
   "url": "",
