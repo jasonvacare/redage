@@ -5,19 +5,15 @@ export const REDAGE = {};
  * @type {Object}
  */
  REDAGE.abilities = {
-  "str": "REDAGE.AbilityStr",
+  "vig": "REDAGE.AbilityVig",
   "dex": "REDAGE.AbilityDex",
-  "con": "REDAGE.AbilityCon",
-  "int": "REDAGE.AbilityInt",
-  "wis": "REDAGE.AbilityWis",
-  "cha": "REDAGE.AbilityCha"
+  "wit": "REDAGE.AbilityWit",
+  "spt": "REDAGE.AbilitySpt"
 };
 
 REDAGE.abilityAbbreviations = {
-  "str": "REDAGE.AbilityStrAbbr",
+  "vig": "REDAGE.AbilityVigAbbr",
   "dex": "REDAGE.AbilityDexAbbr",
-  "con": "REDAGE.AbilityConAbbr",
-  "int": "REDAGE.AbilityIntAbbr",
-  "wis": "REDAGE.AbilityWisAbbr",
-  "cha": "REDAGE.AbilityChaAbbr"
+  "wit": "REDAGE.AbilityWitAbbr",
+  "spt": "REDAGE.AbilitySptAbbr"
 };

@@ -1,17 +1,13 @@
 {
-  "REDAGE.AbilityStr": "Strength",
-  "REDAGE.AbilityCon": "Constitution",
+  "REDAGE.AbilityVig": "Vigor",
   "REDAGE.AbilityDex": "Dexterity",
-  "REDAGE.AbilityInt": "Intelligence",
-  "REDAGE.AbilityWis": "Wisdom",
-  "REDAGE.AbilityCha": "Charisma",
+  "REDAGE.AbilityWit": "Wits",
+  "REDAGE.AbilitySpt": "Spirit",
 
-  "REDAGE.AbilityStrAbbr": "str",
-  "REDAGE.AbilityConAbbr": "con",
+  "REDAGE.AbilityVigAbbr": "vig",
   "REDAGE.AbilityDexAbbr": "dex",
-  "REDAGE.AbilityIntAbbr": "int",
-  "REDAGE.AbilityWisAbbr": "wis",
-  "REDAGE.AbilityChaAbbr": "cha",
+  "REDAGE.AbilityWitAbbr": "wit",
+  "REDAGE.AbilitySptAbbr": "spt",
 
   "REDAGE.EffectCreate": "Create Effect",
   "REDAGE.EffectToggle": "Toggle Effect",
