@@ -21,8 +21,7 @@
         },
         "health": {
           "value": 10,
-          "min": 0,
-          "max": 10
+          "min": 0
         },
         "life": {
           "value": 5,
@@ -41,14 +40,21 @@
     }
   },
   "Item": {
-    "types": ["item", "feature", "spell"],
+    "types": ["class", "item", "feature", "spell"],
     "templates": {
       "base": {
         "description": ""
       }
     },
+    "class": {
+      "templates": [ "base" ],
+      "level": 0,
+      "startingHealth": 0,
+      "maxHealthPerLevel": 0,
+      "attackBonusPerLevel": 0
+    },
     "item": {
-      "templates": ["base"],
+      "templates": [ "base" ],
       "quantity": 1,
       "weight": 0,
       "formula": "d20 + @str.mod + ceil(@lvl / 2)"

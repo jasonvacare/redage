@@ -102,7 +102,7 @@ export class RedAgeActorSheet extends ActorSheet {
         gear.push(i);
       }
       // Append to features.
-      else if (i.type === 'feature') {
+      else if (i.type === 'feature' || i.type === 'class') {
         features.push(i);
       }
       // Append to spells.

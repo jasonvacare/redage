@@ -1,3 +1,5 @@
+import { REDAGE } from "../helpers/config.mjs";
+
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -47,6 +49,7 @@ export class RedAgeActor extends Actor {
 
     // Make modifications to data here. For example:
     const data = actorData.data;
+    const items = actorData.items;
 
     data.level = this._calculateLevel(data.xp);
     data.proficiencyBonus = Math.min(Math.ceil(data.level / 2), 5);
@@ -67,6 +70,8 @@ export class RedAgeActor extends Actor {
     data.wits.save = data.wits.mod + (data.wits.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
+    data.health.max = this._calculateMaxHealth(items, data.vigor.mod);
+    if (data.health.value > data.health.max) data.health.value = data.health.max;
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     if (data.life.value > data.life.max) data.life.value = data.life.max;
   }
@@ -80,6 +85,25 @@ export class RedAgeActor extends Actor {
     else if (xpValue >= 4000) return 3;
     else if (xpValue >= 2000) return 2;
     return 1;
+  }
+
+  _calculateMaxHealth(items, vigorMod) {
+    let classes = items.filter((item) => { return item.type === "class"; });    
+    let returnValue = 0;
+    let totalLevels = 0;
+    classes.sort((a, b) => { return a.data.data.startingHealth - b.data.data.startingHealth; });
+    returnValue += classes[0].data.data.startingHealth;
+    classes.sort((a, b) => { return a.data.data.maxHealthPerLevel - b.data.data.maxHealthPerLevel; });
+    for (let c = 0; c < classes.length; c++) {
+      let thisClassLevels = classes[c].data.data.level;
+      if (totalLevels >= REDAGE.HeroicLevelMax) break;
+      for (let i = 1; i <= thisClassLevels; i++) {        
+        if (totalLevels >= REDAGE.HeroicLevelMax) break;
+        returnValue += classes[c].data.data.maxHealthPerLevel + vigorMod;
+        totalLevels++;
+      }
+    }
+    return returnValue;
   }
 
   /**
