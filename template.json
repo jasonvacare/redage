@@ -24,10 +24,9 @@
           "min": 0,
           "max": 10
         },
-        "power": {
+        "life": {
           "value": 5,
-          "min": 0,
-          "max": 5
+          "min": 0
         },
         "biography": ""
       }

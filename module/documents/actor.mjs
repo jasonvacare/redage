@@ -66,6 +66,9 @@ export class RedAgeActor extends Actor {
     data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.wits.save = data.wits.mod + (data.wits.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+
+    data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
+    if (data.life.value > data.life.max) data.life.value = data.life.max;
   }
 
   _calculateLevel(xpValue) {
