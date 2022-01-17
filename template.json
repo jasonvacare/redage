@@ -4,16 +4,20 @@
     "templates": {
       "base": {
         "vigor": {
-          "value": 10
+          "value": 10,
+          "proficientSave": false
         },
         "dexterity": {
-          "value": 10
+          "value": 10,
+          "proficientSave": false
         },
         "wits": {
-          "value": 10
+          "value": 10,
+          "proficientSave": false
         },
         "spirit": {
-          "value": 10
+          "value": 10,
+          "proficientSave": false
         },
         "health": {
           "value": 10,

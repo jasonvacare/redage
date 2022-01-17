@@ -49,6 +49,8 @@ export class RedAgeActor extends Actor {
     const data = actorData.data;
 
     data.level = this._calculateLevel(data.xp);
+    data.proficiencyBonus = Math.min(Math.ceil(data.level / 2), 5);
+    data.halfProficiencyBonus = Math.floor(data.proficiencyBonus / 2);
 
     data.vigor.mod = Math.floor(data.vigor.value / 3) - 3;
     data.dexterity.mod = Math.floor(data.dexterity.value / 3) - 3;
@@ -59,6 +61,11 @@ export class RedAgeActor extends Actor {
     data.dexterity.bonus = data.dexterity.value - 10;
     data.wits.bonus = data.wits.value - 10;
     data.spirit.bonus = data.spirit.value - 10;
+
+    data.vigor.save = data.vigor.mod + (data.vigor.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+    data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+    data.wits.save = data.wits.mod + (data.wits.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+    data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
   }
 
   _calculateLevel(xpValue) {
@@ -106,11 +113,6 @@ export class RedAgeActor extends Actor {
     data.dexterity = foundry.utils.deepClone(data.dexterity);
     data.wits = foundry.utils.deepClone(data.wits);
     data.spirit = foundry.utils.deepClone(data.spirit);
-
-    // Add level for easier access, or fall back to 0.
-    if (data.attributes.level) {
-      data.lvl = data.attributes.level.value ?? 0;
-    }
   }
 
   /**
