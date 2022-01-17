@@ -51,7 +51,8 @@
       "level": 0,
       "startingHealth": 0,
       "maxHealthPerLevel": 0,
-      "attackBonusPerLevel": 0
+      "attackBonusPerLevel": 0,
+      "maxHealthPerLevelHeroic": 0
     },
     "item": {
       "templates": [ "base" ],

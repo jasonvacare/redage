@@ -1,3 +1,3 @@
 export const REDAGE = {};
 
-REDAGE.HeroicLevelMax = 10;
+REDAGE.HeroicLevelThreshold = 10;

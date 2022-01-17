@@ -70,7 +70,7 @@ export class RedAgeActor extends Actor {
     data.wits.save = data.wits.mod + (data.wits.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
-    data.health.max = this._calculateMaxHealth(items, data.vigor.mod);
+    data.health.max = this._calculateMaxHealth(items, data.vigor.mod, data.level);
     if (data.health.value > data.health.max) data.health.value = data.health.max;
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     if (data.life.value > data.life.max) data.life.value = data.life.max;
@@ -87,19 +87,20 @@ export class RedAgeActor extends Actor {
     return 1;
   }
 
-  _calculateMaxHealth(items, vigorMod) {
+  _calculateMaxHealth(items, vigorMod, level) {
     let classes = items.filter((item) => { return item.type === "class"; });    
     let returnValue = 0;
-    let totalLevels = 0;
-    classes.sort((a, b) => { return a.data.data.startingHealth - b.data.data.startingHealth; });
+    let totalLevels = 1;
+    classes.sort((a, b) => { return b.data.data.startingHealth - a.data.data.startingHealth; });
     returnValue += classes[0].data.data.startingHealth;
-    classes.sort((a, b) => { return a.data.data.maxHealthPerLevel - b.data.data.maxHealthPerLevel; });
+    classes.sort((a, b) => { return b.data.data.maxHealthPerLevel - a.data.data.maxHealthPerLevel; });
     for (let c = 0; c < classes.length; c++) {
       let thisClassLevels = classes[c].data.data.level;
-      if (totalLevels >= REDAGE.HeroicLevelMax) break;
       for (let i = 1; i <= thisClassLevels; i++) {        
-        if (totalLevels >= REDAGE.HeroicLevelMax) break;
-        returnValue += classes[c].data.data.maxHealthPerLevel + vigorMod;
+        if (totalLevels > REDAGE.HeroicLevelThreshold) 
+          returnValue += classes[c].data.data.maxHealthPerLevelHeroic;
+        else 
+          returnValue += classes[c].data.data.maxHealthPerLevel + vigorMod;
         totalLevels++;
       }
     }
