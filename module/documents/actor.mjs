@@ -48,6 +48,8 @@ export class RedAgeActor extends Actor {
     // Make modifications to data here. For example:
     const data = actorData.data;
 
+    data.level = this._calculateLevel(data.xp);
+
     data.vigor.mod = this._calculateMod(data.vigor.value);
     data.dexterity.mod = this._calculateMod(data.dexterity.value);
     data.wits.mod = this._calculateMod(data.wits.value);
@@ -59,6 +61,16 @@ export class RedAgeActor extends Actor {
     data.spirit.bonus = this._calculateBonus(data.spirit.value);
   }
 
+  _calculateLevel(xpValue) {
+    if (xpValue >= 130000) return 8 + Math.floor((xpValue - 130000) / 120000);
+    else if (xpValue >= 65000) return 7;
+    else if (xpValue >= 32000) return 6;
+    else if (xpValue >= 16000) return 5;
+    else if (xpValue >= 8000) return 4;
+    else if (xpValue >= 4000) return 3;
+    else if (xpValue >= 2000) return 2;
+    return 1;
+  }
   _calculateMod(value) {
     return Math.floor(value / 3) - 3;
   }

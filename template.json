@@ -29,16 +29,12 @@
       }
     },
     "character": {
-      "templates": ["base"],
-      "attributes": {
-        "level": {
-          "value": 1
-        }
-      }
+      "templates": [ "base" ],
+      "xp": 0
     },
     "npc": {
       "templates": ["base"],
-      "cr": 0
+      "level": 1
     }
   },
   "Item": {
