@@ -51,7 +51,15 @@
           {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
           use both the "grid" and "grid-Ncol" class where "N" can be any number
           from 1 to 12 and will create that number of columns.  --}}
-          <div class="abilities flexcol">
+          <div class="abilities grid-6col">
+            <div class="ability flexrow flex-group-center">
+              <span class="flexlarge align-left">Ability</span>
+              <span class="align-right">Value</span>
+              <span class="align-right">Bonus</span>
+              <span class="align-right">Mod</span>
+              <span class="align-right">Prof?</span>
+              <span class="align-right">Save</span>
+            </div>
             <div class="ability flexrow flex-group-center">
               <label for="data.vigor.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@vigor.mod" data-label="Vigor">Vigor</label>
               <input type="text" name="data.vigor.value" value="{{data.vigor.value}}" data-dtype="Number"/>
