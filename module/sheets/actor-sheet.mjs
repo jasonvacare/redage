@@ -67,11 +67,7 @@ export class RedAgeActorSheet extends ActorSheet {
    * @return {undefined}
    */
   _prepareCharacterData(context) {
-    // Handle ability scores.
-    context.data.abilities.vigor.label = game.i18n.localize(CONFIG.REDAGE.abilities.vigor);
-    context.data.abilities.dexterity.label = game.i18n.localize(CONFIG.REDAGE.abilities.dexterity);
-    context.data.abilities.wits.label = game.i18n.localize(CONFIG.REDAGE.abilities.wits);
-    context.data.abilities.spirit.label = game.i18n.localize(CONFIG.REDAGE.abilities.spirit);
+
   }
 
   /**

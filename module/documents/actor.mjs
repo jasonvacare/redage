@@ -48,15 +48,15 @@ export class RedAgeActor extends Actor {
     // Make modifications to data here. For example:
     const data = actorData.data;
 
-    data.abilities.vigor.mod = this._calculateMod(data.abilities.vigor.value);
-    data.abilities.dexterity.mod = this._calculateMod(data.abilities.dexterity.value);
-    data.abilities.wits.mod = this._calculateMod(data.abilities.wits.value);
-    data.abilities.spirit.mod = this._calculateMod(data.abilities.spirit.value);
+    data.vigor.mod = this._calculateMod(data.vigor.value);
+    data.dexterity.mod = this._calculateMod(data.dexterity.value);
+    data.wits.mod = this._calculateMod(data.wits.value);
+    data.spirit.mod = this._calculateMod(data.spirit.value);
 
-    data.abilities.vigor.bonus = this._calculateBonus(data.abilities.vigor.value);
-    data.abilities.dexterity.bonus = this._calculateBonus(data.abilities.dexterity.value);
-    data.abilities.wits.bonus = this._calculateBonus(data.abilities.wits.value);
-    data.abilities.spirit.bonus = this._calculateBonus(data.abilities.spirit.value);
+    data.vigor.bonus = this._calculateBonus(data.vigor.value);
+    data.dexterity.bonus = this._calculateBonus(data.dexterity.value);
+    data.wits.bonus = this._calculateBonus(data.wits.value);
+    data.spirit.bonus = this._calculateBonus(data.spirit.value);
   }
 
   _calculateMod(value) {
@@ -97,10 +97,10 @@ export class RedAgeActor extends Actor {
   _getCharacterRollData(data) {
     if (this.data.type !== 'character') return;
 
-    data.vigor = foundry.utils.deepClone(data.abilities.vigor);
-    data.dexterity = foundry.utils.deepClone(data.abilities.dexterity);
-    data.wits = foundry.utils.deepClone(data.abilities.wits);
-    data.spirit = foundry.utils.deepClone(data.abilities.spirit);
+    data.vigor = foundry.utils.deepClone(data.vigor);
+    data.dexterity = foundry.utils.deepClone(data.dexterity);
+    data.wits = foundry.utils.deepClone(data.wits);
+    data.spirit = foundry.utils.deepClone(data.spirit);
 
     // Add level for easier access, or fall back to 0.
     if (data.attributes.level) {
