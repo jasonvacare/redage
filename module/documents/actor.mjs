@@ -50,15 +50,15 @@ export class RedAgeActor extends Actor {
 
     data.level = this._calculateLevel(data.xp);
 
-    data.vigor.mod = this._calculateMod(data.vigor.value);
-    data.dexterity.mod = this._calculateMod(data.dexterity.value);
-    data.wits.mod = this._calculateMod(data.wits.value);
-    data.spirit.mod = this._calculateMod(data.spirit.value);
+    data.vigor.mod = Math.floor(data.vigor.value / 3) - 3;
+    data.dexterity.mod = Math.floor(data.dexterity.value / 3) - 3;
+    data.wits.mod = Math.floor(data.wits.value / 3) - 3;
+    data.spirit.mod = Math.floor(data.spirit.value / 3) - 3;
 
-    data.vigor.bonus = this._calculateBonus(data.vigor.value);
-    data.dexterity.bonus = this._calculateBonus(data.dexterity.value);
-    data.wits.bonus = this._calculateBonus(data.wits.value);
-    data.spirit.bonus = this._calculateBonus(data.spirit.value);
+    data.vigor.bonus = data.vigor.value - 10;
+    data.dexterity.bonus = data.dexterity.value - 10;
+    data.wits.bonus = data.wits.value - 10;
+    data.spirit.bonus = data.spirit.value - 10;
   }
 
   _calculateLevel(xpValue) {
@@ -70,13 +70,6 @@ export class RedAgeActor extends Actor {
     else if (xpValue >= 4000) return 3;
     else if (xpValue >= 2000) return 2;
     return 1;
-  }
-  _calculateMod(value) {
-    return Math.floor(value / 3) - 3;
-  }
-
-  _calculateBonus(value) {
-    return value - 10;
   }
 
   /**
