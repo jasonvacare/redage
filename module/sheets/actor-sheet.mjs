@@ -33,7 +33,7 @@ export class RedAgeActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = context.actor.data;
+    const actorData = context.actor.data;    
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = actorData.data;
@@ -67,7 +67,9 @@ export class RedAgeActorSheet extends ActorSheet {
    * @return {undefined}
    */
   _prepareCharacterData(context) {
-
+    let cl = this._calculateClassLevels(context.items);
+    console.log("@@@", cl);
+    context.data.classLevels = cl;
   }
 
   /**
@@ -221,6 +223,14 @@ export class RedAgeActorSheet extends ActorSheet {
       });
       return roll;
     }
+  }
+
+  // helper functions
+  _calculateClassLevels(items) {   
+    let classes = items.filter((item) => { return item.type === "class"; });
+    if (classes.length === 0) return 0;
+    let classLevels = classes.map(c => c.data.classLevel).reduce((a, b) => a + b);
+    return classLevels;
   }
 
 }

@@ -51,8 +51,8 @@ export class RedAgeActor extends Actor {
     const data = actorData.data;
     const items = actorData.items;
 
-    data.level = this._calculateLevel(data.xp);
-    data.proficiencyBonus = Math.min(Math.ceil(data.level / 2), 5);
+    data.characterLevel = this._calculateCharacterLevel(data.xp);
+    data.proficiencyBonus = Math.min(Math.ceil(data.characterLevel / 2), 5);
     data.halfProficiencyBonus = Math.floor(data.proficiencyBonus / 2);
 
     data.vigor.mod = Math.floor(data.vigor.value / 3) - 3;
@@ -70,13 +70,13 @@ export class RedAgeActor extends Actor {
     data.wits.save = data.wits.mod + (data.wits.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
-    data.health.max = this._calculateMaxHealth(items, data.vigor.mod, data.level);
+    data.health.max = this._calculateMaxHealth(items, data.vigor.mod, data.characterLevel);
     if (data.health.value > data.health.max) data.health.value = data.health.max;
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     if (data.life.value > data.life.max) data.life.value = data.life.max;
   }
 
-  _calculateLevel(xpValue) {
+  _calculateCharacterLevel(xpValue) {
     if (xpValue >= 130000) return 8 + Math.floor((xpValue - 130000) / 120000);
     else if (xpValue >= 65000) return 7;
     else if (xpValue >= 32000) return 6;
@@ -95,7 +95,7 @@ export class RedAgeActor extends Actor {
     returnValue += classes[0].data.data.startingHealth;
     classes.sort((a, b) => { return b.data.data.maxHealthPerLevel - a.data.data.maxHealthPerLevel; });
     for (let c = 0; c < classes.length; c++) {
-      let thisClassLevels = classes[c].data.data.level;
+      let thisClassLevels = classes[c].data.data.classLevel;
       for (let i = 1; i <= thisClassLevels; i++) {        
         if (totalLevels > REDAGE.HeroicLevelThreshold) 
           returnValue += classes[c].data.data.maxHealthPerLevelHeroic;
