@@ -54,6 +54,7 @@ export class RedAgeActor extends Actor {
     data.characterLevel = this._calculateCharacterLevel(data.xp);
     data.proficiencyBonus = Math.min(Math.ceil(data.characterLevel / 2), 5);
     data.halfProficiencyBonus = Math.floor(data.proficiencyBonus / 2);
+    data.attackBonus = this._calculateAttackBonus(items);
 
     data.vigor.mod = Math.floor(data.vigor.value / 3) - 3;
     data.dexterity.mod = Math.floor(data.dexterity.value / 3) - 3;
@@ -85,6 +86,25 @@ export class RedAgeActor extends Actor {
     else if (xpValue >= 4000) return 3;
     else if (xpValue >= 2000) return 2;
     return 1;
+  }
+
+  _calculateAttackBonus(items) {
+    console.log("@@@items", items);
+    let classes = items.filter((item) => { return item.type === "class"; });
+    console.log("@@@classes", classes);
+    let returnValue = 0;
+    let totalLevels = 1;
+    if (classes.length === 0) return 0;
+    classes.sort((a, b) => { return b.data.data.attackBonusPerLevel - a.data.data.attackBonusPerLevel; });
+    for (let c = 0; c < classes.length; c++) {
+      let thisClassLevels = classes[c].data.data.classLevel;
+      for (let i = 1; i <= thisClassLevels; i++) {        
+        if (totalLevels > REDAGE.HeroicLevelThreshold) break;
+        returnValue += classes[c].data.data.attackBonusPerLevel;
+        totalLevels++;
+      }
+    }
+    return Math.round(returnValue);
   }
 
   _calculateMaxHealth(items, vigorMod, level) {

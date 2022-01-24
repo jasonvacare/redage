@@ -8,7 +8,7 @@
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns.  --}}
-      <div class="resources grid grid-4col">
+      <div class="resources grid grid-2col">
 
         {{!-- "flex-group-center" is also defined in the _grid.scss file
         and it will add a small amount of padding, a border, and will
@@ -31,6 +31,10 @@
           </div>
         </div>
 
+      </div>
+
+      <div class="resources grid grid-3col">
+
         <div class="resource flex-group-center">
           <label for="data.xp" class="resource-label">XP</label>
           <div class="resource-content flexrow flex-center flex-between">
@@ -42,6 +46,13 @@
           <label for="data.characterLevel" class="resource-label">Level</label>
           <div class="resource-content flexrow flex-center flex-between">
           <span>{{data.classLevels}} / {{data.characterLevel}}</span>
+          </div>
+        </div>
+
+        <div class="resource flex-group-center">
+          <label for="data.attackBonus" class="resource-label">Attack</label>
+          <div class="resource-content flexrow flex-center flex-between">
+          <span>{{data.attackBonus}}</span>
           </div>
         </div>
 

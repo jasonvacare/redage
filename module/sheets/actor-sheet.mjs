@@ -67,9 +67,7 @@ export class RedAgeActorSheet extends ActorSheet {
    * @return {undefined}
    */
   _prepareCharacterData(context) {
-    let cl = this._calculateClassLevels(context.items);
-    console.log("@@@", cl);
-    context.data.classLevels = cl;
+    context.data.classLevels = this._calculateClassLevels(context.items);
   }
 
   /**
