@@ -40,10 +40,18 @@
     }
   },
   "Item": {
-    "types": ["class", "item", "feature", "spell"],
+    "types": [ "class", "feature", "spell", "weapon", "armor", "item" ],
     "templates": {
       "base": {
         "description": ""
+      },
+      "item": {
+        "isLoot": false,
+        "quantity": 1,
+        "value": 0,
+        "weight": 0,
+        "location": "",
+        "actions": []
       }
     },
     "class": {
@@ -55,16 +63,37 @@
       "maxHealthPerLevelHeroic": 0
     },
     "item": {
-      "templates": [ "base" ],
-      "quantity": 1,
-      "weight": 0,
-      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
+      "templates": [ "base", "item" ]
+    },
+    "weapon": {
+      "templates": [ "base", "item" ],
+      "isProficient": false,
+      "isForceful": false,
+      "isFinesse": false,
+      "proficiencyGroup": "",
+      "damageDie": "",
+      "damageType": "",
+      "handedness": 0,
+      "range": "",
+      "qualities": [],
+      "ammunitionType": "",
+      "attackBonus": "",
+      "damageBonus": ""
+    },
+    "armor": {
+      "templates": [ "base", "item" ],
+      "proficiencyGroup": "",
+      "defense": 0,
+      "maxDexterityBonus": 0,
+      "maxDexterityMod": 0,
+      "qualities": [],
+      "defenseBonus": 0
     },
     "feature": {
-      "templates": ["base"]
+      "templates": [ "base" ]
     },
     "spell": {
-      "templates": ["base"],
+      "templates": [ "base" ],
       "spellLevel": 1
     }
   }
