@@ -4,6 +4,7 @@ REDAGE.HeroicLevelThreshold = 10;
 
 REDAGE.ItemLocations = [
   "Readied",
+  "Worn",
   "Stowed",
   "Camp",
   "Town"

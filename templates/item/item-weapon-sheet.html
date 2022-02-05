@@ -1,0 +1,107 @@
+﻿<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" data-dtype="String" /></h1>
+      <div class="grid grid-2col">
+        <div class="resource">
+          <label class="resource-label">Attack Bonus</label>
+          <input type="text" name="data.attackBonus" value="{{data.attackBonus}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Range</label>
+          <input type="text" name="data.range" value="{{data.range}}" data-dtype="String" />
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Damage Die</label>
+          <input type="text" name="data.damageDie" value="{{data.damageDie}}" data-dtype="String" /> {{!-- @@@ ideally a drop dow --}}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Damage Bonus</label>
+          <input type="text" name="data.damageBonus" value="{{data.damageBonus}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Damage Type</label>
+          <input type="text" name="data.damageType" value="{{data.damageType}}" data-dtype="String" /> {{!-- @@@ ideally a drop dow --}}
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Forceful</label>
+          <input type="checkbox" name="data.isForceful" {{checked data.isForceful}} data-dtype="Boolean" /> {{!-- @@@ ideally a radio for players, but checkboxes for compendium building --}}
+          {{!-- @@@ nice list view UI: a toggle between the two states? dropdown? --}}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Finesse</label>
+          <input type="checkbox" name="data.isFinesse" {{checked data.isFinesse}} data-dtype="Boolean" /> {{!-- @@@ ideally a radio for players, but checkboxes for compendium building --}}
+          {{!-- @@@ nice list view UI: a toggle between the two states? dropdown? --}}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Proficient</label>
+          <input type="checkbox" name="data.isProficient" {{checked data.isProficient}} data-dtype="Boolean" /> 
+        </div>
+        <div class="resource">
+          <label class="resource-label">Type</label>
+          <input type="text" name="data.profGroup" value="{{data.profGroup}}" data-dtype="String" /> {{!-- @@@ read only for players, drop down for compendiumm building? --}}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Handedness</label>
+          <input type="text" name="data.handedness" value="{{data.handedness}}" data-dtype="Number" /> {{!-- @@@ read only for players, drop down for compendiumm building? --}}
+        </div>
+      </div>
+
+      <div class="grid grid-1col">
+        <ol class="items-list">
+          <li class="item flexrow items-header">
+            <div class="item-controls">
+              <a class="item-control item-create" title="Create Quality" data-type="feature"><i class="fas fa-plus"></i> Add Quality</a>
+            </div>
+          </li>
+          {{#each qualities as |quality|}}
+            <li class="item flexrow" data-item-id="{{quality}}">
+              <div class="item-name">
+                <h4>{{quality}}</h4>
+              </div>
+            </li>
+          {{/each}}
+        </ol>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Loot</label>
+          <input type="checkbox" name="data.isLoot" {{checked data.isLoot}} data-dtype="Boolean" /> 
+        </div>
+        <div class="resource">
+          <label class="resource-label">Quantity</label>
+          <input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number" /> 
+        </div>
+        <div class="resource">
+          <label class="resource-label">Value</label>
+          <input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" /> 
+        </div>
+        <div class="resource">
+          <label class="resource-label">Weight</label>
+          <input type="text" name="data.weight" value="{{data.weight}}" data-dtype="Number" /> 
+        </div>
+        <div class="resource">
+          <label class="resource-label">Location</label>
+          <input type="text" name="data.location" value="{{data.location}}" data-dtype="String" /> {{!-- @@@ ideally a drop down --}}
+        </div>
+      </div>
+
+      <div class="grid grid-1col">
+        <div class="resource">
+          <label class="resource-label">Description</label>
+          {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+</form>
