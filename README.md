@@ -3,7 +3,7 @@
 
 1. Items
   A. Prepare defense stat from armor, etc
-  B. Weapons attack/damage roll features
+  B. Weapons attack/damage roll features  << -- WE ARE HERE, need to enable description, qualities, char sheet display, and rolls
   C. Build the compendium of weapons and armor
   D. Inventory locations, including town, camp, stowed, ready, worn (passively ready)
   E. Enumbrance / readiness tracking
