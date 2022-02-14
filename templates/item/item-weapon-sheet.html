@@ -44,6 +44,7 @@
           <label class="resource-label">Proficient</label>
           <input type="checkbox" name="data.isProficient" {{checked data.isProficient}} data-dtype="Boolean" /> 
         </div>
+
         <div class="resource">
           <label class="resource-label">Type</label>
           <input type="text" name="data.proficiencyGroup" value="{{data.proficiencyGroup}}" data-dtype="String" /> {{!-- @@@ read only for players, drop down for compendiumm building? --}}
@@ -54,7 +55,9 @@
         </div>
       </div>
 
-      <div class="grid grid-3col">
+			<!-- Standard Item Properties -->
+
+			<div class="grid grid-3col">
         <div class="resource">
           <label class="resource-label">Quantity</label>
           <input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number" /> 
@@ -80,14 +83,11 @@
 						</select>
 					</span>
 				</div>
-
 				<div class="resource">
 					<label class="resource-label">Loot</label>
 					<input type="checkbox" name="data.isLoot" {{checked data.isLoot}} data-dtype="Boolean" />
 				</div>
-
       </div>
-
 
     </div>
   </header>
