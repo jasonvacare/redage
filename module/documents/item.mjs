@@ -41,7 +41,7 @@ export class RedAgeItem extends Item {
 
     var formula = null;
     if (item.type === "weapon") {
-			formula = this._prepareWeaponAttackFormula(item, actor.data.data);
+			return this._weaponAttackRoll(item, actor.data.data);
     }
 
     // If there's no roll data, send a chat message.
@@ -69,44 +69,67 @@ export class RedAgeItem extends Item {
     }
   }
 
-  _prepareWeaponAttackFormula(item, actor) {
-    var formula = "";
+  async _weaponAttackRoll(item, actor) {
 
-   	formula = (item.data.isProficient) ? "1d20" : "2d20kl1";
-   	formula += "+@attackBonus";
+		const rollData = this.getRollData();
 
-    if (item.data.isForceful && item.data.isFinesse) {
-    	formula += (actor.vigor.mod > actor.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
-    }
-    else if (item.data.isForceful) {
-    	formula += "+@vigor.mod";
-    }
-    else if (item.data.isFinesse) {
-     	formula += "+@dexterity.mod";
-    }
+		var attackFormula = (item.data.isProficient) ? "1d20" : "2d20kl1";
+		var damageFormula = "@item.damageDie";
 
-		formula += "+" + item.data.attackBonus;
+		attackFormula += "+@attackBonus";
 
-    return formula;
-  }
+		if (item.data.isForceful && item.data.isFinesse) {
+			attackFormula += (actor.vigor.mod > actor.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
+			damageFormula += (actor.vigor.mod > actor.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
+		}
+		else if (item.data.isForceful) {
+			attackFormula += "+@vigor.mod";
+			damageFormula += "+@vigor.mod";
+		}
+		else if (item.data.isFinesse) {
+			attackFormula += "+@dexterity.mod";
+			damageFormula += "+@dexterity.mod";
+		}
 
-  _prepareWeaponDamageFormula(item, actor) {
-    var formula = "@damageDie";
+		attackFormula += "+@item.attackBonus";
+		damageFormula += "+@item.damageBonus";
 
-    if (item.data.isForceful && item.data.isFinesse) {
-     	formula += (actor.vigor.mod > actor.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
-    }
-    else if (item.data.isForceful) {
-     	formula += "+@vigor.mod";
-    }
-    else if (item.data.isFinesse) {
-     	formula += "+@dexterity.mod";
-    }
+		const attackRoll = new Roll(attackFormula, rollData);
+		const damageRoll = new Roll(damageFormula, rollData);
 
-    formula += "+@damageBonus";
+		const rollMode = game.settings.get("core", "rollMode");
+		const diceData = Roll.fromTerms([
+			PoolTerm.fromRolls([attackRoll, damageRoll]),
+		]);
 
-    // TODO fighter damage bonus, backstabs?
+		const diceTooltip = {
+			attack: await attackRoll.render(),
+			damage: await damageRoll.render(),
+		};
 
-    return formula;
-  }
+		const dialogData = {
+			actor: this.actor,
+			item,
+			attackRoll,
+			damageRoll,
+			diceTooltip,
+		};
+
+		const template = "systems/redage/templates/chat/weapon-attack-roll.html";
+		const chatContent = await renderTemplate(template, dialogData);
+		const chatMessage = getDocumentClass("ChatMessage");
+		chatMessage.create(
+			chatMessage.applyRollMode(
+			{
+				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+				roll: JSON.stringify(diceData),
+				content: chatContent,
+				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+			},
+			rollMode
+			)
+		);
+
+		return chatMessage;
+	}
 }

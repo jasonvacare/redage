@@ -13,13 +13,11 @@
         </div>
         <h4>{{item.name}}</h4>
       </div>
-      <div class="item-name">
-        <span>
-				{{#if (ne item.data.classLevel undefined)}}
-   			Level: {{item.data.classLevel}}
-  			{{/if}}
-				</span>
-      </div>
+			{{#if item.data.classLevel}}
+			<div class="item-name">
+				<span>Level: {{item.data.classLevel}}</span>
+			</div>
+			{{/if}}
       <div class="item-controls">
         <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
         <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
