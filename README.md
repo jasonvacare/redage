@@ -40,5 +40,10 @@ Hard Mode
   B. Inventory Effects (gauntlets of ogre strength)
 3. How to make the player view of a sheet different than the compendium entry view
   A. For example, make a weapon forceful and/or finesse in the compendium, and the player view enforces that
-4. Full weapon roll interstial dialog with all the +A/D, supremacy, sneak attack, etc options
+4. Full weapon and spell roll interstial dialog with all the +A/D, supremacy, sneak attack, etc options
 5. Get array-based lists working (e.g. weapon/armor qualities, etc)
+6. Item / spell / class / feature icons
+
+Odds & Ends
+- Don't allow more than one copy of a class (also feature?) in your inventory.  When you drag a class in that you
+already have, increment the level of the existing one.
