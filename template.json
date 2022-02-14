@@ -50,7 +50,7 @@
         "quantity": 1,
         "value": 0,
         "weight": 0,
-        "location": "",
+        "location": "None",
         "actions": []
       }
     },

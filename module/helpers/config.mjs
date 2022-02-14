@@ -2,13 +2,20 @@ export const REDAGE = {};
 
 REDAGE.HeroicLevelThreshold = 10;
 
+REDAGE.INV_NONE = "None";
+REDAGE.INV_READY = "Readied";
+REDAGE.INV_WORN = "Worn";
+REDAGE.INV_STOWED = "Stowed";
+REDAGE.INV_CAMP = "Camp";
+REDAGE.INV_TOWN = "Town";
+
 REDAGE.ItemLocations = [
-	"None",
-  "Readied",
-  "Worn",
-  "Stowed",
-  "Camp",
-  "Town"
+	REDAGE.INV_NONE,
+	REDAGE.INV_READY,
+	REDAGE.INV_WORN,
+	REDAGE.INV_STOWED,
+	REDAGE.INV_CAMP,
+	REDAGE.INV_TOWN
 ];
 
 REDAGE.WeaponProficiencyGroups = [
