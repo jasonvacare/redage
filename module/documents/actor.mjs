@@ -89,9 +89,7 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateAttackBonus(items) {
-    console.log("@@@items", items);
     let classes = items.filter((item) => { return item.type === "class"; });
-    console.log("@@@classes", classes);
     let returnValue = 0;
     let totalLevels = 1;
     if (classes.length === 0) return 0;
@@ -112,7 +110,10 @@ export class RedAgeActor extends Actor {
     let returnValue = 0;
     let totalLevels = 1;
     classes.sort((a, b) => { return b.data.data.startingHealth - a.data.data.startingHealth; });
-    returnValue += classes[0].data.data.startingHealth;
+    if (classes.length > 0)
+    {
+	  returnValue += classes[0].data.data.startingHealth;
+    }
     classes.sort((a, b) => { return b.data.data.maxHealthPerLevel - a.data.data.maxHealthPerLevel; });
     for (let c = 0; c < classes.length; c++) {
       let thisClassLevels = classes[c].data.data.classLevel;

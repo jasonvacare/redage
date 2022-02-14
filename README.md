@@ -2,15 +2,18 @@
 ## TO DO LIST
 
 1. Items
-  A. Prepare defense stat from armor, etc
-  B. Weapons attack/damage roll features  << -- WE ARE HERE, need to enable description, qualities, char sheet display, and rolls
-  C. Build the compendium of weapons and armor
-  D. Inventory locations, including town, camp, stowed, ready, worn (passively ready)
-  E. Enumbrance / readiness tracking
+  A. Weapons attack/damage roll features
+    i. need to add damage roll  << -- WE ARE HERE  
+  B. Prepare defense stat from armor, etc ("worn" either as bool or as inv location)
+  C. Build the compendium of weapons and armor (and a few misc gear and example treasures)
+  D. Inventory
+    i. locations, including town, camp, stowed, ready, worn (passively ready)
+    ii. sort weapons, armor, and other into sections of the sheet?  maybe weapons, armor, other, camp, town?
+    iii. Encumbrance / readiness tracking
 2. Features
   A. Need compendium of skill related feats
   B. Need compendium of non-skill related feats
-  C. Need compendium of class features
+  C. Need compendium of class features (display class features nested under class, similar to spells by level?)
     i. Fighter victory feature / interface
     ii. Cleric bonds
     iii. Aberrant mutations
@@ -37,3 +40,5 @@ Hard Mode
   B. Inventory Effects (gauntlets of ogre strength)
 3. How to make the player view of a sheet different than the compendium entry view
   A. For example, make a weapon forceful and/or finesse in the compendium, and the player view enforces that
+4. Full weapon roll interstial dialog with all the +A/D, supremacy, sneak attack, etc options
+5. Get array-based lists working (e.g. weapon/armor qualities, etc)

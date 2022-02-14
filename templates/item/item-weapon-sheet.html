@@ -54,23 +54,6 @@
         </div>
       </div>
 
-      <div class="grid grid-1col">
-        <ol class="items-list">
-          <li class="item flexrow items-header">
-            <div class="item-controls">
-              <a class="item-control item-create" title="Create Quality" data-type="feature"><i class="fas fa-plus"></i> Add Quality</a>
-            </div>
-          </li>
-          {{#each qualities as |quality|}}
-            <li class="item flexrow" data-item-id="{{quality}}">
-              <div class="item-name">
-                <h4>{{quality}}</h4>
-              </div>
-            </li>
-          {{/each}}
-        </ol>
-      </div>
-
       <div class="grid grid-3col">
         <div class="resource">
           <label class="resource-label">Loot</label>
@@ -94,14 +77,28 @@
         </div>
       </div>
 
-      <div class="grid grid-1col">
-        <div class="resource">
-          <label class="resource-label">Description</label>
-          {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
-        </div>
-      </div>
 
     </div>
   </header>
+
+	{{!-- Sheet Tab Navigation --}}
+	<nav class="sheet-tabs tabs" data-group="primary">
+		<a class="item" data-tab="description">Description</a>
+		<a class="item" data-tab="qualities">Attributes</a>
+	</nav>
+
+	{{!-- Sheet Body --}}
+	<section class="sheet-body">
+
+		{{!-- Description Tab --}}
+		<div class="tab" data-group="primary" data-tab="description">
+			{{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+		</div>
+
+		{{!-- Qualities Tab --}}
+		<div class="tab" data-group="primary" data-tab="qualities">
+			{{editor content=data.qualities target="data.qualities" rollData=rollData button=true owner=owner editable=editable}}
+		</div>
+	</section>
 
 </form>

@@ -75,7 +75,7 @@
       "damageType": "",
       "handedness": 0,
       "range": "",
-      "qualities": [],
+      "qualities": "",
       "attackBonus": "",
       "damageBonus": ""
     },
@@ -85,7 +85,7 @@
       "defense": 0,
       "maxDexterityBonus": 0,
       "maxDexterityMod": 0,
-      "qualities": [],
+      "qualities": "",
       "defenseBonus": 0
     },
     "feature": {
