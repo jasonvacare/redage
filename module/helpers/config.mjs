@@ -3,6 +3,7 @@ export const REDAGE = {};
 REDAGE.HeroicLevelThreshold = 10;
 
 REDAGE.ItemLocations = [
+	"None",
   "Readied",
   "Worn",
   "Stowed",

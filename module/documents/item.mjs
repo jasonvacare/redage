@@ -1,3 +1,5 @@
+import { REDAGE } from "../helpers/config.mjs";
+
 /**
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}

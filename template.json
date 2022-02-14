@@ -81,6 +81,7 @@
     },
     "armor": {
       "templates": [ "base", "item" ],
+      "isProficient": false,
       "proficiencyGroup": "",
       "defense": 0,
       "maxDexterityBonus": 0,

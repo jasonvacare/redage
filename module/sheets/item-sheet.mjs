@@ -1,3 +1,5 @@
+import { REDAGE } from "../helpers/config.mjs";
+
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -45,6 +47,8 @@ export class RedAgeItemSheet extends ItemSheet {
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = itemData.data;
     context.flags = itemData.flags;
+
+    context.locations = REDAGE.ItemLocations;
 
     return context;
   }
