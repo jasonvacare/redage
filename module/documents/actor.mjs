@@ -75,6 +75,8 @@ export class RedAgeActor extends Actor {
     if (data.health.value > data.health.max) data.health.value = data.health.max;
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     if (data.life.value > data.life.max) data.life.value = data.life.max;
+
+		data.defenseBonus = 0;
   }
 
   _calculateCharacterLevel(xpValue) {
@@ -106,7 +108,7 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateMaxHealth(items, vigorMod, level) {
-    let classes = items.filter((item) => { return item.type === "class"; });    
+    let classes = items.filter((item) => { return item.type === "class"; });
     let returnValue = 0;
     let totalLevels = 1;
     classes.sort((a, b) => { return b.data.data.startingHealth - a.data.data.startingHealth; });

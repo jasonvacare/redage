@@ -3,11 +3,15 @@
 
 1. Items
   A. Weapons attack/damage roll features
-    i. need to add damage roll  << -- WE ARE HERE  
+    i. need to add damage roll  << -- WE ARE HERE
   B. Prepare defense stat from armor, etc ("worn" either as bool or as inv location)
+    i. Put defense field on charsheet.  Visually note when dex/DEX are lowered by armor.
+    ii. Create armor item-sheet.
   C. Build the compendium of weapons and armor (and a few misc gear and example treasures)
+    i. Visually indicate proficiency of weapons / armor on the actor item list.
   D. Inventory
     i. locations, including town, camp, stowed, ready, worn (passively ready)
+      a. allow location to be changed from the actor sheet list, without going into the item sheet
     ii. sort weapons, armor, and other into sections of the sheet?  maybe weapons, armor, other, camp, town?
     iii. Encumbrance / readiness tracking
 2. Features

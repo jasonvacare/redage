@@ -33,7 +33,7 @@
 
       </div>
 
-      <div class="resources grid grid-3col">
+      <div class="resources grid grid-4col">
 
         <div class="resource flex-group-center">
           <label for="data.xp" class="resource-label">XP</label>
@@ -52,11 +52,18 @@
         <div class="resource flex-group-center">
           <label for="data.attackBonus" class="resource-label">Attack</label>
           <div class="resource-content flexrow flex-center flex-between">
-          <span>{{data.attackBonus}}</span>
+          <span>{{numberFormat data.attackBonus decimals=0 sign=true}}</span>
           </div>
         </div>
 
-      </div>
+				<div class="resource flex-group-center">
+					<label for="data.defenseBonus" class="resource-label rollable" data-roll="d20+@defenseBonus" data-label="Defense">Defense</label>
+					<div class="resource-content flexrow flex-center flex-between">
+						<span>{{numberFormat data.defenseBonus decimals=0 sign=true}}</span>
+					</div>
+				</div>
+
+			</div>
 
       <aside class="sidebar">
           {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
@@ -72,7 +79,7 @@
               <span class="align-right">Save</span>
             </div>
             <div class="ability flexrow flex-group-center">
-              <label for="data.vigor.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@vigor.mod" data-label="Vigor">Vigor</label>
+              <label for="data.vigor.value" class="resource-label flexlarge align-left" data-label="Vigor">Vigor</label>
               <input type="text" name="data.vigor.value" value="{{data.vigor.value}}" data-dtype="Number"/>
               <span class="ability-bonus rollable" data-roll="d20+@vigor.bonus" data-label="Vigor Bonus">{{numberFormat data.vigor.bonus decimals=0 sign=true}}</span>
               <span class="ability-mod rollable" data-roll="d20+@vigor.mod" data-label="Vigor Mod">{{numberFormat data.vigor.mod decimals=0 sign=true}}</span>
@@ -80,7 +87,7 @@
               <span class="ability-save rollable" data-roll="d20+@vigor.save" data-label="Vigor Save">{{numberFormat data.vigor.save decimals=0 sign=true}}</span>
             </div>
             <div class="ability flexrow flex-group-center">
-              <label for="data.dexterity.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@dexterity.mod" data-label="Dexterity">Dexterity</label>
+              <label for="data.dexterity.value" class="resource-label flexlarge align-left" data-label="Dexterity">Dexterity</label>
               <input type="text" name="data.dexterity.value" value="{{data.dexterity.value}}" data-dtype="Number"/>
               <span class="ability-bonus rollable" data-roll="d20+@dexterity.bonus" data-label="Dexterity Bonus">{{numberFormat data.dexterity.bonus decimals=0 sign=true}}</span>
               <span class="ability-mod rollable" data-roll="d20+@dexterity.mod" data-label="Dexterity Mod">{{numberFormat data.dexterity.mod decimals=0 sign=true}}</span>
@@ -88,7 +95,7 @@
               <span class="ability-save rollable" data-roll="d20+@dexterity.save" data-label="Dexterity Save">{{numberFormat data.dexterity.save decimals=0 sign=true}}</span>
             </div>
             <div class="ability flexrow flex-group-center">
-              <label for="data.wits.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@wits.mod" data-label="Wits">Wits</label>
+              <label for="data.wits.value" class="resource-label flexlarge align-left" data-label="Wits">Wits</label>
               <input type="text" name="data.wits.value" value="{{data.wits.value}}" data-dtype="Number"/>
               <span class="ability-bonus rollable" data-roll="d20+@wits.bonus" data-label="Wits Bonus">{{numberFormat data.wits.bonus decimals=0 sign=true}}</span>
               <span class="ability-mod rollable" data-roll="d20+@wits.mod" data-label="Wits Mod">{{numberFormat data.wits.mod decimals=0 sign=true}}</span>
@@ -96,7 +103,7 @@
               <span class="ability-save rollable" data-roll="d20+@wits.save" data-label="Wits Save">{{numberFormat data.wits.save decimals=0 sign=true}}</span>
             </div>
             <div class="ability flexrow flex-group-center">
-              <label for="data.spirit.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@spirit.mod" data-label="Spirit">Spirit</label>
+              <label for="data.spirit.value" class="resource-label flexlarge align-left" data-label="Spirit">Spirit</label>
               <input type="text" name="data.spirit.value" value="{{data.spirit.value}}" data-dtype="Number"/>
               <span class="ability-bonus rollable" data-roll="d20+@spirit.bonus" data-label="Spirit Bonus">{{numberFormat data.spirit.bonus decimals=0 sign=true}}</span>
               <span class="ability-mod rollable" data-roll="d20+@spirit.mod" data-label="Spirit Mod">{{numberFormat data.spirit.mod decimals=0 sign=true}}</span>
