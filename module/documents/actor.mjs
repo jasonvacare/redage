@@ -76,7 +76,15 @@ export class RedAgeActor extends Actor {
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     if (data.life.value > data.life.max) data.life.value = data.life.max;
 
-		data.defenseBonus = 0;
+		// armor caps dexterity bonus and mod
+		const armorProperties = this._calculateDefenseBonus(items);
+		data.defenseBonus = armorProperties.defense;
+		data.dexterity.bonus = Math.min(armorProperties.maxDexterityBonus, data.dexterity.bonus);
+		data.dexterity.mod = Math.min(armorProperties.maxDexterityMod, data.dexterity.mod);
+		data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+
+    // TODO have some visual way of showing that your dex / mod have been capped down (color, small icon, etc) + tooltip?
+
   }
 
   _calculateCharacterLevel(xpValue) {
@@ -128,6 +136,29 @@ export class RedAgeActor extends Actor {
       }
     }
     return returnValue;
+  }
+
+	_calculateDefenseBonus(items) {
+    let armor = items.filter((item) => { return item.type === "armor"; });
+    let defense = 0;
+    let maxDexterityBonus = 100;
+    let maxDexterityMod = 100;
+
+		for (let c = 0; c < armor.length; c++) {
+			// worn and readied armor grants protection (half value if non-proficient)
+			if (armor[c].data.data.location === REDAGE.INV_WORN || armor[c].data.data.location === REDAGE.INV_READY) {
+				let def = armor[c].data.data.defense + armor[c].data.data.defenseBonus;
+				defense += (armor[c].data.data.isProficient) ? def : Math.floor(def / 2);
+			}
+			// worn armor caps dex bonus and mod (or +1 and +0, if non-proficient)
+			if (armor[c].data.data.location === REDAGE.INV_WORN) {
+				maxDexterityBonus = (armor[c].data.data.isProficient) ?
+					Math.min(maxDexterityBonus, armor[c].data.data.maxDexterityBonus) : 1;
+				maxDexterityMod = (armor[c].data.data.isProficient) ?
+					Math.min(maxDexterityMod, armor[c].data.data.maxDexterityMod) : 0;
+			}
+		}
+		return { "defense": defense, "maxDexterityBonus": maxDexterityBonus, "maxDexterityMod": maxDexterityMod };
   }
 
   /**

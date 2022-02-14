@@ -84,8 +84,8 @@
       "isProficient": false,
       "proficiencyGroup": "",
       "defense": 0,
-      "maxDexterityBonus": 0,
-      "maxDexterityMod": 0,
+      "maxDexterityBonus": 100,
+      "maxDexterityMod": 100,
       "qualities": "",
       "defenseBonus": 0
     },
