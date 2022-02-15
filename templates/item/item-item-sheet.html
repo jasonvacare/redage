@@ -4,36 +4,9 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
 
+			<!-- Standard Item Properties -->
 			<div class="grid grid-3col">
-				<div class="resource">
-					<label class="resource-label">Quantity</label>
-					<input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number" />
-				</div>
-				<div class="resource">
-					<label class="resource-label">Value</label>
-					<input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" />
-				</div>
-				<div class="resource">
-					<label class="resource-label">Weight</label>
-					<input type="text" name="data.weight" value="{{data.weight}}" data-dtype="Number" />
-				</div>
-
-				<div>
-					<label class="resource-label">Location</label>
-					<span>
-						<select name="data.location" data-dtype="String">
-							{{#select data.location}}
-							{{#each locations }}
-							<option value="{{this}}" data-dtype="String">{{this}}</option>
-							{{/each}}
-							{{/select}}
-						</select>
-					</span>
-				</div>
-				<div class="resource">
-					<label class="resource-label">Loot</label>
-					<input type="checkbox" name="data.isLoot" {{checked data.isLoot}} data-dtype="Boolean" />
-				</div>
+				{{> "systems/redage/templates/item/parts/item-basics-sheet.html"}}
 			</div>
 
 		</div>
@@ -44,7 +17,6 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -56,13 +28,5 @@
       {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
 
-    {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
-      {{!-- As you add new fields, add them in here! --}}
-      <div class="resource">
-        <label class="resource-label">Roll Formula</label>
-        <input type="text" name="data.formula" value="{{data.formula}}" data-dtype="String"/>
-      </div>
-    </div>
   </section>
 </form>

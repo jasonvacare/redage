@@ -1,0 +1,29 @@
+	<div class="resource">
+		<label class="resource-label">Quantity</label>
+		<input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number" />
+	</div>
+	<div class="resource">
+		<label class="resource-label">Value</label>
+		<input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" />
+	</div>
+	<div class="resource">
+		<label class="resource-label">Weight</label>
+		<input type="text" name="data.weight" value="{{data.weight}}" data-dtype="Number" />
+	</div>
+
+	<div>
+		<label class="resource-label">Location</label>
+		<span>
+						<select name="data.location" data-dtype="String">
+							{{#select data.location}}
+							{{#each locations }}
+							<option value="{{this}}" data-dtype="String">{{this}}</option>
+							{{/each}}
+							{{/select}}
+						</select>
+					</span>
+	</div>
+	<div class="resource">
+		<label class="resource-label">Loot</label>
+		<input type="checkbox" name="data.isLoot" {{checked data.isLoot}} data-dtype="Boolean" />
+	</div>
