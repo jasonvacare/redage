@@ -7,14 +7,15 @@
   B. Prepare defense stat from armor, etc ("worn" either as bool or as inv location)
     i. Put defense field on charsheet.
     ii. Create armor item-sheet.
-    iii. Visually note on stat block when dex/DEX are lowered by armor.  << -- WE ARE HERE
-  C. Build the compendium of weapons and armor (and a few misc gear and example treasures)    
-  D. Inventory
+    iii. Visually note on stat block when dex/DEX are lowered by armor.  << -- WE ARE HERE 
+  C. Inventory
     i. locations, including town, camp, stowed, ready, worn (passively ready) 
     ii. sort weapons, armor, and other into sections of the sheet?  by weapons, armor, other, camp, town?
+      a. maybe have a button / radio selector that swaps between type and location arrangement?
     iii. Encumbrance / readiness tracking
     iv. Display info/controls on item entries in the actor list w/o going into the item sheet
       a. set location, see isProf / prof group, see weapon dmg, armor value, armor dex max
+  D. Build the compendium of weapons and armor (and a few misc gear and example treasures)
 2. Features
   A. Need compendium of skill related feats
   B. Need compendium of non-skill related feats
