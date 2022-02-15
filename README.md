@@ -3,17 +3,18 @@
 
 1. Items
   A. Weapons attack/damage roll features
-    i. need to add damage roll  << -- WE ARE HERE
+    i. need to add damage roll
   B. Prepare defense stat from armor, etc ("worn" either as bool or as inv location)
-    i. Put defense field on charsheet.  Visually note when dex/DEX are lowered by armor.
+    i. Put defense field on charsheet.
     ii. Create armor item-sheet.
-  C. Build the compendium of weapons and armor (and a few misc gear and example treasures)
-    i. Visually indicate proficiency of weapons / armor on the actor item list.
+    iii. Visually note on stat block when dex/DEX are lowered by armor.  << -- WE ARE HERE
+  C. Build the compendium of weapons and armor (and a few misc gear and example treasures)    
   D. Inventory
-    i. locations, including town, camp, stowed, ready, worn (passively ready)
-      a. allow location to be changed from the actor sheet list, without going into the item sheet
-    ii. sort weapons, armor, and other into sections of the sheet?  maybe weapons, armor, other, camp, town?
+    i. locations, including town, camp, stowed, ready, worn (passively ready) 
+    ii. sort weapons, armor, and other into sections of the sheet?  by weapons, armor, other, camp, town?
     iii. Encumbrance / readiness tracking
+    iv. Display info/controls on item entries in the actor list w/o going into the item sheet
+      a. set location, see isProf / prof group, see weapon dmg, armor value, armor dex max
 2. Features
   A. Need compendium of skill related feats
   B. Need compendium of non-skill related feats
@@ -32,6 +33,7 @@
   C. Mana
   D. Reserves (HP/Mana)
   E. Temporary HP
+  F. Effects / Statuses
 5. Rest Button
 6. Panoply Checkboxes
 7. "Return To Town" Button to calculate loot
