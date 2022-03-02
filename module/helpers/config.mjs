@@ -67,3 +67,11 @@ REDAGE.DamageTypes = [
 	"Health",
 	"Spirit"
 ];
+
+/**
+* Return index of element's location in list, or list.length+1 if not found
+*/
+REDAGE.ordinal = function(listElement, list) {
+  let result = list.findIndex(element => element === listElement);
+  return (result == -1) ? list.length+1 : result;
+}

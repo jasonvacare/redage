@@ -118,16 +118,10 @@ export class RedAgeActorSheet extends ActorSheet {
       }
     }
 
-//     var getOrdinal = function(word, list) {
-//     	let result = list.findIndex(word);
-//     	return (result == -1) ? list.length+1 : result;
-//     }
-
+		// sort gear by location
     gear.sort((first, second) => {
-//    		let one = this._getOrdinal(first.data.data.location, REDAGE.ItemLocations);
-//    		let two = this._getOrdinal(second.data.data.location, REDAGE.ItemLocations);
-   		let one = this._getOrdinal(first.data.location);
-   		let two = this._getOrdinal(second.data.location);
+   		let one = REDAGE.ordinal(first.data.location, REDAGE.ItemLocations);
+   		let two = REDAGE.ordinal(second.data.location, REDAGE.ItemLocations);
    		return one - two;
     });
 
@@ -142,25 +136,9 @@ export class RedAgeActorSheet extends ActorSheet {
 // 	    locationChoices[REDAGE.ItemLocations[i]] = REDAGE.ItemLocations[i];
 //     }
 //     let value = "None";
-//
-//
-//     console.log("TEST -------------", locationChoices);
    }
 
   /* -------------------------------------------- */
-
-// 	_getOrdinal(word, list) {
-//     let result = list.findIndex(word);
-//     return (result == -1) ? list.length+1 : result;
-
-	_getOrdinal(word) {
-    if (word == REDAGE.INV_READY) return 0;
-    else if (word == REDAGE.INV_WORN) return 1;
-    else if (word == REDAGE.INV_STOWED) return 2;
-    else if (word == REDAGE.INV_CAMP) return 3;
-    else if (word == REDAGE.INV_TOWN) return 4;
-    else return 5;
-  }
 
   /** @override */
   activateListeners(html) {

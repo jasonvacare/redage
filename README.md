@@ -14,11 +14,12 @@
     iii. Encumbrance / readiness tracking
 2. Features
   A. Need compendium of skill related feats     << -- WE ARE HERE
+   i. Roll from a feat, applying its bonus to correct stat bonus or mod roll.  Roll text reflects the feat use.
   B. Need compendium of non-skill related feats
   C. Need compendium of class features (display class features nested under class, similar to spells by level?)
     i. Fighter victory feature / interface
     ii. Cleric bonds
-    iii. Aberrant mutations
+    iii. Abhuman mutations (abhuman subtype (brute, skulk, malison) applies to certain feats)
     iv. Rogue feats
   D. Feat points (total and spent, like levels?)
 3. Spells
@@ -51,8 +52,10 @@ Hard Mode
 6. Item / spell / class / feature icons
 7. Visually note on stat block when dex/DEX are lowered by armor.
 8. Change item location from select on inventory list, without having to go into item sheet
-9. Display info/controls on item entries in the actor list w/o going into the item sheet
+9. Color code too-many-readied-items and load level 
+10. Display info/controls on item entries in the actor list w/o going into the item sheet
   A. set location, see isProf / prof group, see weapon dmg, armor value, armor dex max
+
 Odds & Ends
 - Don't allow more than one copy of a class (also feature?) in your inventory.  When you drag a class in that you
 already have, increment the level of the existing one.
