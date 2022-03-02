@@ -5,7 +5,10 @@
       <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
     </div>
   </li>
-  {{#each gear as |item id|}}
+
+	{{log locations}}
+
+	{{#each gear as |item id|}}
     <li class="item flexrow" data-item-id="{{item._id}}">
       <div class="item-name">
         <div class="item-image">
@@ -37,8 +40,29 @@
 			{{/if}}
 
 			<!-- Item Location -->
+			<!--div class="item-prop">
+				<span>{{item.data.location}}</span>
+			</div-->
+
+			<div class="item-prop">
+				<span>
+					<!--input type="text" name="item.data.weight" value="{{item.data.weight}}" data-dtype="Number"/-->
+
+					<!--select name="data.location" data-dtype="String">
+						{{#select data.location}}
+						{{#each data.locations as |loc|}}
+						<option value="{{loc}}" data-dtype="String">{{loc}}</option>
+						{{/each}}
+						{{/select}}
+					</select-->
+				</span>
+			</div>
+
 			<div class="item-prop">
 				<span>{{item.data.location}}</span>
+			</div>
+			<div class="item-prop">
+				<span>Qty: {{item.data.quantity}}</span>
 			</div>
 
 			<div class="item-controls">

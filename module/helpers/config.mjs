@@ -56,3 +56,14 @@ REDAGE.PanoplyTypes = [
   "Talisman",
   "Transfiguration"
 ];
+
+REDAGE.DamageTypes = [
+	"Crushing",
+	"Piercing",
+	"Slashing",
+	"Fire",
+	"Frost",
+	"Acid",
+	"Health",
+	"Spirit"
+];

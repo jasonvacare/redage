@@ -1,6 +1,5 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import { REDAGE } from "../helpers/config.mjs";
-
+import { REDAGE } from "/systems/redage/module/helpers/config.mjs";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -60,7 +59,7 @@ export class RedAgeActorSheet extends ActorSheet {
     return context;
   }
 
-  /**
+  /*
    * Organize and classify Items for Character sheets.
    *
    * @param {Object} actorData The actor to prepare.
@@ -69,9 +68,13 @@ export class RedAgeActorSheet extends ActorSheet {
    */
   _prepareCharacterData(context) {
     context.data.classLevels = this._calculateClassLevels(context.items);
+
+//     document.getElementById("ability_dexBonus").style.color = "red";
+//     document.getElementById("ability_dexBonus").style += "color: red;";
+
   }
 
-  /**
+  /*
    * Organize and classify Items for Character sheets.
    *
    * @param {Object} actorData The actor to prepare.
@@ -100,6 +103,7 @@ export class RedAgeActorSheet extends ActorSheet {
       i.img = i.img || DEFAULT_TOKEN;
       // Append to gear.
       if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
+        i.data.locations = REDAGE.ItemLocations;
         gear.push(i);
       }
       // Append to features.
@@ -114,14 +118,49 @@ export class RedAgeActorSheet extends ActorSheet {
       }
     }
 
+//     var getOrdinal = function(word, list) {
+//     	let result = list.findIndex(word);
+//     	return (result == -1) ? list.length+1 : result;
+//     }
+
+    gear.sort((first, second) => {
+//    		let one = this._getOrdinal(first.data.data.location, REDAGE.ItemLocations);
+//    		let two = this._getOrdinal(second.data.data.location, REDAGE.ItemLocations);
+   		let one = this._getOrdinal(first.data.location);
+   		let two = this._getOrdinal(second.data.location);
+   		return one - two;
+    });
+
     // Assign and return
     context.gear = gear;
     context.features = features;
     context.spells = spells;
-    context.locations = REDAGE.ItemLocations;
+//     context.locations = REDAGE.ItemLocations;
+//
+// 		let locationChoices = {};
+//     for (let i=0; i < REDAGE.ItemLocations.length; i++) {
+// 	    locationChoices[REDAGE.ItemLocations[i]] = REDAGE.ItemLocations[i];
+//     }
+//     let value = "None";
+//
+//
+//     console.log("TEST -------------", locationChoices);
    }
 
   /* -------------------------------------------- */
+
+// 	_getOrdinal(word, list) {
+//     let result = list.findIndex(word);
+//     return (result == -1) ? list.length+1 : result;
+
+	_getOrdinal(word) {
+    if (word == REDAGE.INV_READY) return 0;
+    else if (word == REDAGE.INV_WORN) return 1;
+    else if (word == REDAGE.INV_STOWED) return 2;
+    else if (word == REDAGE.INV_CAMP) return 3;
+    else if (word == REDAGE.INV_TOWN) return 4;
+    else return 5;
+  }
 
   /** @override */
   activateListeners(html) {

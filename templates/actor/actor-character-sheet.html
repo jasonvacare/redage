@@ -66,60 +66,87 @@
 			</div>
 
       <aside class="sidebar">
-          {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-          use both the "grid" and "grid-Ncol" class where "N" can be any number
-          from 1 to 12 and will create that number of columns.  --}}
-          <div class="abilities grid-6col">
-            <div class="ability flexrow flex-group-center">
-              <span class="flexlarge align-left">Ability</span>
-              <span class="align-right">Value</span>
-              <span class="align-right">Bonus</span>
-              <span class="align-right">Mod</span>
-              <span class="align-right">Prof?</span>
-              <span class="align-right">Save</span>
-            </div>
-            <div class="ability flexrow flex-group-center">
-              <label for="data.vigor.value" class="resource-label flexlarge align-left" data-label="Vigor">Vigor</label>
-              <input type="text" name="data.vigor.value" value="{{data.vigor.value}}" data-dtype="Number"/>
-              <span class="ability-bonus rollable" data-roll="d20+@vigor.bonus" data-label="Vigor Bonus">{{numberFormat data.vigor.bonus decimals=0 sign=true}}</span>
-              <span class="ability-mod rollable" data-roll="d20+@vigor.mod" data-label="Vigor Mod">{{numberFormat data.vigor.mod decimals=0 sign=true}}</span>
-              <input type="checkbox" name="data.vigor.proficientSave" {{checked data.vigor.proficientSave}} data-dtype="Boolean" />
-              <span class="ability-save rollable" data-roll="d20+@vigor.save" data-label="Vigor Save">{{numberFormat data.vigor.save decimals=0 sign=true}}</span>
-            </div>
-            <div class="ability flexrow flex-group-center">
-              <label for="data.dexterity.value" class="resource-label flexlarge align-left" data-label="Dexterity">Dexterity</label>
-              <input type="text" name="data.dexterity.value" value="{{data.dexterity.value}}" data-dtype="Number"/>
-              <span class="ability-bonus rollable" data-roll="d20+@dexterity.bonus" data-label="Dexterity Bonus">{{numberFormat data.dexterity.bonus decimals=0 sign=true}}</span>
-              <span class="ability-mod rollable" data-roll="d20+@dexterity.mod" data-label="Dexterity Mod">{{numberFormat data.dexterity.mod decimals=0 sign=true}}</span>
-              <input type="checkbox" name="data.dexterity.proficientSave" {{checked data.dexterity.proficientSave}} data-dtype="Boolean" />
-              <span class="ability-save rollable" data-roll="d20+@dexterity.save" data-label="Dexterity Save">{{numberFormat data.dexterity.save decimals=0 sign=true}}</span>
-            </div>
-            <div class="ability flexrow flex-group-center">
-              <label for="data.wits.value" class="resource-label flexlarge align-left" data-label="Wits">Wits</label>
-              <input type="text" name="data.wits.value" value="{{data.wits.value}}" data-dtype="Number"/>
-              <span class="ability-bonus rollable" data-roll="d20+@wits.bonus" data-label="Wits Bonus">{{numberFormat data.wits.bonus decimals=0 sign=true}}</span>
-              <span class="ability-mod rollable" data-roll="d20+@wits.mod" data-label="Wits Mod">{{numberFormat data.wits.mod decimals=0 sign=true}}</span>
-              <input type="checkbox" name="data.wits.proficientSave" {{checked data.wits.proficientSave}} data-dtype="Boolean" />
-              <span class="ability-save rollable" data-roll="d20+@wits.save" data-label="Wits Save">{{numberFormat data.wits.save decimals=0 sign=true}}</span>
-            </div>
-            <div class="ability flexrow flex-group-center">
-              <label for="data.spirit.value" class="resource-label flexlarge align-left" data-label="Spirit">Spirit</label>
-              <input type="text" name="data.spirit.value" value="{{data.spirit.value}}" data-dtype="Number"/>
-              <span class="ability-bonus rollable" data-roll="d20+@spirit.bonus" data-label="Spirit Bonus">{{numberFormat data.spirit.bonus decimals=0 sign=true}}</span>
-              <span class="ability-mod rollable" data-roll="d20+@spirit.mod" data-label="Spirit Mod">{{numberFormat data.spirit.mod decimals=0 sign=true}}</span>
-              <input type="checkbox" name="data.spirit.proficientSave" {{checked data.spirit.proficientSave}} data-dtype="Boolean" />
-              <span class="ability-save rollable" data-roll="d20+@spirit.save" data-label="Spirit Save">{{numberFormat data.spirit.save decimals=0 sign=true}}</span>
-            </div>
-          </div>
-        </aside>
+				{{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+				use both the "grid" and "grid-Ncol" class where "N" can be any number
+				from 1 to 12 and will create that number of columns.  --}}
+				<div class="abilities grid-6col">
+					<div class="ability flexrow flex-group-center">
+						<span class="flexlarge align-left">Ability</span>
+						<span class="align-right">Value</span>
+						<span class="align-right">Bonus</span>
+						<span class="align-right">Mod</span>
+						<span class="align-right">Prof?</span>
+						<span class="align-right">Save</span>
+					</div>
+					<div class="ability flexrow flex-group-center">
+						<label for="data.vigor.value" class="resource-label flexlarge align-left" data-label="Vigor">Vigor</label>
+						<input type="text" name="data.vigor.value" value="{{data.vigor.value}}" data-dtype="Number"/>
+						<span class="ability-bonus rollable" data-roll="d20+@vigor.bonus" data-label="Vigor Bonus">{{numberFormat data.vigor.bonus decimals=0 sign=true}}</span>
+						<span class="ability-mod rollable" data-roll="d20+@vigor.mod" data-label="Vigor Mod">{{numberFormat data.vigor.mod decimals=0 sign=true}}</span>
+						<input type="checkbox" name="data.vigor.proficientSave" {{checked data.vigor.proficientSave}} data-dtype="Boolean" />
+						<span class="ability-save rollable" data-roll="d20+@vigor.save" data-label="Vigor Save">{{numberFormat data.vigor.save decimals=0 sign=true}}</span>
+					</div>
+					<div class="ability flexrow flex-group-center">
+						<label for="data.dexterity.value" class="resource-label flexlarge align-left" data-label="Dexterity">Dexterity</label>
+						<input type="text" name="data.dexterity.value" value="{{data.dexterity.value}}" data-dtype="Number"/>
+						<span id="ability_dexBonus" class="ability-bonus rollable" data-roll="d20+@dexterity.bonus" data-label="Dexterity Bonus">{{numberFormat data.dexterity.bonus decimals=0 sign=true}}</span>
+						<span id="ability_dexMod" class="ability-mod rollable" data-roll="d20+@dexterity.mod" data-label="Dexterity Mod">
+							{{numberFormat data.dexterity.mod decimals=0 sign=true}}</span>
+						<input type="checkbox" name="data.dexterity.proficientSave" {{checked data.dexterity.proficientSave}} data-dtype="Boolean" />
+						<span class="ability-save rollable" data-roll="d20+@dexterity.save" data-label="Dexterity Save">
+							{{numberFormat data.dexterity.save decimals=0 sign=true}}</span>
+					</div>
+					<div class="ability flexrow flex-group-center">
+						<label for="data.wits.value" class="resource-label flexlarge align-left" data-label="Wits">Wits</label>
+						<input type="text" name="data.wits.value" value="{{data.wits.value}}" data-dtype="Number"/>
+						<span class="ability-bonus rollable" data-roll="d20+@wits.bonus" data-label="Wits Bonus">{{numberFormat data.wits.bonus decimals=0 sign=true}}</span>
+						<span class="ability-mod rollable" data-roll="d20+@wits.mod" data-label="Wits Mod">{{numberFormat data.wits.mod decimals=0 sign=true}}</span>
+						<input type="checkbox" name="data.wits.proficientSave" {{checked data.wits.proficientSave}} data-dtype="Boolean" />
+						<span class="ability-save rollable" data-roll="d20+@wits.save" data-label="Wits Save">{{numberFormat data.wits.save decimals=0 sign=true}}</span>
+					</div>
+					<div class="ability flexrow flex-group-center">
+						<label for="data.spirit.value" class="resource-label flexlarge align-left" data-label="Spirit">Spirit</label>
+						<input type="text" name="data.spirit.value" value="{{data.spirit.value}}" data-dtype="Number"/>
+						<span class="ability-bonus rollable" data-roll="d20+@spirit.bonus" data-label="Spirit Bonus">{{numberFormat data.spirit.bonus decimals=0 sign=true}}</span>
+						<span class="ability-mod rollable" data-roll="d20+@spirit.mod" data-label="Spirit Mod">{{numberFormat data.spirit.mod decimals=0 sign=true}}</span>
+						<input type="checkbox" name="data.spirit.proficientSave" {{checked data.spirit.proficientSave}} data-dtype="Boolean" />
+						<span class="ability-save rollable" data-roll="d20+@spirit.save" data-label="Spirit Save">{{numberFormat data.spirit.save decimals=0 sign=true}}</span>
+					</div>
+				</div>
+			</aside>
 
-    </div>
+			<div class="resources grid grid-3col">
+
+				<div class="resource flex-group-center">
+					<label for="data.readied.value" class="resource-label">Readied Items</label>
+					<div class="resource-content flexrow flex-center flex-between">
+						<span>{{data.readied.value}} / {{data.readied.max}}</span>
+					</div>
+				</div>
+
+				<div class="resource flex-group-center">
+					<label for="data.carried.value" class="resource-label">Carried Items</label>
+					<div class="resource-content flexrow flex-center flex-between">
+						<span>{{data.carried.value}} / {{data.carried.max}}</span>
+					</div>
+				</div>
+
+				<div class="resource flex-group-center">
+					<label for="data.carried.loadLevel" class="resource-label">Load</label>
+					<div class="resource-content flexrow flex-center flex-between">
+						<span>{{data.carried.loadLevel}}</span>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
   </header>
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="features">Features</a>
+    <a class="item" data-tab="features">Feats</a>
     <a class="item" data-tab="description">Description</a>
     <a class="item" data-tab="items">Items</a>
     <a class="item" data-tab="spells">Spells</a>

@@ -85,6 +85,46 @@ export class RedAgeActor extends Actor {
 
     // TODO have some visual way of showing that your dex / mod have been capped down (color, small icon, etc) + tooltip?
 
+ 		data.readied = { value: this._calculateReadiedItems(items) };
+ 		data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0);
+
+ 		data.carried = { value: this._calculateCarriedItems(items) };
+ 		data.carried.max = data.vigor.value;
+
+		if (data.carried.value <= (data.carried.max / 2))
+			data.carried.loadLevel = "Light";
+		else if (data.carried.value <= data.carried.max)
+			data.carried.loadLevel = "Medium";
+		else if (data.carried.value <= (1.5 * data.carried.max))
+			data.carried.loadLevel = "Heavy";
+		else
+			data.carried.loadLevel = "Overloaded";
+  }
+
+  _calculateReadiedItems(items) {
+  	let readiedItems = 0;
+
+    for (let i of items) {
+      if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
+      	if (i.data.data.location == REDAGE.INV_READY)
+      		readiedItems++;
+      }
+    }
+
+    return readiedItems;
+  }
+
+  _calculateCarriedItems(items) {
+  	let carriedWeight = 0;
+
+    for (let i of items) {
+      if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
+      	if (i.data.data.location == REDAGE.INV_READY || i.data.data.location == REDAGE.INV_WORN || i.data.data.location == REDAGE.INV_STOWED)
+      		carriedWeight += Math.round(i.data.data.quantity * i.data.data.weight);
+      }
+    }
+
+    return carriedWeight;
   }
 
   _calculateCharacterLevel(xpValue) {
