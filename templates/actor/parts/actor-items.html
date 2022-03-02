@@ -23,13 +23,13 @@
 			<!-- Weapon Specifics -->
 			{{#if (eq 'weapon' item.type)}}
 			<div class="item-prop">
-				<span>Weapon: {{item.data.attackBonus}}</span>
+				<span>Weapon: {{numberFormat item.data.attackBonus decimals=0 sign=true}}</span>
 			</div>
 
 			<!-- Armor Specifics -->
 			{{else if (eq 'armor' item.type)}}
 			<div class="item-prop">
-				<span>Armor: {{item.data.defense}}+{{item.data.defenseBonus}}</span>
+				<span>Armor: {{numberFormat item.data.defense decimals=0 sign=true}}{{numberFormat item.data.defenseBonus decimals=0 sign=true}}</span>
 			</div>
 
 			<!-- Non-Weapon/Armor Specifics -->

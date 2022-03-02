@@ -69,9 +69,13 @@ export class RedAgeActorSheet extends ActorSheet {
   _prepareCharacterData(context) {
     context.data.classLevels = this._calculateClassLevels(context.items);
 
-//     document.getElementById("ability_dexBonus").style.color = "red";
-//     document.getElementById("ability_dexBonus").style += "color: red;";
-
+		switch (context.data.carried.loadLevel)
+		{
+		case REDAGE.LOAD_LIGHT: context.data.carried.color = "blue"; break;
+		case REDAGE.LOAD_MEDIUM: context.data.carried.color = "green"; break;
+		case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow"; break;
+		default: context.data.carried.color = "red"; break;
+		}
   }
 
   /*

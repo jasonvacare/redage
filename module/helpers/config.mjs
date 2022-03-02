@@ -18,6 +18,18 @@ REDAGE.ItemLocations = [
 	REDAGE.INV_TOWN
 ];
 
+REDAGE.LOAD_LIGHT = "Light";
+REDAGE.LOAD_MEDIUM = "Medium";
+REDAGE.LOAD_HEAVY = "Heavy";
+REDAGE.LOAD_OVERLOADED = "Overloaded";
+
+REDAGE.LoadLevels = [
+	REDAGE.LOAD_LIGHT,
+	REDAGE.LOAD_MEDIUM,
+	REDAGE.LOAD_HEAVY,
+	REDAGE.LOAD_OVERLOADED
+];
+
 REDAGE.WeaponProficiencyGroups = [
   "Brawling",
   "Exotic",

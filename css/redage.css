@@ -461,3 +461,19 @@
 .redage .effects .item .effect-controls {
   border: none;
 }
+
+.red {
+	background-color: orangered;
+}
+
+.blue {
+	background-color: lightblue;
+}
+
+.green {
+	background-color: lightgreen;
+}
+
+.yellow {
+	background-color: yellow;
+}

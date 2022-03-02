@@ -59,7 +59,7 @@
 				<div class="resource flex-group-center">
 					<label for="data.defenseBonus" class="resource-label">Defense</label>
 					<div class="resource-content flexrow flex-center flex-between">
-						<span class="resource-label rollable" data-roll="d20+@defenseBonus" data-label="Defense">{{numberFormat data.defenseBonus decimals=0 sign=true}}</span>
+						<span class="rollable" data-roll="d20+@defenseBonus" data-label="Defense">{{numberFormat data.defenseBonus decimals=0 sign=true}}</span>
 					</div>
 				</div>
 
@@ -134,7 +134,7 @@
 				<div class="resource flex-group-center">
 					<label for="data.carried.loadLevel" class="resource-label">Load</label>
 					<div class="resource-content flexrow flex-center flex-between">
-						<span>{{data.carried.loadLevel}}</span>
+						<span class="{{data.carried.color}}">{{data.carried.loadLevel}}</span>
 					</div>
 				</div>
 
