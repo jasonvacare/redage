@@ -71,10 +71,18 @@ export class RedAgeActorSheet extends ActorSheet {
 
 		switch (context.data.carried.loadLevel)
 		{
-		case REDAGE.LOAD_LIGHT: context.data.carried.color = "blue"; break;
-		case REDAGE.LOAD_MEDIUM: context.data.carried.color = "green"; break;
-		case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow"; break;
-		default: context.data.carried.color = "red"; break;
+		case REDAGE.LOAD_LIGHT: context.data.carried.color = "blue";
+			context.data.carried.tooltip = "";
+			break;
+		case REDAGE.LOAD_MEDIUM: context.data.carried.color = "green";
+			context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
+			break;
+		case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow";
+			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks.  +D to initiative.  Slowed.  Can't swim.";
+			break;
+		default: context.data.carried.color = "red";
+			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks.  +D to initiative.  Slowed 6x.  Can't swim.  Fatigue every 10 min.";
+			break;
 		}
   }
 
