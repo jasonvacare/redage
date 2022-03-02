@@ -187,7 +187,7 @@ export class RedAgeActor extends Actor {
 		for (let c = 0; c < armor.length; c++) {
 			// worn and readied armor grants protection (half value if non-proficient)
 			if (armor[c].data.data.location === REDAGE.INV_WORN || armor[c].data.data.location === REDAGE.INV_READY) {
-				let def = armor[c].data.data.defense + armor[c].data.data.defenseBonus;
+				let def = Number(armor[c].data.data.defense) + Number(armor[c].data.data.defenseBonus);
 				defense += (armor[c].data.data.isProficient) ? def : Math.floor(def / 2);
 			}
 			// worn armor caps dex bonus and mod (or +1 and +0, if non-proficient)
