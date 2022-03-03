@@ -102,6 +102,11 @@ export class RedAgeActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const gear = [];
+    const gearByLoc = {
+    	Inventory: [],
+    	Camp: [],
+    	Town: []
+    };
     const features = [];
     const spells = {
       0: [],
@@ -123,6 +128,12 @@ export class RedAgeActorSheet extends ActorSheet {
       if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
         i.data.locations = REDAGE.ItemLocations;
         gear.push(i);
+        if (i.data.location == REDAGE.INV_CAMP)
+        	gearByLoc.Camp.push(i);
+        else if (i.data.location == REDAGE.INV_TOWN)
+        	gearByLoc.Town.push(i);
+        else
+        	gearByLoc.Inventory.push(i);
       }
       // Append to features.
       else if (i.type === 'feature' || i.type === 'class' || i.type === 'featureFighter') {
@@ -137,7 +148,7 @@ export class RedAgeActorSheet extends ActorSheet {
     }
 
 		// sort gear by location
-    gear.sort((first, second) => {
+    gearByLoc.Inventory.sort((first, second) => {
    		let one = REDAGE.ordinal(first.data.location, REDAGE.ItemLocations);
    		let two = REDAGE.ordinal(second.data.location, REDAGE.ItemLocations);
    		return one - two;
@@ -145,15 +156,9 @@ export class RedAgeActorSheet extends ActorSheet {
 
     // Assign and return
     context.gear = gear;
+    context.gearByLoc = gearByLoc;
     context.features = features;
     context.spells = spells;
-//     context.locations = REDAGE.ItemLocations;
-//
-// 		let locationChoices = {};
-//     for (let i=0; i < REDAGE.ItemLocations.length; i++) {
-// 	    locationChoices[REDAGE.ItemLocations[i]] = REDAGE.ItemLocations[i];
-//     }
-//     let value = "None";
    }
 
   /* -------------------------------------------- */
