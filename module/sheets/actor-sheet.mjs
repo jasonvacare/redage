@@ -195,6 +195,34 @@ export class RedAgeActorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
+    // Incrementable / Decrementable quantities
+    html.find('.item-inc').click(ev => {
+	    ev.preventDefault();
+      ev.stopPropagation();
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.data.data.quantity = item.data.data.quantity + 1;
+			item.update({ "data.quantity": item.data.data.quantity }, {});
+    });
+    html.find('.item-dec').click(ev => {
+	    ev.preventDefault();
+      ev.stopPropagation();
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.data.data.quantity = Math.max(0, item.data.data.quantity - 1);
+			item.update({ "data.quantity": item.data.data.quantity }, {});
+    });
+
+    // Relocate item in inventory
+    html.find(".item-relocate").on("change", ev => {
+	    ev.preventDefault();
+      ev.stopPropagation();
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.data.data.location = ev.currentTarget.value;
+			item.update({ "data.location": item.data.data.location }, {});
+    });
+
     // Drag events for macros.
     if (this.actor.owner) {
       let handler = ev => this._onDragStart(ev);

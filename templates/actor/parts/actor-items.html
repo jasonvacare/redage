@@ -45,9 +45,9 @@
 				{{/if}}
 
 				<div class="item-prop">
-					<span><a class="item-control" title="Decrement"> <i class="fas fa-caret-left"> </i> </a></span>
+					<span><a class="item-control item-dec" title="Decrement"> <i class="fas fa-caret-left"> </i> </a></span>
 					<span> {{item.data.quantity}} </span>
-					<span><a class="item-control" title="Increment"> <i class="fas fa-caret-right"> </i></a></span>
+					<span><a class="item-control item-inc" title="Increment"> <i class="fas fa-caret-right"> </i></a></span>
 				</div>
 
 				<div class="item-prop">
@@ -56,7 +56,7 @@
 
 				<div class="item-prop">
 					<span>
-						<select name="data.location" data-dtype="String">
+						<select name="data.location" data-dtype="String" class="item-control item-relocate">
 							{{#select data.location}}
 							{{#each data.locations as |loc|}}
 							<option value="{{loc}}" data-dtype="String">{{loc}}</option>
