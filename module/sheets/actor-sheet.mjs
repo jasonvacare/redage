@@ -182,12 +182,7 @@ export class RedAgeActorSheet extends ActorSheet {
     html.find('.item-create').click(this._onItemCreate.bind(this));
 
     // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.delete();
-      li.slideUp(200, () => this.render(false));
-    });
+    html.find('.item-delete').click(this._onItemDelete.bind(this));
 
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
@@ -259,6 +254,37 @@ export class RedAgeActorSheet extends ActorSheet {
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});
+  }
+
+  /**
+   * Handle deleting a new Owned Item for the actor
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onItemDelete(event) {
+    event.preventDefault();
+    const li = $(event.currentTarget).parents(".item");
+    const item = this.actor.items.get(li.data("itemId"));
+
+    if (!item)
+      return;
+
+    const performDelete = await new Promise((resolve) => {
+      Dialog.confirm({
+        title: "Delete",
+        yes: () => resolve(true),
+        no: () => resolve(false),
+        content: game.i18n.format("Delete {name}?", {
+          name: item.name,
+          actor: this.actor.name,
+        }),
+      });
+    });
+    if (!performDelete)
+      return;
+
+    item.delete();
+    li.slideUp(200, () => this.render(false));
   }
 
   /**
