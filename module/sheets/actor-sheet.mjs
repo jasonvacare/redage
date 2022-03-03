@@ -78,10 +78,10 @@ export class RedAgeActorSheet extends ActorSheet {
 			context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
 			break;
 		case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow";
-			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks.  +D to initiative.  Slowed.  Can't swim.";
+			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
 			break;
 		default: context.data.carried.color = "red";
-			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks.  +D to initiative.  Slowed 6x.  Can't swim.  Fatigue every 10 min.";
+			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed 6x\nCan't swim\nFatigue every 10 min";
 			break;
 		}
 
@@ -89,8 +89,7 @@ export class RedAgeActorSheet extends ActorSheet {
 		let mundaneFP = Math.floor(Math.min(context.data.characterLevel, REDAGE.HeroicLevelThreshold) / 2);
 		let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;
  		context.data.featPoints.max = 2 + context.data.wits.mod + mundaneFP + heroicFP;
-
- 		// TODO if feat points > max, color it red
+ 		context.data.featPoints.color = (context.data.featPoints.value > context.data.featPoints.max) ? "red" : "";
   }
 
   /*
