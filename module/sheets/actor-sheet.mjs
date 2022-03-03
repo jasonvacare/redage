@@ -84,6 +84,13 @@ export class RedAgeActorSheet extends ActorSheet {
 			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks.  +D to initiative.  Slowed 6x.  Can't swim.  Fatigue every 10 min.";
 			break;
 		}
+
+		context.data.featPoints = { value: this._calculateFeatPoints(context.items) };
+		let mundaneFP = Math.floor(Math.min(context.data.characterLevel, REDAGE.HeroicLevelThreshold) / 2);
+		let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;
+ 		context.data.featPoints.max = 2 + context.data.wits.mod + mundaneFP + heroicFP;
+
+ 		// TODO if feat points > max, color it red
   }
 
   /*
@@ -119,7 +126,7 @@ export class RedAgeActorSheet extends ActorSheet {
         gear.push(i);
       }
       // Append to features.
-      else if (i.type === 'feature' || i.type === 'class') {
+      else if (i.type === 'feature' || i.type === 'class' || i.type === 'featureFighter') {
         features.push(i);
       }
       // Append to spells.
@@ -262,4 +269,15 @@ export class RedAgeActorSheet extends ActorSheet {
     return classLevels;
   }
 
+  _calculateFeatPoints(items) {
+  	let featPointsSpent = 0;
+
+    for (let i of items) {
+      if (i.type === 'feature') {
+      	featPointsSpent += i.data.cost;
+      }
+    }
+
+    return featPointsSpent;
+  }
 }

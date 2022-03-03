@@ -115,7 +115,7 @@
 				</div>
 			</aside>
 
-			<div class="resources grid grid-3col">
+			<div class="resources grid grid-4col">
 
 				<div class="resource flex-group-center">
 					<label for="data.readied.value" class="resource-label">Readied Items</label>
@@ -135,6 +135,13 @@
 					<label for="data.carried.loadLevel" class="resource-label">Load</label>
 					<div class="resource-content flexrow flex-center flex-between">
 						<span class="{{data.carried.color}} box-title" title="{{data.carried.tooltip}}">{{data.carried.loadLevel}}</span>
+					</div>
+				</div>
+
+				<div class="resource flex-group-center">
+					<label for="data.featPoints.value" class="resource-label">Feats</label>
+					<div class="resource-content flexrow flex-center flex-between">
+						<span>{{data.featPoints.value}} / {{data.featPoints.max}}</span>
 					</div>
 				</div>
 

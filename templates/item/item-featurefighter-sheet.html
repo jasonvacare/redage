@@ -1,0 +1,55 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+
+			<div class="grid grid-2col">
+				<div class="resource">
+					<label class="resource-label">Cost</label>
+					<input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number" />
+				</div>
+				<div class="resource">
+					<label class="resource-label">Deeds</label>
+					<input type="text" name="data.deedsNumber" value="{{data.deedsNumber}}" data-dtype="Number" />
+				</div>
+			</div>
+
+    </div>
+	</header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+		<a class="item" data-tab="attributes">Weapon Mastery</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+
+		{{!-- Weapon Mastery Tab --}}
+		<div class="tab attributes" data-group="primary" data-tab="attributes">
+			<div class="flexcol">
+
+				{{#each mastery as |weapon id|}}
+				<div class="flexrow flex-group-center">
+					<label for="{{weapon.name}}" class="resource-label">{{weapon.name}}</label>
+					<input type="text" name="data.startingHealth" value="{{weapon.victories}}" data-dtype="Number"/>
+					<input type="checkbox" name="weapon.damage" {{checked weapon.damage}} data-dtype="Boolean" />
+					<input type="checkbox" name="weapon.brutal" {{checked weapon.brutal}} data-dtype="Boolean" />
+					<input type="checkbox" name="weapon.cleave" {{checked weapon.cleave}} data-dtype="Boolean" />
+					<input type="checkbox" name="weapon.supremacy" {{checked weapon.supremacy}} data-dtype="Boolean" />
+				</div>
+				{{/each}}
+
+			</div>
+		</div>
+
+	</section>
+
+</form>

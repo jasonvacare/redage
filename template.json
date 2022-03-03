@@ -1,6 +1,7 @@
 {
   "Actor": {
     "types": ["character", "npc"],
+
     "templates": {
       "base": {
         "vigor": {
@@ -30,22 +31,29 @@
         "biography": ""
       }
     },
+
     "character": {
       "templates": [ "base" ],
       "xp": 0
     },
+
     "npc": {
       "templates": ["base"],
       "level": 1
     }
   },
+
+
   "Item": {
-    "types": [ "class", "feature", "spell", "weapon", "armor", "item" ],
+    "types": [ "class", "feature", "spell", "weapon", "armor", "item", "featureFighter" ],
     "templates": {
       "base": {
         "description": ""
       },
-      "item": {
+      "baseFeature": {
+        "cost": 0
+      },
+      "baseItem": {
         "isLoot": false,
         "quantity": 1,
         "value": 0,
@@ -54,6 +62,7 @@
         "actions": []
       }
     },
+
     "class": {
       "templates": [ "base" ],
       "classLevel": 0,
@@ -63,10 +72,10 @@
       "maxHealthPerLevelHeroic": 0
     },
     "item": {
-      "templates": [ "base", "item" ]
+      "templates": [ "base", "baseItem" ]
     },
     "weapon": {
-      "templates": [ "base", "item" ],
+      "templates": [ "base", "baseItem" ],
       "isProficient": false,
       "isForceful": false,
       "isFinesse": false,
@@ -80,7 +89,7 @@
       "damageBonus": ""
     },
     "armor": {
-      "templates": [ "base", "item" ],
+      "templates": [ "base", "baseItem" ],
       "isProficient": false,
       "proficiencyGroup": "",
       "defense": 0,
@@ -90,8 +99,68 @@
       "defenseBonus": 0
     },
     "feature": {
-      "templates": [ "base" ]
+      "templates": [ "base", "baseFeature" ]
     },
+
+
+    "featureFighter": {
+      "templates": [ "base", "baseFeature" ],
+      "deedsNumber": 20,
+      "mastery": {
+        "brawling": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        },
+        "great": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        },
+        "missile": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        },
+        "pole": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        },
+        "single": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        },
+        "thrown": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        },
+        "exotic": {
+          "victories": 0,
+          "damage": false,
+          "brutal": false,
+          "cleave": false,
+          "supremacy": false
+        }
+      }
+    },
+
+
+
     "spell": {
       "templates": [ "base" ],
       "spellLevel": 1
