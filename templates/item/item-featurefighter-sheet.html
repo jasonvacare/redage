@@ -27,28 +27,161 @@
   {{!-- Sheet Body --}}
   <section class="sheet-body">
 
-    {{!-- Description Tab --}}
+		{{!-- Weapon Mastery Tab --}}
+		<div class="tab attributes" data-group="primary" data-tab="attributes">
+
+			<ol class="items-list">
+
+				<li class="item flexrow items-header">
+					<div class="item-name">Weapon</div>
+					<div class="item-prop">Victories</div>
+					<div class="item-prop">Damage</div>
+					<div class="item-prop">Brutal</div>
+					<div class="item-prop">Cleave</div>
+					<div class="item-prop">Supremacy</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Brawling</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.brawling.victories" {{checked data.mastery.brawling.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.brawling.brutal" {{data.mastery.brawling.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.brawling.cleave" {{data.mastery.brawling.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.brawling.damage" {{data.mastery.brawling.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.brawling.supremacy" {{data.mastery.brawling.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Great</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.great.victories" {{data.mastery.great.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.great.brutal" {{data.mastery.great.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.great.cleave" {{data.mastery.great.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.great.damage" {{data.mastery.great.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.great.supremacy" {{data.mastery.great.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Missile</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.missile.victories" {{data.mastery.missile.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.missile.brutal" {{data.mastery.missile.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.missile.cleave" {{data.mastery.missile.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.missile.damage" {{data.mastery.missile.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.missile.supremacy" {{data.mastery.missile.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Pole</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.pole.victories" {{data.mastery.pole.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.pole.brutal" {{data.mastery.pole.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.pole.cleave" {{data.mastery.pole.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.pole.damage" {{data.mastery.pole.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.pole.supremacy" {{data.mastery.pole.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Single</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.single.victories" {{data.mastery.single.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.single.brutal" {{data.mastery.single.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.single.cleave" {{data.mastery.single.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.single.damage" {{data.mastery.single.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.single.supremacy" {{data.mastery.single.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Thrown</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.thrown.victories" {{data.mastery.thrown.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.thrown.brutal" {{data.mastery.thrown.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.thrown.cleave" {{data.mastery.thrown.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.thrown.damage" {{data.mastery.thrown.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.thrown.supremacy" {{data.mastery.thrown.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+				<li class="item flexrow">
+					<div class="item-name">Exotic</div>
+					<div class="item-prop">
+						<input type="number" name="data.mastery.exotic.victories" {{data.mastery.exotic.victories}} data-dtype="Number" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.exotic.brutal" {{data.mastery.exotic.brutal}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.exotic.cleave" {{data.mastery.exotic.cleave}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.exotic.damage" {{data.mastery.exotic.damage}} data-dtype="Boolean" />
+					</div>
+					<div class="item-prop">
+						<input type="checkbox" name="data.mastery.exotic.supremacy" {{data.mastery.exotic.supremacy}} data-dtype="Boolean" />
+					</div>
+				</li>
+
+			</ol>
+
+		</div>
+
+		{{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
-
-		{{!-- Weapon Mastery Tab --}}
-		<div class="tab attributes" data-group="primary" data-tab="attributes">
-			<div class="flexcol">
-
-				{{#each mastery as |weapon id|}}
-				<div class="flexrow flex-group-center">
-					<label for="{{weapon.name}}" class="resource-label">{{weapon.name}}</label>
-					<input type="text" name="data.startingHealth" value="{{weapon.victories}}" data-dtype="Number"/>
-					<input type="checkbox" name="weapon.damage" {{checked weapon.damage}} data-dtype="Boolean" />
-					<input type="checkbox" name="weapon.brutal" {{checked weapon.brutal}} data-dtype="Boolean" />
-					<input type="checkbox" name="weapon.cleave" {{checked weapon.cleave}} data-dtype="Boolean" />
-					<input type="checkbox" name="weapon.supremacy" {{checked weapon.supremacy}} data-dtype="Boolean" />
-				</div>
-				{{/each}}
-
-			</div>
-		</div>
 
 	</section>
 
