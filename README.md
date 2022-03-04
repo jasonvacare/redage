@@ -1,23 +1,9 @@
 
 ## TO DO LIST
 
-1. Items
-  A. Weapons attack/damage roll features
-    i. need to add damage roll
-  B. Prepare defense stat from armor, etc ("worn" either as bool or as inv location)
-    i. Put defense field on charsheet.
-    ii. Create armor item-sheet.    
-  C. Inventory
-    i. locations, including town, camp, stowed, ready, worn (passively ready) 
-    ii. sort weapons, armor, and other into sections of the sheet?  by weapons, armor, other, camp, town?
-      a. maybe have a button / radio selector that swaps between type and location arrangement?
-    iii. Encumbrance / readiness tracking
 2. Features
-  A. Need compendium of skill related feats     << -- WE ARE HERE
-   i. Roll from a feat, applying its bonus to correct stat bonus or mod roll.  Roll text reflects the feat use.
-  B. Need compendium of non-skill related feats
+  A. Need compendium of feats
   C. Need compendium of class features (display class features nested under class, similar to spells by level?)
-    i. Fighter victory feature / interface
     ii. Cleric bonds
     iii. Abhuman mutations (abhuman subtype (brute, skulk, malison) applies to certain feats)
     iv. Rogue feats

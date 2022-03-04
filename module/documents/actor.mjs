@@ -99,6 +99,61 @@ export class RedAgeActor extends Actor {
 			data.carried.loadLevel = "Heavy";
 		else
 			data.carried.loadLevel = "Overloaded";
+
+    // fighter mastery preparation
+    data.fighterMastery = this._calculateFighterMasteries(items);    
+  }
+
+  _calculateFighterMasteries(items) {
+    let masteries = {};
+    for (let i of items) {
+      if (i.type === 'featureFighter') {
+        let data = i.data.data;
+        masteries.brawling = { 
+          brutal: data.mastery.brawling.brutal,
+          cleave: data.mastery.brawling.cleave,
+          damage: data.mastery.brawling.damage,
+          supreme: data.mastery.brawling.supreme
+        };
+        masteries.great = { 
+          brutal: data.mastery.great.brutal,
+          cleave: data.mastery.great.cleave,
+          damage: data.mastery.great.damage,
+          supreme: data.mastery.great.supreme
+        };
+        masteries.missile = { 
+          brutal: data.mastery.missile.brutal,
+          cleave: data.mastery.missile.cleave,
+          damage: data.mastery.missile.damage,
+          supreme: data.mastery.missile.supreme
+        };
+        masteries.pole = { 
+          brutal: data.mastery.pole.brutal,
+          cleave: data.mastery.pole.cleave,
+          damage: data.mastery.pole.damage,
+          supreme: data.mastery.pole.supreme
+        };
+        masteries.single = { 
+          brutal: data.mastery.single.brutal,
+          cleave: data.mastery.single.cleave,
+          damage: data.mastery.single.damage,
+          supreme: data.mastery.single.supreme
+        };
+        masteries.thrown = { 
+          brutal: data.mastery.thrown.brutal,
+          cleave: data.mastery.thrown.cleave,
+          damage: data.mastery.thrown.damage,
+          supreme: data.mastery.thrown.supreme
+        };
+        masteries.exotic = { 
+          brutal: data.mastery.exotic.brutal,
+          cleave: data.mastery.exotic.cleave,
+          damage: data.mastery.exotic.damage,
+          supreme: data.mastery.exotic.supreme
+        };
+      }
+    }
+    return masteries;
   }
 
   _calculateReadiedItems(items) {
@@ -235,6 +290,8 @@ export class RedAgeActor extends Actor {
     data.dexterity = foundry.utils.deepClone(data.dexterity);
     data.wits = foundry.utils.deepClone(data.wits);
     data.spirit = foundry.utils.deepClone(data.spirit);
+
+    data.features = foundry.utils.deepClone(data.features);
   }
 
   /**

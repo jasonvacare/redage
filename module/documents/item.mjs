@@ -93,6 +93,12 @@ export class RedAgeItem extends Item {
 			damageFormula += "+@dexterity.mod";
 		}
 
+    // fighter feature check
+    if (actor.fighterMastery) {
+      let m = actor.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+        if (m.damage) damageFormula += "+" + actor.proficiencyBonus;
+    }
+
 		attackFormula += "+@item.attackBonus";
 		damageFormula += "+@item.damageBonus";
 
