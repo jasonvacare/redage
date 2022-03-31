@@ -41,6 +41,7 @@ Hard Mode
 9. Color code too-many-readied-items and load level 
 10. Display info/controls on item entries in the actor list w/o going into the item sheet
   A. set location, see isProf / prof group, see weapon dmg, armor value, armor dex max
+11. Rearrange inventory items (drag-drop, arrows) w/in limits of sorting for the item type
 
 Odds & Ends
 - Don't allow more than one copy of a class (also feature?) in your inventory.  When you drag a class in that you

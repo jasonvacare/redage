@@ -87,6 +87,10 @@ export class RedAgeActorSheet extends ActorSheet {
 
 		context.data.readied.color = (context.data.readied.value > context.data.readied.max) ? "red" : "";
 
+    // TODO visual indicator showing that your dex / mod have been capped down by armor (color, small icon)?
+    // tooltip of the elements summed into your defense, including clumsy penalty
+    // all stats show green / red color and icon to indicate alteration from base
+
 		context.data.featPoints = { value: this._calculateFeatPoints(context.items) };
 		let mundaneFP = Math.floor(Math.min(context.data.characterLevel, REDAGE.HeroicLevelThreshold) / 2);
 		let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;

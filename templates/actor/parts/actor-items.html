@@ -1,17 +1,15 @@
 <ol class="items-list">
 	{{#each gearByLoc as |gear loc|}}
-  <li class="item flexrow items-header">
-    <div class="item-name ">{{loc}}</div>
-		<div class="item-prop"></div>
-		<div class="item-prop">Qty</div>
-		<div class="item-prop">Wt</div>
-		<div class="item-prop"></div>
-    <div class="item-controls">
-      <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
-    </div>
-  </li>
-
-	{{log locations}}
+		<li class="item flexrow items-header">
+			<div class="item-name">{{loc}}</div>
+			<div class="item-prop"></div>
+			<div class="item-prop">Qty</div>
+			<div class="item-prop">Wt</div>
+			<div class="item-prop"></div>
+			<div class="item-controls">
+				<a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
+			</div>
+		</li>
 
 		{{#each gear as |item id|}}
 			<li class="item flexrow" data-item-id="{{item._id}}">
@@ -21,9 +19,6 @@
 					</div>
 					<h4>{{item.name}}</h4>
 				</div>
-
-				<!-- Post item object to log -->
-				{{log item}}
 
 				<!-- Weapon Specifics -->
 				{{#if (eq 'weapon' item.type)}}

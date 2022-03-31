@@ -60,7 +60,7 @@ REDAGE.PanoplyTypes = [
   "Order",
   "Patron",
   "PowerFont",
-  "Raimant",
+  "Raiment",
   "Ritual",
   "Sacrament",
   "Sanctity",
@@ -77,7 +77,8 @@ REDAGE.DamageTypes = [
 	"Frost",
 	"Acid",
 	"Health",
-	"Spirit"
+	"Spirit",
+	"Healing"
 ];
 
 /**
