@@ -70,6 +70,9 @@
 				use both the "grid" and "grid-Ncol" class where "N" can be any number
 				from 1 to 12 and will create that number of columns.  --}}
 				<div class="abilities grid-6col">
+
+					<hr>
+
 					<div class="ability flexrow flex-group-center">
 						<span class="flexlarge align-left">Ability</span>
 						<span class="align-right">Value</span>
@@ -78,6 +81,9 @@
 						<span class="align-right">Prof?</span>
 						<span class="align-right">Save</span>
 					</div>
+
+					<hr>
+
 					<div class="ability flexrow flex-group-center">
 						<label for="data.vigor.value" class="resource-label flexlarge align-left" data-label="Vigor">Vigor</label>
 						<input type="text" name="data.vigor.value" value="{{data.vigor.value}}" data-dtype="Number"/>
@@ -112,6 +118,9 @@
 						<input type="checkbox" name="data.spirit.proficientSave" {{checked data.spirit.proficientSave}} data-dtype="Boolean" />
 						<span class="ability-save rollable" data-roll="d20+@spirit.save" data-label="Spirit Save">{{numberFormat data.spirit.save decimals=0 sign=true}}</span>
 					</div>
+
+					<hr>
+
 				</div>
 			</aside>
 
