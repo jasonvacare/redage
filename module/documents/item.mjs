@@ -1,6 +1,6 @@
 import { REDAGE } from "../helpers/config.mjs";
 
-/**
+/*
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
@@ -34,7 +34,7 @@ export class RedAgeItem extends Item {
    */
   async roll() {
     const item = this.data;
-    const actor = this.actor;
+    const actor = this.actor.data;
 
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
@@ -43,7 +43,7 @@ export class RedAgeItem extends Item {
 
     var formula = null;
     if (item.type === "weapon") {
-			return this._weaponAttackRoll(item, actor.data.data);
+			return this._onWeaponAttackRoll(item, actor);
     }
 
     // If there's no roll data, send a chat message.
@@ -71,18 +71,24 @@ export class RedAgeItem extends Item {
     }
   }
 
-  async _weaponAttackRoll(item, actor) {
+	/**
+	* Prep and display weapon attack dialog
+	*/
+  async _onWeaponAttackRoll(item, actor) {
+
+		const _doRoll = async (html) => { return this._doWeaponAttackRoll(html, this.tempData); };
 
 		const rollData = this.getRollData();
 
-		var attackFormula = (item.data.isProficient) ? "1d20" : "2d20kl1";
+		var adShift = 3;
+		if (!item.data.isProficient) adShift--;
+
+		var attackFormula = "@attackBonus";
 		var damageFormula = "@item.damageDie";
 
-		attackFormula += "+@attackBonus";
-
 		if (item.data.isForceful && item.data.isFinesse) {
-			attackFormula += (actor.vigor.mod > actor.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
-			damageFormula += (actor.vigor.mod > actor.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
+			attackFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
+			damageFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
 		}
 		else if (item.data.isForceful) {
 			attackFormula += "+@vigor.mod";
@@ -93,51 +99,114 @@ export class RedAgeItem extends Item {
 			damageFormula += "+@dexterity.mod";
 		}
 
-    // fighter feature check
-    if (actor.fighterMastery) {
-      let m = actor.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-        if (m.damage) damageFormula += "+" + actor.proficiencyBonus;
-    }
-
 		attackFormula += "+@item.attackBonus";
 		damageFormula += "+@item.damageBonus";
+
+		// fighter feature check
+		if (actor.data.fighterMastery) {
+			let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+			if (m.damage) damageFormula += "+@proficiencyBonus";
+		}
+
+		// TODO to add
+		// 		fighter-type bonuses from other sources (brute, acrobatic combatant, etc)
+		//		sneak attack
 
 		const attackRoll = new Roll(attackFormula, rollData);
 		const damageRoll = new Roll(damageFormula, rollData);
 
-		const rollMode = game.settings.get("core", "rollMode");
-		const diceData = Roll.fromTerms([
-			PoolTerm.fromRolls([attackRoll, damageRoll]),
-		]);
-
-		const diceTooltip = {
-			attack: await attackRoll.render(),
-			damage: await damageRoll.render(),
-		};
-
 		const dialogData = {
-			actor: this.actor,
-			item,
-			attackRoll,
-			damageRoll,
-			diceTooltip,
+			actor: actor,
+			item: item,
+			attackFormula: attackFormula,
+			attackRoll: attackRoll,
+			damageFormula: damageFormula,
+			damageRoll: damageRoll,
+			adShift: adShift,
+			adLadder: ["+3D", "+2D", "+D", "Normal", "+A", "+2A", "+3A"],
+			rollData: rollData
 		};
 
-		const template = "systems/redage/templates/chat/weapon-attack-roll.html";
-		const chatContent = await renderTemplate(template, dialogData);
-		const chatMessage = getDocumentClass("ChatMessage");
-		chatMessage.create(
-			chatMessage.applyRollMode(
-			{
-				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-				roll: JSON.stringify(diceData),
-				content: chatContent,
-				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-			},
-			rollMode
-			)
-		);
+		const template = "systems/redage/templates/dialogs/roll-weapon-attack.html";
+		const html = await renderTemplate(template, dialogData);
 
-		return chatMessage;
+		// this.tempData is a temporary place to store data for inter-function transport
+		// the dialog callback only passes its own html as text, so we need a way to move data
+		// it can be overwritten as needed
+		this.tempData = dialogData;
+
+		this.popUpDialog = new Dialog({
+			title: actor.name + " - " + item.name + "Attack",
+			content: html,
+			default: "roll",
+			buttons: {
+				roll: {
+					label: "Attack",
+					callback: (html) => _doRoll(html),
+				},
+				cancel: {
+					label: "Cancel",
+					callback: () => { ; },
+				}
+			},
+		});
+
+		const s = this.popUpDialog.render(true);
+
+		if (s instanceof Promise)
+			await s;
+
+		return this.tempData.chatMessage;
 	}
+
+		/**
+  	* Actual processing and output of weapon attack roll
+  	*/
+  	async _doWeaponAttackRoll(html, dialogData) {
+
+  		var _a;
+      const form = html[0].querySelector("form");
+      const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
+      const adShiftLadder = ["(+3D)", "(+2D)", "(+D)", "", "(+A)", "(+2A)", "(+3A)"];
+
+  		var dice = (Math.abs(adShift)+1) + "d20";
+  		if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
+    	dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
+    	dialogData.adShiftText = adShiftLadder[adShift+3];
+
+    	const attackRoll = new Roll(dialogData.attackFormula, dialogData.rollData);
+    	const damageRoll = new Roll(dialogData.damageFormula, dialogData.rollData);
+
+    	const rollMode = game.settings.get("core", "rollMode");
+    	const diceData = Roll.fromTerms([
+    		PoolTerm.fromRolls([attackRoll, damageRoll]),
+    	]);
+
+    	const diceTooltip = {
+    		attack: await attackRoll.render(),
+    		damage: await damageRoll.render(),
+    	};
+
+    	dialogData.attackRoll = attackRoll;
+    	dialogData.damageRoll = damageRoll;
+    	dialogData.diceTooltip = diceTooltip;
+
+    	const template = "systems/redage/templates/chat/weapon-attack-roll.html";
+    	const chatContent = await renderTemplate(template, dialogData);
+    	const chatMessage = getDocumentClass("ChatMessage");
+    	chatMessage.create(
+    		chatMessage.applyRollMode(
+    		{
+    			speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    			roll: JSON.stringify(diceData),
+    			content: chatContent,
+    			type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    		},
+    		rollMode
+    		)
+    	);
+
+  		this.tempData.chatMessage = chatMessage;
+    	return chatMessage;
+    }
 }
