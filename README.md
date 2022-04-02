@@ -33,7 +33,8 @@ Hard Mode
   B. Inventory Effects (gauntlets of ogre strength)
 3. How to make the player view of a sheet different than the compendium entry view
   A. For example, make a weapon forceful and/or finesse in the compendium, and the player view enforces that
-4. Full weapon and spell roll interstial dialog with all the +A/D, supremacy, sneak attack, etc options
+4. Weapon and spell roll interstial dialogs
+   A. Weapon dialog is in, needs to be fancied up a bit (+A/D, supremacy, sneak attack, etc options)
 5. Get array-based lists working (e.g. weapon/armor qualities, etc)
 6. Item / spell / class / feature icons
 7. Visually note on stat block when dex/DEX are lowered by armor.

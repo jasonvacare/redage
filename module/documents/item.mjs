@@ -76,8 +76,6 @@ export class RedAgeItem extends Item {
 	*/
   async _onWeaponAttackRoll(item, actor) {
 
-		const _doRoll = async (html) => { return this._doWeaponAttackRoll(html, this.tempData); };
-
 		const rollData = this.getRollData();
 
 		var adShift = 3;
@@ -135,6 +133,8 @@ export class RedAgeItem extends Item {
 		// it can be overwritten as needed
 		this.tempData = dialogData;
 
+		const _doRoll = async (html) => { return this._doWeaponAttackRoll(html, this.tempData); };
+
 		this.popUpDialog = new Dialog({
 			title: actor.name + " - " + item.name + "Attack",
 			content: html,
@@ -159,54 +159,109 @@ export class RedAgeItem extends Item {
 		return this.tempData.chatMessage;
 	}
 
-		/**
-  	* Actual processing and output of weapon attack roll
-  	*/
-  	async _doWeaponAttackRoll(html, dialogData) {
+	/**
+	* Actual processing and output of weapon attack roll
+	*/
+	async _doWeaponAttackRoll(html, dialogData) {
 
-  		var _a;
-      const form = html[0].querySelector("form");
-      const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
-      const adShiftLadder = ["(+3D)", "(+2D)", "(+D)", "", "(+A)", "(+2A)", "(+3A)"];
+		const actor = dialogData.actor;
+		const item = dialogData.item;
 
-  		var dice = (Math.abs(adShift)+1) + "d20";
-  		if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
-    	dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
-    	dialogData.adShiftText = adShiftLadder[adShift+3];
+		dialogData.attackNotes = [];
+		dialogData.damageNotes = [item.data.damageType];
 
-    	const attackRoll = new Roll(dialogData.attackFormula, dialogData.rollData);
-    	const damageRoll = new Roll(dialogData.damageFormula, dialogData.rollData);
+		// get data from dialog
+		var _a;
+		const form = html[0].querySelector("form");
+		const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
 
-    	const rollMode = game.settings.get("core", "rollMode");
-    	const diceData = Roll.fromTerms([
-    		PoolTerm.fromRolls([attackRoll, damageRoll]),
-    	]);
+		// handle advantage / disadvantage on attack roll
+		const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+		var dice = (Math.abs(adShift)+1) + "d20";
+		if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
+		dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
+		if (adShift != 0) dialogData.attackNotes.push(adShiftLadder[adShift+3]);
 
-    	const diceTooltip = {
-    		attack: await attackRoll.render(),
-    		damage: await damageRoll.render(),
-    	};
+		// handle attack roll
+		const attackRoll = new Roll(dialogData.attackFormula, dialogData.rollData);
+		await attackRoll.evaluate({async: true});
 
-    	dialogData.attackRoll = attackRoll;
-    	dialogData.damageRoll = damageRoll;
-    	dialogData.diceTooltip = diceTooltip;
+		// handle special attack rolls (crit, fumble, deeds)
+		const attackD20Result = attackRoll.terms[0].total;
+		var critThreshold = 20;
+		var fumbleThreshold = 1;
+		var deedsNumber = 0;
 
-    	const template = "systems/redage/templates/chat/weapon-attack-roll.html";
-    	const chatContent = await renderTemplate(template, dialogData);
-    	const chatMessage = getDocumentClass("ChatMessage");
-    	chatMessage.create(
-    		chatMessage.applyRollMode(
-    		{
-    			speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    			roll: JSON.stringify(diceData),
-    			content: chatContent,
-    			type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-    		},
-    		rollMode
-    		)
-    	);
+		// apply fighter brutal crit threat range and deeds number
+		if (actor.data.fighterMastery) {
+			deedsNumber = actor.data.fighterMastery.deedsNumber;
 
-  		this.tempData.chatMessage = chatMessage;
-    	return chatMessage;
-    }
+			let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+			if (m.brutal && actor.data.fighterMastery.fighterLevel >= 5) critThreshold = 19;
+		}
+
+		if (attackD20Result >= critThreshold)
+		{
+			dialogData.attackNotes.push("Crit");
+
+			// add maximized damage die
+			const damageDie = dialogData.damageRoll.terms[0];
+			const damageDieMax = Number(damageDie.number) * Number(damageDie.faces);
+			dialogData.damageFormula += " + " + damageDieMax;
+
+			// apply fighter brutal crit damage
+			if (actor.data.fighterMastery) {
+				let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+				if (m.brutal) dialogData.damageFormula += " + " + damageDieMax;
+			}
+		}
+		else if (attackD20Result <= fumbleThreshold)
+		{
+			dialogData.attackNotes.push("Fumble");
+		}
+
+		// deeds number may overlap with crit / fumble
+		if (attackD20Result == deedsNumber)
+		{
+			dialogData.attackNotes.push("Mighty Deeds");
+		}
+
+		const damageRoll = new Roll(dialogData.damageFormula, dialogData.rollData);
+		await damageRoll.evaluate({async: true});
+
+		const rollMode = game.settings.get("core", "rollMode");
+		const diceData = Roll.fromTerms([
+			PoolTerm.fromRolls([attackRoll, damageRoll]),
+		]);
+
+		const diceTooltip = {
+			attack: await attackRoll.render(),
+			damage: await damageRoll.render(),
+		};
+
+		dialogData.attackRoll = attackRoll;
+		dialogData.damageRoll = damageRoll;
+		dialogData.diceTooltip = diceTooltip;
+
+		dialogData.attackNotes = (dialogData.attackNotes.length > 0) ? "(" + dialogData.attackNotes.join(", ") + ")" : "";
+		dialogData.damageNotes = (dialogData.damageNotes.length > 0) ? "(" + dialogData.damageNotes.join(", ") + ")" : "";
+
+		const template = "systems/redage/templates/chat/weapon-attack-roll.html";
+		const chatContent = await renderTemplate(template, dialogData);
+		const chatMessage = getDocumentClass("ChatMessage");
+		chatMessage.create(
+			chatMessage.applyRollMode(
+			{
+				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+				roll: JSON.stringify(diceData),
+				content: chatContent,
+				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+			},
+			rollMode
+			)
+		);
+
+		this.tempData.chatMessage = chatMessage;
+		return chatMessage;
+	}
 }

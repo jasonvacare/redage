@@ -105,10 +105,17 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateFighterMasteries(items) {
-    let masteries = {};
+    let masteries = { fighterLevel: 0, deedsNumber: 0 };
     for (let i of items) {
+
+    	if (i.type === 'class' && i.name.toLowerCase() === "fighter") {
+				masteries.fighterLevel = i.data.data.classLevel;
+    	}
+
       if (i.type === 'featureFighter') {
         let data = i.data.data;
+        masteries.deedsNumber = data.deedsNumber;
+
         masteries.brawling = { 
           brutal: data.mastery.brawling.brutal,
           cleave: data.mastery.brawling.cleave,
@@ -153,6 +160,7 @@ export class RedAgeActor extends Actor {
         };
       }
     }
+
     return masteries;
   }
 
