@@ -51,7 +51,8 @@
         "description": ""
       },
       "baseFeature": {
-        "cost": 0
+        "cost": 0,
+        "origin": ""
       },
       "baseItem": {
         "isLoot": false,
@@ -98,10 +99,27 @@
       "qualities": "",
       "defenseBonus": 0
     },
+
     "feature": {
       "templates": [ "base", "baseFeature" ]
     },
-
+    "featureSkill": {
+      "templates": [ "base", "baseFeature" ],
+      "tier": 0
+    },
+    "featureRollable": {
+      "templates": [ "base", "baseFeature" ],
+      "formula": ""
+    },
+    "featureResource": {
+      "templates": [ "base", "baseFeature" ],
+      "resource": {
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "recharge": ""
+      }
+    },
 
     "featureFighter": {
       "templates": [ "base", "baseFeature" ],
