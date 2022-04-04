@@ -48,7 +48,8 @@
     "types": [ "class", "feature", "spell", "weapon", "armor", "item", "featureFighter" ],
     "templates": {
       "base": {
-        "description": ""
+        "description": "",
+        "tags": []
       },
       "baseFeature": {
         "cost": 0,
@@ -178,10 +179,30 @@
     },
 
 
-
-    "spell": {
+    "spellContainer": {
       "templates": [ "base" ],
-      "spellLevel": 1
+      "____spells": [],
+      "____spellUuids": [],
+      "origin": "",
+      "powerMin": 0,
+      "powerMax": 5,
+      "location": "Vessel",
+      "____effectBonus": "0",
+      "____magnitudeBonus": "0"
+    },
+
+    "____spell": {
+      "____templates": [ "base" ],
+      "____parent": null,
+      "____castingTime": "1 action",
+      "____duration": "Instant",
+      "____range": "None",
+      "____target": "Self",
+      "____components": "None",
+
+      "____effectFormula": "0",
+      "____magnitudeFormula": "0",
+      "____magnitudeType": ""
     }
   }
 }

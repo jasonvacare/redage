@@ -81,6 +81,38 @@ REDAGE.DamageTypes = [
 	"Healing"
 ];
 
+REDAGE.SPELL_NONE = "None";
+REDAGE.SPELL_PREPARED = "Prepared";
+REDAGE.SPELL_INNATE = "Innate";
+REDAGE.SPELL_VESSEL = "Vessel";
+REDAGE.SPELL_PANOPLY = "Panoply";
+REDAGE.SPELL_CAMP = "Camp";
+REDAGE.SPELL_TOWN = "Town";
+
+REDAGE.SpellLocations = [
+	REDAGE.SPELL_NONE,
+	REDAGE.SPELL_PREPARED,
+	REDAGE.SPELL_INNATE,
+	REDAGE.SPELL_VESSEL,
+	REDAGE.SPELL_PANOPLY,
+	REDAGE.SPELL_CAMP,
+	REDAGE.SPELL_TOWN
+];
+
+REDAGE.ManaCost = [
+	0.2,
+	2,
+	3,
+	5,
+	6,
+	7,
+	9,
+	10,
+	11,
+	13
+];
+
+
 /**
 * Return index of element's location in list, or list.length+1 if not found
 */
