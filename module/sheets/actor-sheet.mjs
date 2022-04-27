@@ -469,11 +469,15 @@ export class RedAgeActorSheet extends ActorSheet {
             return item.roll();
         }
       }
-
       // Handle stat rolls.
-      if (dataset.rollType == 'stat') {
+      else if (dataset.rollType == 'stat') {
         let rollType = dataset.label.split(' ');
         this._onStatRoll("Stat Roll", rollType[0], rollType[1], "");
+      }
+      // Handle defense rolls.
+      else if (dataset.rollType == 'defense') {
+        let rollType = dataset.label.split(' ');
+        this._onStatRoll("Defense", "defenseBonus", "Save", "");
       }
     }
     
@@ -604,23 +608,31 @@ export class RedAgeActorSheet extends ActorSheet {
     dialogData.defaultStat = (_a = form.querySelector('[name="defaultStat"]')) === null || _a === void 0 ? void 0 : _a.value;
     dialogData.defaultRoll = (_a = form.querySelector('[name="defaultRoll"]')) === null || _a === void 0 ? void 0 : _a.value;
 
+    if (!dialogData.defaultRoll) dialogData.defaultRoll = "mod";
+
     dialogData.modifiers = (_a = form.querySelector('[name="modifiers"]')) === null || _a === void 0 ? void 0 : _a.value;
     if (dialogData.defaultRoll.toLowerCase() === "bonus") {
       dialogData.rollData.skilled = "5";
       dialogData.rollData.expert = "10";
     }
     else {
-      dialogData.rollData.skilled = dialogData.actor.data.data.halfProficiencyBonus;
-      dialogData.rollData.expert = dialogData.actor.data.data.proficiencyBonus;
+      dialogData.rollData.skilled = actor.data.data.halfProficiencyBonus;
+      dialogData.rollData.expert = actor.data.data.proficiencyBonus;
     }
 
-    dialogData.rollNotes.push(dialogData.defaultStat + " " + dialogData.defaultRoll);
+    if (dialogData.defaultStat !== "defenseBonus") {
+      dialogData.rollNotes.push(dialogData.defaultStat + " " + dialogData.defaultRoll);
+      dialogData.formula = "@" + dialogData.defaultStat.toLowerCase() + "." + dialogData.defaultRoll.toLowerCase();
+    }
+    else {
+      dialogData.formula = "@defenseBonus";
+    }
+
     if (dialogData.modifiers.toLowerCase().includes("skilled"))
       dialogData.rollNotes.push("Skilled");
     else if (dialogData.modifiers.toLowerCase().includes("expert"))
       dialogData.rollNotes.push("Expert");
 
-    dialogData.formula = "@" + dialogData.defaultStat.toLowerCase() + "." + dialogData.defaultRoll.toLowerCase();
     if (dialogData.modifiers)
       dialogData.formula = dialogData.formula + " + " + dialogData.modifiers;
 
