@@ -103,24 +103,26 @@ export class RedAgeActorSheet extends ActorSheet {
     let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;
  		fp.max = 2 + context.data.wits.mod + mundaneFP + heroicFP;
     var overspent = (fp.value > fp.max);
+    context.data.featPoints.tooltip = "Basic: " + fp.value + " / " + fp.max;
 
     context.data.featPoints.rogue = fp = { value: fpSpent.rogue.spent, max: fpSpent.rogue.max };
     overspent = overspent || (fp.value > fp.max);
+    if (fp.max > 0)
+      context.data.featPoints.tooltip += "\nRogue: " + fp.value + " / " + fp.max;
+
     context.data.featPoints.mutation = fp = { value: fpSpent.mutation.spent, max: fpSpent.mutation.max };
     overspent = overspent || (fp.value > fp.max);
+    if (fp.max > 0) context.data.featPoints.tooltip += "\nMutation: " + fp.value + " / " + fp.max;
+
     context.data.featPoints.skulk = fp = { value: fpSpent.skulk.spent, max: fpSpent.skulk.max };
     overspent = overspent || (fp.value > fp.max);
+    if (fp.max > 0) context.data.featPoints.tooltip += "\nSkulk: " + fp.value + " / " + fp.max;
 
-    context.data.featPoints.tooltip = "Basic: " + context.data.featPoints.basic.value + " / " + context.data.featPoints.basic.max;
-    if (context.data.featPoints.rogue.max > 0)
-      context.data.featPoints.tooltip += "\nRogue: " + context.data.featPoints.rogue.value + " / " + context.data.featPoints.rogue.max;
-    if (context.data.featPoints.mutation.max > 0)
-      context.data.featPoints.tooltip += "\nMutation: " + context.data.featPoints.mutation.value + " / " + context.data.featPoints.mutation.max;
-    if (context.data.featPoints.skulk.max > 0)
-      context.data.featPoints.tooltip += "\nSkulk: " + context.data.featPoints.skulk.value + " / " + context.data.featPoints.skulk.max;
+    context.data.featPoints.theurge = fp = { value: fpSpent.theurge.spent, max: (fpSpent.theurge.max + context.data.spirit.mod) };
+    overspent = overspent || (fp.value > fp.max);
+    if (fp.max > 0) context.data.featPoints.tooltip += "\nDivine Bonds: " + fp.value + " / " + fp.max;
 
-    if (overspent)
-      context.data.featPoints.basic.color = "red";
+    if (overspent) context.data.featPoints.basic.color = "red";
   }
 
   /*
@@ -490,12 +492,14 @@ export class RedAgeActorSheet extends ActorSheet {
   }
 
   _calculateFeatPoints(items) {
-    let featPointsSpent = { basic: {spent: 0, max: 0}, rogue: {spent: 0, max: 0}, mutation: {spent: 0, max: 0}, skulk: {spent: 0, max: 0} };
+    let featPointsSpent = { basic: {spent: 0, max: 0}, rogue: {spent: 0, max: 0}, mutation: {spent: 0, max: 0}, skulk: {spent: 0, max: 0}, theurge: {spent: 0, max: 0} };
     var abhumanLevels = 0;
     for (let i of items) {
       if (i.type === "class") {
         if (i.name.toLowerCase() === "rogue")
           featPointsSpent.rogue.max = Math.min(15, i.data.classLevel + 5);
+        else if (i.name.toLowerCase() === "theurge")
+          featPointsSpent.theurge.max = Math.min(10, i.data.classLevel);
         else if (i.name.toLowerCase().includes("brute") || i.name.toLowerCase().includes("malison"))
           abhumanLevels += i.data.classLevel;
         else if (i.name.toLowerCase().includes("skulk"))
@@ -511,6 +515,8 @@ export class RedAgeActorSheet extends ActorSheet {
           featPointsSpent.skulk.spent += i.data.cost;
         else if (i.data.origin.toLowerCase() === "mutation")
           featPointsSpent.mutation.spent += i.data.cost;
+        else if (i.data.origin.toLowerCase() === "divine bond")
+          featPointsSpent.theurge.spent += i.data.resource.value;
         else
       	  featPointsSpent.basic.spent += i.data.cost;
       }

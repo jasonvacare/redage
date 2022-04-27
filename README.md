@@ -5,12 +5,11 @@
 2. Features
   A. Need compendium of feats
   B. Need compendium of class features (display class features nested under class, similar to spells by level?)
-    i. Cleric bonds
-  C. Feat points (total and spent, like levels?)
 3. Spells
   A. Compendium of spells
   B. Rollable spell entries (auto-decrement mana?)
   C. Spell inventory sorting (and in-location ordinal rearranging)
+  D. Spell origin (sorc, malison, world-affinity, divine bond; reflect divine bond rating as Pow cap)
 4. Resources
   A. Wounds
   B. Fatigue
