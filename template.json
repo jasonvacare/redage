@@ -45,17 +45,19 @@
 
 
   "Item": {
-    "types": [ "class", "feature", "spell", "weapon", "armor", "item", "featureFighter" ],
+    "types": [ "class", "spell", "weapon", "armor", "item", "feature", "featureFighter" ],
     "templates": {
       "base": {
         "description": "",
         "tags": []
       },
       "baseFeature": {
+        "group": "feat",
         "cost": 0,
         "origin": ""
       },
       "baseItem": {
+        "group": "item",
         "isLoot": false,
         "quantity": 1,
         "value": 0,
@@ -67,6 +69,7 @@
 
     "class": {
       "templates": [ "base" ],
+      "group": "feat",
       "classLevel": 0,
       "attackBonusPerLevel": 0,
       "startingHealth": 0,
@@ -181,6 +184,7 @@
 
     "spellContainer": {
       "templates": [ "base" ],
+      "group": "spell",
       "____spells": [],
       "____spellUuids": [],
       "origin": "",
@@ -193,6 +197,7 @@
 
     "____spell": {
       "____templates": [ "base" ],
+      "group": "spell",
       "____parent": null,
       "____castingTime": "1 action",
       "____duration": "Instant",

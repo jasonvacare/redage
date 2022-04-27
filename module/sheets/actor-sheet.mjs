@@ -12,8 +12,9 @@ export class RedAgeActorSheet extends ActorSheet {
       classes: ["redage", "sheet", "actor"],
       template: "systems/redage/templates/actor/actor-sheet.html",
       width: 600,
-      height: 600,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
+      height: 700,
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
+      dragDrop: [{ dragSelector: ".items-list .item", dropSelector: null }]
     });
   }
 
@@ -139,7 +140,7 @@ export class RedAgeActorSheet extends ActorSheet {
       i.img = i.img || DEFAULT_TOKEN;
 
       // Append to gear.
-      if (REDAGE.isType(i, ['item', 'weapon', 'armor']))
+      if (i.data.group === "item")
       {
         i.data.locations = REDAGE.ItemLocations;
         gear.push(i);
@@ -152,13 +153,13 @@ export class RedAgeActorSheet extends ActorSheet {
       }
 
       // Append to features.
-      else if (REDAGE.isType(i, ['class', 'feature', 'featureSkill', 'featureRollable', 'featureResource', 'featureFighter']))
+      else if (i.data.group === "feat")
       {
         features.push(i);
       }
 
       // Append to spells.
-      else if (i.type === 'spell')
+      else if (i.data.group === "spell")
       {
         if (i.data.spellLevel != undefined)
         {
@@ -323,6 +324,83 @@ export class RedAgeActorSheet extends ActorSheet {
 
     item.delete();
     li.slideUp(200, () => this.render(false));
+  }
+
+  async _onDrop(event) {
+    let data;
+    try {
+      data = JSON.parse(event.dataTransfer.getData('text/plain'));
+    }
+    catch (err) {
+      return false;
+    }
+
+    const actor = this.actor;
+
+    // Handle the drop with a Hooked function
+    const allowed = Hooks.call("dropActorSheetData", actor, this, data);
+    if (allowed === false) return;
+
+    switch (data.type) {
+      case "ActiveEffect": return this._onDropActiveEffect(event, data);
+      case "Actor": return this._onDropActor(event, data);
+      case "Item": return this._onDropItem(event, data);
+    }
+  }
+
+  // DOES NOTHING RIGHT NOW
+  async _onDropActor(event, data) {
+    if (!this.actor.isOwner) return false;
+  }
+
+  // DOES NOTHING RIGHT NOW
+  async _onDropActiveEffect(event, data) {
+    if (!this.actor.isOwner) return false;
+  }
+
+  // sorts item if dropped into own inventory, or creates it if transfered to another character
+  async _onDropItem(event, data) {
+    if (!this.actor.isOwner) return false;
+
+    const item = await Item.implementation.fromDropData(data);
+    const itemData = item.toObject();
+
+    // Handle item sorting within the same actor
+    const actor = this.actor;
+    let sameActor = (data.actorId === actor.id) || (actor.isToken && (data.tokenId === actor.token.id));
+    if (sameActor) return this._onSortItem(event, itemData);
+
+    // Else, create the owned item
+    return this._onDropItemCreate(itemData);
+  }
+
+  _onSortItem(event, itemData) {
+    // Get the drag source and its siblings
+    const source = this.actor.items.get(itemData._id);
+
+    // get all items of the same group type
+    const siblings = this.actor.items.filter(i => {
+      return (i.data.data.group === itemData.data.group && (i.data._id != source.data._id));
+    });
+
+    // Get the drop target
+    const dropTarget = event.target.closest("[data-item-id]");
+    const targetId = dropTarget ? dropTarget.dataset.itemId : null;
+    const target = siblings.find(s => s.data._id === targetId);
+
+    // Ensure we're only sorting like group types
+    if (target && (source.data.data.group !== target.data.data.group)) return;
+
+    // Perform the sort
+    const sortUpdates = SortingHelpers.performIntegerSort(source, { target: target, siblings });
+    const updateData = sortUpdates.map(u => {
+      const update = u.update;
+      update._id = u.target.data._id;
+      return update;
+    });
+
+    // Perform the update
+    return this.actor.updateEmbeddedDocuments("Item", updateData);
   }
 
   /**
