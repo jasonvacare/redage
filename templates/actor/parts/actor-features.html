@@ -21,32 +21,39 @@
         <span>{{item.data.tags}}</span>
       </div>
 
-			<!-- Class specifics -->
-			{{#if (eq 'class' item.type)}}
-			<div class="item-prop">
-				<span>Level: {{item.data.classLevel}}</span>
-			</div>
+      <!-- Class specifics -->
+      {{#if (eq 'class' item.type)}}
+      <div class="item-prop">
+        <span>Level: {{item.data.classLevel}}</span>
+      </div>
 
-			<!-- Feat type -->
-			{{else if (eq 'feature' item.type)}}
-			<div class="item-prop">
-			</div>
+      <!-- Feat Basic -->
+      {{else if (eq 'feature' item.type)}}
+      <div class="item-prop">
+      </div>
 
-			<!-- Feat Skill -->
+      <!-- Feat Skill -->
       {{else if (eq 'featureSkill' item.type)}}
-			<div class="item-prop">
+      <div class="item-prop">
+				<span>
+        {{#if (eq '1' item.data.tier)}}
+        Skilled
+        {{else if (eq '2' item.data.tier)}}
+        Expert
+        {{else}}
+        {{item.data.tier}}
+        {{/if}}
+        ({{item.data.defaultStat}} {{item.data.defaultRoll}})</span>
 			</div>
 
- 			<!-- Feat Rollable -->
+      <!-- Feat Rollable -->
       {{else if (eq 'featureRollable' item.type)}}
       <div class="item-prop">
+        {{item.data.formula}}
       </div>
 
- 			<!-- Feat Resource -->
+      <!-- Feat Resource -->
       {{else if (eq 'featureResource' item.type)}}
-      <div class="item-prop">
-      </div>
-
       <div class="item-prop">
         <span>
           <a class="item-control item-dec" title="Decrement"> <i class="fas fa-caret-left"> </i> </a>

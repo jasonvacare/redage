@@ -117,7 +117,9 @@
     },
     "featureSkill": {
       "templates": [ "base", "baseFeature" ],
-      "tier": 0
+      "tier": 0,
+      "defaultStat": "Vigor",
+      "defaultRoll": "Bonus"
     },
     "featureRollable": {
       "templates": [ "base", "baseFeature" ],

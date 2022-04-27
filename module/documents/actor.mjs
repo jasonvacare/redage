@@ -183,7 +183,7 @@ export class RedAgeActor extends Actor {
     for (let i of items) {
       if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
       	if (i.data.data.location == REDAGE.INV_READY || i.data.data.location == REDAGE.INV_WORN || i.data.data.location == REDAGE.INV_STOWED)
-      		carriedWeight += Math.round(i.data.data.quantity * i.data.data.weight);
+      		carriedWeight += Math.round(i.data.data.quantity.value * i.data.data.weight);
       }
     }
 

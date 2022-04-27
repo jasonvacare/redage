@@ -453,17 +453,16 @@ export class RedAgeActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
 
-    // Handle item rolls.
-    if (dataset.rollType) {
+    if (dataset.rollType)
+    {
+      // Handle item rolls.
       if (dataset.rollType == 'item') {
         const itemId = element.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
         if (item) return item.roll();
       }
-    }
 
-    // Handle stat rolls.
-    if (dataset.rollType) {
+      // Handle stat rolls.
       if (dataset.rollType == 'stat') {
         this._onStatRoll(dataset);
       }

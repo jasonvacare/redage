@@ -15,6 +15,39 @@
 				</div>
 			</div>
 
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Stat</label>
+          <select name="data.defaultStat" data-dtype="String">
+            {{#select data.defaultStat}}
+            <option value="Vigor" data-dtype="String">Vigor</option>
+            <option value="Dexterity" data-dtype="String">Dexterity</option>
+            <option value="Wits" data-dtype="String">Wits</option>
+            <option value="Spirit" data-dtype="String">Spirit</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Type</label>
+          <select name="data.defaultRoll" data-dtype="String">
+            {{#select data.defaultRoll}}
+            <option value="Bonus" data-dtype="String">Bonus</option>
+            <option value="Mod" data-dtype="String">Mod</option>
+            <option value="Save" data-dtype="String">Save</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Tier</label>
+          <select name="data.tier" data-dtype="String">
+            {{#select data.tier}}
+            <option value="1" data-dtype="Number">Skilled</option>
+            <option value="2" data-dtype="Number">Expert</option>
+            {{/select}}
+          </select>
+        </div>
+      </div>
+
     </div>
 	</header>
 

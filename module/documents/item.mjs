@@ -39,11 +39,15 @@ export class RedAgeItem extends Item {
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
     const rollMode = game.settings.get('core', 'rollMode');
-    const label = `[${item.type}] ${item.name}`;
+    var label = `[${item.type}] ${item.name}`;
 
     var formula = null;
     if (item.type === "weapon") {
 			return this._onWeaponAttackRoll(item, actor);
+    }
+    else if (item.type === "featureRollable") {
+      formula = item.data.formula;
+      label = `${item.name}`;
     }
 
     // If there's no roll data, send a chat message.
