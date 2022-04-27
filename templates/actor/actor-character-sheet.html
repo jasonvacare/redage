@@ -87,36 +87,36 @@
 					<div class="ability flexrow flex-group-center">
 						<label for="data.vigor.value" class="resource-label flexlarge align-left" data-label="Vigor">Vigor</label>
 						<input type="text" name="data.vigor.value" value="{{data.vigor.value}}" data-dtype="Number"/>
-						<span class="ability-bonus rollable" data-roll="d20+@vigor.bonus" data-label="Vigor Bonus">{{numberFormat data.vigor.bonus decimals=0 sign=true}}</span>
-						<span class="ability-mod rollable" data-roll="d20+@vigor.mod" data-label="Vigor Mod">{{numberFormat data.vigor.mod decimals=0 sign=true}}</span>
+						<span class="ability-bonus rollable" data-roll-type="stat" data-label="Vigor Bonus">{{numberFormat data.vigor.bonus decimals=0 sign=true}}</span>
+						<span class="ability-mod rollable" data-roll-type="stat" data-label="Vigor Mod">{{numberFormat data.vigor.mod decimals=0 sign=true}}</span>
 						<input type="checkbox" name="data.vigor.proficientSave" {{checked data.vigor.proficientSave}} data-dtype="Boolean" />
-						<span class="ability-save rollable" data-roll="d20+@vigor.save" data-label="Vigor Save">{{numberFormat data.vigor.save decimals=0 sign=true}}</span>
+						<span class="ability-save rollable" data-roll-type="stat" data-label="Vigor Save">{{numberFormat data.vigor.save decimals=0 sign=true}}</span>
 					</div>
 					<div class="ability flexrow flex-group-center">
 						<label for="data.dexterity.value" class="resource-label flexlarge align-left" data-label="Dexterity">Dexterity</label>
 						<input type="text" name="data.dexterity.value" value="{{data.dexterity.value}}" data-dtype="Number"/>
-						<span id="ability_dexBonus" class="ability-bonus rollable" data-roll="d20+@dexterity.bonus" data-label="Dexterity Bonus">{{numberFormat data.dexterity.bonus decimals=0 sign=true}}</span>
-						<span id="ability_dexMod" class="ability-mod rollable" data-roll="d20+@dexterity.mod" data-label="Dexterity Mod">
+						<span id="ability_dexBonus" class="ability-bonus rollable" data-roll-type="stat" data-label="Dexterity Bonus">{{numberFormat data.dexterity.bonus decimals=0 sign=true}}</span>
+						<span id="ability_dexMod" class="ability-mod rollable" data-roll-type="stat" data-label="Dexterity Mod">
 							{{numberFormat data.dexterity.mod decimals=0 sign=true}}</span>
 						<input type="checkbox" name="data.dexterity.proficientSave" {{checked data.dexterity.proficientSave}} data-dtype="Boolean" />
-						<span class="ability-save rollable" data-roll="d20+@dexterity.save" data-label="Dexterity Save">
+						<span class="ability-save rollable" data-roll-type="stat" data-label="Dexterity Save">
 							{{numberFormat data.dexterity.save decimals=0 sign=true}}</span>
 					</div>
 					<div class="ability flexrow flex-group-center">
 						<label for="data.wits.value" class="resource-label flexlarge align-left" data-label="Wits">Wits</label>
 						<input type="text" name="data.wits.value" value="{{data.wits.value}}" data-dtype="Number"/>
-						<span class="ability-bonus rollable" data-roll="d20+@wits.bonus" data-label="Wits Bonus">{{numberFormat data.wits.bonus decimals=0 sign=true}}</span>
-						<span class="ability-mod rollable" data-roll="d20+@wits.mod" data-label="Wits Mod">{{numberFormat data.wits.mod decimals=0 sign=true}}</span>
+						<span class="ability-bonus rollable" data-roll-type="stat" data-label="Wits Bonus">{{numberFormat data.wits.bonus decimals=0 sign=true}}</span>
+						<span class="ability-mod rollable" data-roll-type="stat" data-label="Wits Mod">{{numberFormat data.wits.mod decimals=0 sign=true}}</span>
 						<input type="checkbox" name="data.wits.proficientSave" {{checked data.wits.proficientSave}} data-dtype="Boolean" />
-						<span class="ability-save rollable" data-roll="d20+@wits.save" data-label="Wits Save">{{numberFormat data.wits.save decimals=0 sign=true}}</span>
+						<span class="ability-save rollable" data-roll-type="stat" data-label="Wits Save">{{numberFormat data.wits.save decimals=0 sign=true}}</span>
 					</div>
 					<div class="ability flexrow flex-group-center">
 						<label for="data.spirit.value" class="resource-label flexlarge align-left" data-label="Spirit">Spirit</label>
 						<input type="text" name="data.spirit.value" value="{{data.spirit.value}}" data-dtype="Number"/>
-						<span class="ability-bonus rollable" data-roll="d20+@spirit.bonus" data-label="Spirit Bonus">{{numberFormat data.spirit.bonus decimals=0 sign=true}}</span>
-						<span class="ability-mod rollable" data-roll="d20+@spirit.mod" data-label="Spirit Mod">{{numberFormat data.spirit.mod decimals=0 sign=true}}</span>
+						<span class="ability-bonus rollable" data-roll-type="stat" data-label="Spirit Bonus">{{numberFormat data.spirit.bonus decimals=0 sign=true}}</span>
+						<span class="ability-mod rollable" data-roll-type="stat" data-label="Spirit Mod">{{numberFormat data.spirit.mod decimals=0 sign=true}}</span>
 						<input type="checkbox" name="data.spirit.proficientSave" {{checked data.spirit.proficientSave}} data-dtype="Boolean" />
-						<span class="ability-save rollable" data-roll="d20+@spirit.save" data-label="Spirit Save">{{numberFormat data.spirit.save decimals=0 sign=true}}</span>
+						<span class="ability-save rollable" data-roll-type="stat" data-label="Spirit Save">{{numberFormat data.spirit.save decimals=0 sign=true}}</span>
 					</div>
 
 					<hr>
@@ -191,7 +191,7 @@
 
     {{!-- Owned Spells Tab --}}
     <div class="tab spells" data-group="primary" data-tab="spells">
-      {{> "systems/redage/templates/actor/parts/actor-spells.html"}}
+      {{> "systems/redage/templates/actor/parts/actor-spellContainers.html"}}
     </div>
 
     {{!-- Active Effects Tab --}}

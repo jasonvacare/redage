@@ -113,7 +113,9 @@ export class RedAgeActorSheet extends ActorSheet {
     	Camp: [],
     	Town: []
     };
+
     const features = [];
+
     const spells = {
       0: [],
       1: [],
@@ -126,12 +128,19 @@ export class RedAgeActorSheet extends ActorSheet {
       8: [],
       9: []
     };
+    const spellsByLoc = {
+    	Inventory: [],
+    	Camp: [],
+    	Town: []
+    };
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
+
       // Append to gear.
-      if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
+      if (REDAGE.isType(i, ['item', 'weapon', 'armor']))
+      {
         i.data.locations = REDAGE.ItemLocations;
         gear.push(i);
         if (i.data.location == REDAGE.INV_CAMP)
@@ -141,15 +150,30 @@ export class RedAgeActorSheet extends ActorSheet {
         else
         	gearByLoc.Inventory.push(i);
       }
+
       // Append to features.
-      else if (i.type === 'feature' || i.type === 'class' || i.type === 'featureFighter') {
+      else if (REDAGE.isType(i, ['class', 'feature', 'featureSkill', 'featureRollable', 'featureResource', 'featureFighter']))
+      {
         features.push(i);
       }
+
       // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.data.spellLevel != undefined) {
+      else if (i.type === 'spell')
+      {
+        if (i.data.spellLevel != undefined)
+        {
           spells[i.data.spellLevel].push(i);
         }
+
+        i.data.locations = REDAGE.SpellLocations;
+        gear.push(i);
+        if (i.data.location == REDAGE.SPELL_CAMP)
+        	spellsByLoc.Camp.push(i);
+        else if (i.data.location == REDAGE.SPELL_TOWN)
+        	spellsByLoc.Town.push(i);
+        else
+        	spellsByLoc.Inventory.push(i);
+
       }
     }
 
@@ -160,11 +184,19 @@ export class RedAgeActorSheet extends ActorSheet {
    		return one - two;
     });
 
+		// sort gear by location
+    spellsByLoc.Inventory.sort((first, second) => {
+      let one = REDAGE.ordinal(first.data.location, REDAGE.SpellLocations);
+      let two = REDAGE.ordinal(second.data.location, REDAGE.SpellLocations);
+      return one - two;
+   });
+
     // Assign and return
     context.gear = gear;
     context.gearByLoc = gearByLoc;
     context.features = features;
     context.spells = spells;
+    context.spellsByLoc = spellsByLoc;
    }
 
   /* -------------------------------------------- */
@@ -312,6 +344,13 @@ export class RedAgeActorSheet extends ActorSheet {
       }
     }
 
+    // Handle stat rolls.
+    if (dataset.rollType) {
+      if (dataset.rollType == 'stat') {
+        this._onStatRoll(dataset);
+      }
+    }
+    
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {      
       let label = dataset.label ? `${dataset.label}` : '';
@@ -325,7 +364,8 @@ export class RedAgeActorSheet extends ActorSheet {
     }
   }
 
-  // helper functions
+  // Helper Functions
+
   _calculateClassLevels(items) {   
     let classes = items.filter((item) => { return item.type === "class"; });
     if (classes.length === 0) return 0;
@@ -334,14 +374,137 @@ export class RedAgeActorSheet extends ActorSheet {
   }
 
   _calculateFeatPoints(items) {
-  	let featPointsSpent = 0;
-
+    let featPointsSpent = 0;
     for (let i of items) {
       if (i.type === 'feature') {
       	featPointsSpent += i.data.cost;
       }
     }
-
     return featPointsSpent;
   }
+
+
+
+	/**
+	* Prep and display stat roll dialog
+	*/
+  async _onStatRoll(dataset) {
+
+    const actor = this.actor;
+    const rollType = dataset.label.toLowerCase().split(' ');
+
+    var formula = "@" + rollType[0] + "." + rollType[1];
+		var adShift = 3;
+    const rollData = this.actor.getRollData();
+    const statRoll = new Roll(formula, rollData);
+
+		const dialogData = {
+			actor: actor,
+      label: dataset.label,
+			formula: formula,
+			statRoll: statRoll,
+			adShift: adShift,
+			adLadder: ["+3D", "+2D", "+D", "Normal", "+A", "+2A", "+3A"],
+			rollData: rollData
+		};
+
+		const template = "systems/redage/templates/dialogs/roll-stat.html";
+		const html = await renderTemplate(template, dialogData);
+
+		// this.tempData is a temporary place to store data for inter-function transport
+		// the dialog callback only passes its own html as text, so we need a way to move data
+		// it can be overwritten as needed
+		this.tempData = dialogData;
+
+		const _doRoll = async (html) => { return this._doStatRoll(html, this.tempData); };
+
+		this.popUpDialog = new Dialog({
+			title: actor.name + " - " + dataset.label,
+			content: html,
+			default: "roll",
+			buttons: {
+				roll: {
+					label: "Roll",
+					callback: (html) => _doRoll(html),
+				},
+				cancel: {
+					label: "Cancel",
+					callback: () => { ; },
+				}
+			},
+		});
+
+		const s = this.popUpDialog.render(true);
+
+		if (s instanceof Promise)
+			await s;
+
+		return this.tempData.chatMessage;
+	}
+
+	/**
+	* Actual processing and output of stat roll
+	*/
+	async _doStatRoll(html, dialogData) {
+
+		const actor = dialogData.actor;
+
+		dialogData.rollNotes = [];
+
+		// get data from dialog
+		var _a;
+		const form = html[0].querySelector("form");
+		const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
+
+		// handle advantage / disadvantage on roll
+		const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+		var dice = (Math.abs(adShift)+1) + "d20";
+		if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
+		dialogData.formula = dice + " + " + dialogData.formula;
+		if (adShift != 0) dialogData.rollNotes.push(adShiftLadder[adShift+3]);
+
+		// handle roll
+		const statRoll = new Roll(dialogData.formula, dialogData.rollData);
+		await statRoll.evaluate({async: true});
+
+		// handle special rolls (crit, fumble)
+		const rollD20Result = statRoll.terms[0].total;
+		var critThreshold = 20;
+		var fumbleThreshold = 1;
+
+		if (rollD20Result >= critThreshold)
+			dialogData.rollNotes.push("Crit");
+		else if (rollD20Result <= fumbleThreshold)
+			dialogData.rollNotes.push("Fumble");
+
+    const rollMode = game.settings.get("core", "rollMode");
+		const diceData = Roll.fromTerms([
+			PoolTerm.fromRolls([statRoll]),
+		]);
+
+
+		const diceTooltip = { roll: await statRoll.render() };
+
+		dialogData.statRoll = statRoll;
+		dialogData.diceTooltip = diceTooltip;
+		dialogData.rollNotes = (dialogData.rollNotes.length > 0) ? "(" + dialogData.rollNotes.join(", ") + ")" : "";
+
+		const template = "systems/redage/templates/chat/stat-roll.html";
+		const chatContent = await renderTemplate(template, dialogData);
+		const chatMessage = getDocumentClass("ChatMessage");
+		chatMessage.create(
+			chatMessage.applyRollMode(
+			{
+				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+				roll: JSON.stringify(diceData),
+				content: chatContent,
+				type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+			},
+			rollMode
+			)
+		);
+
+		this.tempData.chatMessage = chatMessage;
+		return chatMessage;
+	}
 }

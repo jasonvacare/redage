@@ -120,3 +120,9 @@ REDAGE.ordinal = function(listElement, list) {
   let result = list.findIndex(element => element === listElement);
   return (result == -1) ? list.length+1 : result;
 }
+
+REDAGE.isType = function(item, list) {
+
+  let result = list.findIndex(element => element === item.type);
+  return (result != -1);
+}

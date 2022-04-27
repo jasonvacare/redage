@@ -1,0 +1,19 @@
+<form class="{{cssClass}}" autocomplete="off" xmlns="http://www.w3.org/1999/html">
+
+	<div class="grid grid-3col">
+		<label class="resource-label">{{label}}</label>
+		<span class="box-title" title="{{formula}}">{{statRoll.result}}</span>
+		<div class="item-prop">
+      <span>
+        <select name="adShift" data-dtype="String" class="item-control item-relocate">
+          {{#select adShift}}
+          {{#each adLadder as |ad id|}}
+            <option value="{{id}}" data-dtype="String">{{ad}}</option>
+          {{/each}}
+          {{/select}}
+        </select>
+      </span>
+		</div>
+	</div>
+
+</form>
