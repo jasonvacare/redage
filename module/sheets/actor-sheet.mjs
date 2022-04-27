@@ -459,12 +459,21 @@ export class RedAgeActorSheet extends ActorSheet {
       if (dataset.rollType == 'item') {
         const itemId = element.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
-        if (item) return item.roll();
+        if (item) {
+          if (item.type === "featureSkill")
+          {
+            let featMod = (item.data.data.tier == 1) ? "@skilled" : ((item.data.data.tier == 2) ? "@expert" : "");
+            this._onStatRoll(item.name, item.data.data.defaultStat, item.data.data.defaultRoll, featMod);
+          }
+          else
+            return item.roll();
+        }
       }
 
       // Handle stat rolls.
       if (dataset.rollType == 'stat') {
-        this._onStatRoll(dataset);
+        let rollType = dataset.label.split(' ');
+        this._onStatRoll("Stat Roll", rollType[0], rollType[1], "");
       }
     }
     
@@ -528,21 +537,18 @@ export class RedAgeActorSheet extends ActorSheet {
 	/**
 	* Prep and display stat roll dialog
 	*/
-  async _onStatRoll(dataset) {
+  async _onStatRoll(label, defaultStat, defaultRoll, modifiers) {
 
     const actor = this.actor;
-    const rollType = dataset.label.toLowerCase().split(' ');
-
-    var formula = "@" + rollType[0] + "." + rollType[1];
 		var adShift = 3;
     const rollData = this.actor.getRollData();
-    const statRoll = new Roll(formula, rollData);
 
 		const dialogData = {
 			actor: actor,
-      label: dataset.label,
-			formula: formula,
-			statRoll: statRoll,
+      label: label,
+      defaultStat: defaultStat,
+      defaultRoll: defaultRoll,
+      modifiers: modifiers,
 			adShift: adShift,
 			adLadder: ["+3D", "+2D", "+D", "Normal", "+A", "+2A", "+3A"],
 			rollData: rollData
@@ -559,7 +565,7 @@ export class RedAgeActorSheet extends ActorSheet {
 		const _doRoll = async (html) => { return this._doStatRoll(html, this.tempData); };
 
 		this.popUpDialog = new Dialog({
-			title: actor.name + " - " + dataset.label,
+			title: actor.name + " - " + label,
 			content: html,
 			default: "roll",
 			buttons: {
@@ -595,6 +601,28 @@ export class RedAgeActorSheet extends ActorSheet {
 		var _a;
 		const form = html[0].querySelector("form");
 		const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
+    dialogData.defaultStat = (_a = form.querySelector('[name="defaultStat"]')) === null || _a === void 0 ? void 0 : _a.value;
+    dialogData.defaultRoll = (_a = form.querySelector('[name="defaultRoll"]')) === null || _a === void 0 ? void 0 : _a.value;
+
+    dialogData.modifiers = (_a = form.querySelector('[name="modifiers"]')) === null || _a === void 0 ? void 0 : _a.value;
+    if (dialogData.defaultRoll.toLowerCase() === "bonus") {
+      dialogData.rollData.skilled = "5";
+      dialogData.rollData.expert = "10";
+    }
+    else {
+      dialogData.rollData.skilled = dialogData.actor.data.data.halfProficiencyBonus;
+      dialogData.rollData.expert = dialogData.actor.data.data.proficiencyBonus;
+    }
+
+    dialogData.rollNotes.push(dialogData.defaultStat + " " + dialogData.defaultRoll);
+    if (dialogData.modifiers.toLowerCase().includes("skilled"))
+      dialogData.rollNotes.push("Skilled");
+    else if (dialogData.modifiers.toLowerCase().includes("expert"))
+      dialogData.rollNotes.push("Expert");
+
+    dialogData.formula = "@" + dialogData.defaultStat.toLowerCase() + "." + dialogData.defaultRoll.toLowerCase();
+    if (dialogData.modifiers)
+      dialogData.formula = dialogData.formula + " + " + dialogData.modifiers;
 
 		// handle advantage / disadvantage on roll
 		const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
