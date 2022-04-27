@@ -70,33 +70,57 @@ export class RedAgeActorSheet extends ActorSheet {
   _prepareCharacterData(context) {
     context.data.classLevels = this._calculateClassLevels(context.items);
 
-		switch (context.data.carried.loadLevel)
-		{
-		case REDAGE.LOAD_LIGHT: context.data.carried.color = "blue";
-			context.data.carried.tooltip = "";
-			break;
-		case REDAGE.LOAD_MEDIUM: context.data.carried.color = "green";
-			context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
-			break;
-		case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow";
-			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
-			break;
-		default: context.data.carried.color = "red";
-			context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed 6x\nCan't swim\nFatigue every 10 min";
-			break;
-		}
+    // Highlight load level and supply tooltip
+    switch (context.data.carried.loadLevel)
+    {
+    case REDAGE.LOAD_LIGHT: context.data.carried.color = "blue";
+      context.data.carried.tooltip = "";
+      break;
+    case REDAGE.LOAD_MEDIUM: context.data.carried.color = "green";
+      context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
+      break;
+    case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow";
+      context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
+      break;
+    default: context.data.carried.color = "red";
+      context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed 6x\nCan't swim\nFatigue every 10 min";
+      break;
+    }
 
-		context.data.readied.color = (context.data.readied.value > context.data.readied.max) ? "red" : "";
+    // Highlight if too many items are readied
+    context.data.readied.color = (context.data.readied.value > context.data.readied.max) ? "red" : "";
 
     // TODO visual indicator showing that your dex / mod have been capped down by armor (color, small icon)?
     // tooltip of the elements summed into your defense, including clumsy penalty
     // all stats show green / red color and icon to indicate alteration from base
 
-		context.data.featPoints = { value: this._calculateFeatPoints(context.items) };
-		let mundaneFP = Math.floor(Math.min(context.data.characterLevel, REDAGE.HeroicLevelThreshold) / 2);
-		let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;
- 		context.data.featPoints.max = 2 + context.data.wits.mod + mundaneFP + heroicFP;
- 		context.data.featPoints.color = (context.data.featPoints.value > context.data.featPoints.max) ? "red" : "";
+    // Determine feat points available and used (basic and class subtypes), highlight if overspent
+    context.data.featPoints = { tooltip: ""};
+    var fpSpent = this._calculateFeatPoints(context.items);
+		var fp = { value: fpSpent.basic.spent };
+    context.data.featPoints.basic = fp;
+    let mundaneFP = Math.floor(Math.min(context.data.characterLevel, REDAGE.HeroicLevelThreshold) / 2);
+    let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;
+ 		fp.max = 2 + context.data.wits.mod + mundaneFP + heroicFP;
+    var overspent = (fp.value > fp.max);
+
+    context.data.featPoints.rogue = fp = { value: fpSpent.rogue.spent, max: fpSpent.rogue.max };
+    overspent = overspent || (fp.value > fp.max);
+    context.data.featPoints.mutation = fp = { value: fpSpent.mutation.spent, max: fpSpent.mutation.max };
+    overspent = overspent || (fp.value > fp.max);
+    context.data.featPoints.skulk = fp = { value: fpSpent.skulk.spent, max: fpSpent.skulk.max };
+    overspent = overspent || (fp.value > fp.max);
+
+    context.data.featPoints.tooltip = "Basic: " + context.data.featPoints.basic.value + " / " + context.data.featPoints.basic.max;
+    if (context.data.featPoints.rogue.max > 0)
+      context.data.featPoints.tooltip += "\nRogue: " + context.data.featPoints.rogue.value + " / " + context.data.featPoints.rogue.max;
+    if (context.data.featPoints.mutation.max > 0)
+      context.data.featPoints.tooltip += "\nMutation: " + context.data.featPoints.mutation.value + " / " + context.data.featPoints.mutation.max;
+    if (context.data.featPoints.skulk.max > 0)
+      context.data.featPoints.tooltip += "\nSkulk: " + context.data.featPoints.skulk.value + " / " + context.data.featPoints.skulk.max;
+
+    if (overspent)
+      context.data.featPoints.basic.color = "red";
   }
 
   /*
@@ -466,16 +490,35 @@ export class RedAgeActorSheet extends ActorSheet {
   }
 
   _calculateFeatPoints(items) {
-    let featPointsSpent = 0;
+    let featPointsSpent = { basic: {spent: 0, max: 0}, rogue: {spent: 0, max: 0}, mutation: {spent: 0, max: 0}, skulk: {spent: 0, max: 0} };
+    var abhumanLevels = 0;
     for (let i of items) {
-      if (i.type === 'feature') {
-      	featPointsSpent += i.data.cost;
+      if (i.type === "class") {
+        if (i.name.toLowerCase() === "rogue")
+          featPointsSpent.rogue.max = Math.min(15, i.data.classLevel + 5);
+        else if (i.name.toLowerCase().includes("brute") || i.name.toLowerCase().includes("malison"))
+          abhumanLevels += i.data.classLevel;
+        else if (i.name.toLowerCase().includes("skulk"))
+        {
+          abhumanLevels += i.data.classLevel;
+          featPointsSpent.skulk.max = Math.min(8, Math.floor(i.data.classLevel / 2) + 3);
+        }
+      }
+      else if (i.data.group === "feat") {
+        if (i.data.origin.toLowerCase() === "rogue")
+          featPointsSpent.rogue.spent += i.data.cost;
+        else if (i.data.origin.toLowerCase() === "skulk")
+          featPointsSpent.skulk.spent += i.data.cost;
+        else if (i.data.origin.toLowerCase() === "mutation")
+          featPointsSpent.mutation.spent += i.data.cost;
+        else
+      	  featPointsSpent.basic.spent += i.data.cost;
       }
     }
+    if (abhumanLevels > 0)
+      featPointsSpent.mutation.max = Math.min(13, abhumanLevels + 3);
     return featPointsSpent;
   }
-
-
 
 	/**
 	* Prep and display stat roll dialog
