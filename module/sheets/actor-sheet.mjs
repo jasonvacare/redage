@@ -230,22 +230,8 @@ export class RedAgeActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Incrementable / Decrementable quantities
-    html.find('.item-inc').click(ev => {
-	    ev.preventDefault();
-      ev.stopPropagation();
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.data.data.quantity = item.data.data.quantity + 1;
-			item.update({ "data.quantity": item.data.data.quantity }, {});
-    });
-    html.find('.item-dec').click(ev => {
-	    ev.preventDefault();
-      ev.stopPropagation();
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.data.data.quantity = Math.max(0, item.data.data.quantity - 1);
-			item.update({ "data.quantity": item.data.data.quantity }, {});
-    });
+    html.find('.item-inc').click(ev => { this._incdec(ev, 1); });
+    html.find('.item-dec').click(ev => { this._incdec(ev, -1); });
 
     // Relocate item in inventory
     html.find(".item-relocate").on("change", ev => {
@@ -402,6 +388,34 @@ export class RedAgeActorSheet extends ActorSheet {
     // Perform the update
     return this.actor.updateEmbeddedDocuments("Item", updateData);
   }
+
+  _incdec(ev, delta) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const li = $(ev.currentTarget).parents(".item");
+    const item = this.actor.items.get(li.data("itemId"));
+    var entry;
+    var quantityName;
+    if (item.data.data.group === "item") {
+      entry = item.data.data.quantity;
+      quantityName = "data.quantity.value";
+    }
+    else if (item.data.data.group === "feat") {
+      entry = item.data.data.resource;
+      quantityName = "data.resource.value";
+    }
+
+    entry.value = entry.value + delta;
+    if (entry.max != null)
+      entry.value = Math.min(entry.max, entry.value);
+    if (entry.min != null)
+    entry.value = Math.max(entry.min, entry.value);
+
+    const val = { };
+    val[quantityName] = entry.value;
+    item.update(val, {});
+  }
+
 
   /**
    * Handle clickable rolls.

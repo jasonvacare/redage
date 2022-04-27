@@ -45,7 +45,11 @@
 
 
   "Item": {
-    "types": [ "class", "spell", "weapon", "armor", "item", "feature", "featureFighter" ],
+    "types": [ 
+      "weapon", "armor", "item", 
+      "spell",
+      "class", "feature", "featureSkill", "featureRollable", "featureResource", "featureFighter"
+    ],
     "templates": {
       "base": {
         "description": "",
@@ -59,7 +63,11 @@
       "baseItem": {
         "group": "item",
         "isLoot": false,
-        "quantity": 1,
+        "quantity": {
+          "value": 1,
+          "min": 0,
+          "max": null
+        },
         "value": 0,
         "weight": 0,
         "location": "Stowed",
