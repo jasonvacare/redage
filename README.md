@@ -31,7 +31,7 @@ Hard Mode
 3. How to make the player view of a sheet different than the compendium entry view
   A. For example, make a weapon forceful and/or finesse in the compendium, and the player view enforces that
 4. Weapon and spell roll interstial dialogs
-   A. Weapon dialog needs to be fancied up a bit (+A/D, supremacy, sneak attack, etc options)
+   A. Weapon dialog needs to be fancied up a bit (supremacy, sneak attack, etc)
 5. Get array-based lists working (e.g. weapon/armor qualities, etc)
 6. Item / spell / class / feature icons
 7. Visually note on stat block when dex/DEX are lowered by armor.

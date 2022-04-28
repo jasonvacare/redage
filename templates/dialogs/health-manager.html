@@ -1,0 +1,45 @@
+<form class="{{cssClass}}" autocomplete="off" xmlns="http://www.w3.org/1999/html">
+
+  <div class="grid grid-4col">
+    <div class="resource">
+      <label for="health.value" class="resource-label">Health</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="health.value" value="{{actor.data.data.health.value}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="health.temp" class="resource-label">Temp</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="health.temp" value="{{actor.data.data.health.temp}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="health.reserve" class="resource-label">Reserve</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="health.reserve" value="{{actor.data.data.health.reserve}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="health.max" class="resource-label">Max</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <span>{{actor.data.data.health.max}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-4col">
+    <div class="resource">
+      <label for="life.value" class="resource-label">Life</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="life.value" value="{{actor.data.data.life.value}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="life.max" class="resource-label">Max</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <span>{{actor.data.data.life.max}}</span>
+      </div>
+    </div>
+  </div>
+
+</form>
