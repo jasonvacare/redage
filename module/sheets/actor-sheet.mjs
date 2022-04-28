@@ -90,6 +90,10 @@ export class RedAgeActorSheet extends ActorSheet {
     // Highlight if too many items are readied
     context.data.readied.color = (context.data.readied.value > context.data.readied.max) ? "red" : "";
 
+    context.data.health.tooltip = "Reserve: " + context.data.health.reserve;
+    if (context.data.health.temp > 0)
+      context.data.health.tooltip += "\nTemp: " + context.data.health.temp;
+
     // TODO visual indicator showing that your dex / mod have been capped down by armor (color, small icon)?
     // tooltip of the elements summed into your defense, including clumsy penalty
     // all stats show green / red color and icon to indicate alteration from base
@@ -469,15 +473,18 @@ export class RedAgeActorSheet extends ActorSheet {
             return item.roll();
         }
       }
-      // Handle stat rolls.
+      // Handle stat rolls
       else if (dataset.rollType == 'stat') {
         let rollType = dataset.label.split(' ');
         this._onStatRoll("Stat Roll", rollType[0], rollType[1], "");
       }
-      // Handle defense rolls.
+      // Handle defense rolls
       else if (dataset.rollType == 'defense') {
-        let rollType = dataset.label.split(' ');
         this._onStatRoll("Defense", "defenseBonus", "Save", "");
+      }
+      // HP / reserve/ tHP / Life manager dialog
+      else if (dataset.rollType == 'healthManager') {
+        this._onHealthManager();
       }
     }
     
@@ -493,6 +500,7 @@ export class RedAgeActorSheet extends ActorSheet {
       return roll;
     }
   }
+
 
   // Helper Functions
 
@@ -662,7 +670,6 @@ export class RedAgeActorSheet extends ActorSheet {
 			PoolTerm.fromRolls([statRoll]),
 		]);
 
-
 		const diceTooltip = { roll: await statRoll.render() };
 
 		dialogData.statRoll = statRoll;
@@ -687,4 +694,57 @@ export class RedAgeActorSheet extends ActorSheet {
 		this.tempData.chatMessage = chatMessage;
 		return chatMessage;
 	}
+
+  async _onHealthManager()
+  {
+    const actor = this.actor;
+    const rollData = this.actor.getRollData();
+
+    const dialogData = {
+      actor: actor,
+      label: actor.name + " Health",
+      rollData: rollData
+    };
+
+    const template = "systems/redage/templates/dialogs/health-manager.html";
+    const html = await renderTemplate(template, dialogData);
+    this.tempData = dialogData;
+
+    const _doHealthManagement = async (html) => {
+      let actor = this.tempData.actor.data;
+      var _a;
+      const form = html[0].querySelector("form");
+      var hpVal = parseInt((_a = form.querySelector('[name="health.value"]')) === null || _a === void 0 ? void 0 : _a.value);
+      var hpTemp = parseInt((_a = form.querySelector('[name="health.temp"]')) === null || _a === void 0 ? void 0 : _a.value);
+      var hpRes = parseInt((_a = form.querySelector('[name="health.reserve"]')) === null || _a === void 0 ? void 0 : _a.value);
+      var lifeVal = parseInt((_a = form.querySelector('[name="life.value"]')) === null || _a === void 0 ? void 0 : _a.value);
+
+      hpVal = (!isNaN(hpVal)) ? Math.max(0, Math.min(hpVal, actor.data.health.max)) : 0;
+      hpTemp = (!isNaN(hpTemp)) ? Math.max(0, hpTemp) : 0;
+      hpRes = (!isNaN(hpRes)) ? Math.max(0, Math.min(hpRes, actor.data.health.max)) : 0;
+      lifeVal = (!isNaN(lifeVal)) ? Math.max(0, Math.min(lifeVal, actor.data.life.max)) : 0;
+      this.actor.update( { "data.health.value": hpVal, "data.health.temp": hpTemp, "data.health.reserve": hpRes, "data.life.value": lifeVal }, {});
+    };
+
+    this.popUpDialog = new Dialog({
+      title: dialogData.label,
+      content: html,
+      default: "close",
+      buttons: {
+        close: {
+          label: "Apply",
+          // callback: async (html) => { return this._doHealthManagement(html, this.tempData); },
+					callback: (html) => _doHealthManagement(html),
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => { ; },
+        }
+      },
+    });
+
+    const s = this.popUpDialog.render(true);
+    if (s instanceof Promise)
+      await s;
+  }
 }

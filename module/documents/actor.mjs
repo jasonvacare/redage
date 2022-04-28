@@ -73,6 +73,8 @@ export class RedAgeActor extends Actor {
 
     data.health.max = this._calculateMaxHealth(items, data.vigor.mod, data.characterLevel);
     if (data.health.value > data.health.max) data.health.value = data.health.max;
+    if (data.health.reserve > data.health.max) data.health.reserve = data.health.max;
+    
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     if (data.life.value > data.life.max) data.life.value = data.life.max;
 

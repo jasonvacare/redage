@@ -22,6 +22,8 @@
         },
         "health": {
           "value": 10,
+          "temp": 0,
+          "reserve": 10,
           "min": 0
         },
         "life": {

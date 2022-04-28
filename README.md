@@ -13,10 +13,8 @@
 4. Resources
   A. Wounds
   B. Fatigue
-  C. Mana
-  D. Reserves (HP/Mana)
-  E. Temporary HP
-  F. Effects / Statuses
+  C. Mana (and reserve)  
+  D. Effects / Statuses
 5. Rest Button
 6. Panoply Checkboxes
 7. "Return To Town" Button to calculate loot
