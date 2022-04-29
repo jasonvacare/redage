@@ -118,6 +118,7 @@ export class RedAgeActor extends Actor {
 
     	if (i.type === 'class' && i.name.toLowerCase() === "fighter") {
 				masteries.fighterLevel = i.data.data.classLevel;
+				masteries.damage = Math.ceil(masteries.fighterLevel / 2);
     	}
 
       if (i.type === 'featureFighter') {

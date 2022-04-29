@@ -106,8 +106,10 @@ export class RedAgeItem extends Item {
 
 		// fighter feature check
 		if (actor.data.fighterMastery) {
-			let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-			if (m.damage) damageFormula += "+@proficiencyBonus";
+      if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
+        let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+        if (m.damage) damageFormula += "+@fighterMastery.damage";
+      }
 		}
 
 		// TODO to add
@@ -196,13 +198,15 @@ export class RedAgeItem extends Item {
 		var fumbleThreshold = 1;
 		var deedsNumber = 0;
 
-		// apply fighter brutal crit threat range and deeds number
-		if (actor.data.fighterMastery) {
-			deedsNumber = actor.data.fighterMastery.deedsNumber;
+    // apply fighter brutal crit threat range and deeds number
+    if (actor.data.fighterMastery) {
+      deedsNumber = actor.data.fighterMastery.deedsNumber;
 
-			let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-			if (m.brutal && actor.data.fighterMastery.fighterLevel >= 5) critThreshold = 19;
-		}
+      if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
+        let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+        if (m.brutal && actor.data.fighterMastery.fighterLevel >= 5) critThreshold = 19;
+      }
+    }
 
 		if (attackD20Result >= critThreshold)
 		{
@@ -213,10 +217,12 @@ export class RedAgeItem extends Item {
 			const damageDieMax = Number(damageDie.number) * Number(damageDie.faces);
 			dialogData.damageFormula += " + " + damageDieMax;
 
-			// apply fighter brutal crit damage
-			if (actor.data.fighterMastery) {
-				let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-				if (m.brutal) dialogData.damageFormula += " + " + damageDieMax;
+      // apply fighter brutal crit damage
+      if (actor.data.fighterMastery) {
+        if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
+          let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+  				if (m.brutal) dialogData.damageFormula += " + " + damageDieMax;
+        }
 			}
 		}
 		else if (attackD20Result <= fumbleThreshold)
