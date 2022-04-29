@@ -22,7 +22,7 @@
       </div>
 
       <!-- Class specifics -->
-      {{#if (eq 'class' item.type)}}
+      {{#if (or (eq 'class' item.type) (eq 'classCaster' item.type))}}
       <div class="item-prop">
         <span>Level: {{item.data.classLevel}}</span>
       </div>

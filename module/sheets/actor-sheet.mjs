@@ -122,10 +122,6 @@ export class RedAgeActorSheet extends ActorSheet {
     overspent = overspent || (fp.value > fp.max);
     if (fp.max > 0) context.data.featPoints.tooltip += "\nSkulk: " + fp.value + " / " + fp.max;
 
-    context.data.featPoints.theurge = fp = { value: fpSpent.theurge.spent, max: (fpSpent.theurge.max + context.data.spirit.mod) };
-    overspent = overspent || (fp.value > fp.max);
-    if (fp.max > 0) context.data.featPoints.tooltip += "\nDivine Bonds: " + fp.value + " / " + fp.max;
-
     if (overspent) context.data.featPoints.basic.color = "red";
   }
 
@@ -147,18 +143,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
     const features = [];
 
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
-    };
+    const spells = [];
     const spellsByLoc = {
     	Inventory: [],
     	Camp: [],
@@ -169,7 +154,7 @@ export class RedAgeActorSheet extends ActorSheet {
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
 
-      // Append to gear.
+      // Append to gear
       if (i.data.group === "item")
       {
         i.data.locations = REDAGE.ItemLocations;
@@ -182,29 +167,23 @@ export class RedAgeActorSheet extends ActorSheet {
         	gearByLoc.Inventory.push(i);
       }
 
-      // Append to features.
+      // Append to features
       else if (i.data.group === "feat")
       {
         features.push(i);
       }
 
-      // Append to spells.
+      // Append to spells
       else if (i.data.group === "spell")
       {
-        if (i.data.spellLevel != undefined)
-        {
-          spells[i.data.spellLevel].push(i);
-        }
-
-        i.data.locations = REDAGE.SpellLocations;
-        gear.push(i);
+        i.data.spellLocations = REDAGE.SpellLocations;
+        spells.push(i);
         if (i.data.location == REDAGE.SPELL_CAMP)
         	spellsByLoc.Camp.push(i);
         else if (i.data.location == REDAGE.SPELL_TOWN)
         	spellsByLoc.Town.push(i);
         else
         	spellsByLoc.Inventory.push(i);
-
       }
     }
 
@@ -215,7 +194,7 @@ export class RedAgeActorSheet extends ActorSheet {
    		return one - two;
     });
 
-		// sort gear by location
+		// sort spells by location
     spellsByLoc.Inventory.sort((first, second) => {
       let one = REDAGE.ordinal(first.data.location, REDAGE.SpellLocations);
       let two = REDAGE.ordinal(second.data.location, REDAGE.SpellLocations);
@@ -505,21 +484,20 @@ export class RedAgeActorSheet extends ActorSheet {
   // Helper Functions
 
   _calculateClassLevels(items) {   
-    let classes = items.filter((item) => { return item.type === "class"; });
+    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster"]); });
     if (classes.length === 0) return 0;
     let classLevels = classes.map(c => c.data.classLevel).reduce((a, b) => a + b);
     return classLevels;
   }
 
   _calculateFeatPoints(items) {
-    let featPointsSpent = { basic: {spent: 0, max: 0}, rogue: {spent: 0, max: 0}, mutation: {spent: 0, max: 0}, skulk: {spent: 0, max: 0}, theurge: {spent: 0, max: 0} };
+    let featPointsSpent = { basic: {spent: 0, max: 0}, rogue: {spent: 0, max: 0}, mutation: {spent: 0, max: 0}, skulk: {spent: 0, max: 0} };
+
     var abhumanLevels = 0;
     for (let i of items) {
-      if (i.type === "class") {
+      if (REDAGE.isType(i, ["class", "classCaster"])) {
         if (i.name.toLowerCase() === "rogue")
           featPointsSpent.rogue.max = Math.min(15, i.data.classLevel + 5);
-        else if (i.name.toLowerCase() === "theurge")
-          featPointsSpent.theurge.max = Math.min(10, i.data.classLevel);
         else if (i.name.toLowerCase().includes("brute") || i.name.toLowerCase().includes("malison"))
           abhumanLevels += i.data.classLevel;
         else if (i.name.toLowerCase().includes("skulk"))
@@ -535,8 +513,6 @@ export class RedAgeActorSheet extends ActorSheet {
           featPointsSpent.skulk.spent += i.data.cost;
         else if (i.data.origin.toLowerCase() === "mutation")
           featPointsSpent.mutation.spent += i.data.cost;
-        else if (i.data.origin.toLowerCase() === "divine bond")
-          featPointsSpent.theurge.spent += i.data.resource.value;
         else
       	  featPointsSpent.basic.spent += i.data.cost;
       }
@@ -702,7 +678,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
     const dialogData = {
       actor: actor,
-      label: actor.name + " Health",
+      label: "Health & Life",
       rollData: rollData
     };
 

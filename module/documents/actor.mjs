@@ -72,11 +72,11 @@ export class RedAgeActor extends Actor {
     data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
     data.health.max = this._calculateMaxHealth(items, data.vigor.mod, data.characterLevel);
-    if (data.health.value > data.health.max) data.health.value = data.health.max;
-    if (data.health.reserve > data.health.max) data.health.reserve = data.health.max;
+    data.health.value = Math.max(0, Math.min(data.health.max, data.health.value));
+    data.health.reserve = Math.max(0, Math.min(data.health.max, data.health.reserve));
     
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
-    if (data.life.value > data.life.max) data.life.value = data.life.max;
+    data.life.value = Math.max(0, Math.min(data.life.max, data.life.value));
 
 		// armor caps dexterity bonus and mod
 		const armorProperties = this._calculateDefenseBonus(items);
@@ -103,7 +103,13 @@ export class RedAgeActor extends Actor {
 			data.carried.loadLevel = "Overloaded";
 
     // fighter mastery preparation
-    data.fighterMastery = this._calculateFighterMasteries(items);    
+    data.fighterMastery = this._calculateFighterMasteries(items);
+
+    // mana
+    data.mana.max = this._calculateMaxMana(items);
+    data.mana.value = Math.max(0, Math.min(data.mana.max, data.mana.value));
+    data.mana.reserve = Math.max(0, Math.min(data.mana.max, data.mana.reserve));
+    data.mana.cantrip = Math.max(0, data.mana.cantrip);
   }
 
   _calculateFighterMasteries(items) {
@@ -204,7 +210,7 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateAttackBonus(items) {
-    let classes = items.filter((item) => { return item.type === "class"; });
+    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster"]); });
     let returnValue = 0;
     let totalLevels = 1;
     if (classes.length === 0) return 0;
@@ -221,7 +227,7 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateMaxHealth(items, vigorMod, level) {
-    let classes = items.filter((item) => { return item.type === "class"; });
+    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster"]); });
     let returnValue = 0;
     let totalLevels = 1;
     classes.sort((a, b) => { return b.data.data.startingHealth - a.data.data.startingHealth; });
@@ -264,6 +270,19 @@ export class RedAgeActor extends Actor {
 			}
 		}
 		return { "defense": defense, "maxDexterityBonus": maxDexterityBonus, "maxDexterityMod": maxDexterityMod };
+  }
+
+  _calculateMaxMana(items) {
+    let castingClasses = items.filter((item) => { return item.type === "classCaster"; });
+    let manaLevel = 0;
+
+		for (let c = 0; c < castingClasses.length; c++) {
+      manaLevel += castingClasses[c].data.data.classLevel * castingClasses[c].data.data.manaLevel;
+		}
+
+    manaLevel = Math.ceil(manaLevel);
+    let mana = [0, 4, 6, 9, 12, 17, 22, 28, 37, 44, 56];
+    return mana[Math.min(10, manaLevel)] + (2 * Math.max(0, manaLevel-10));
   }
 
   /**
@@ -312,5 +331,4 @@ export class RedAgeActor extends Actor {
 
     // Process additional NPC data here.
   }
-
 }

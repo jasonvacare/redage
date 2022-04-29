@@ -49,6 +49,11 @@ export class RedAgeItemSheet extends ItemSheet {
     context.flags = itemData.flags;
 
     context.locations = REDAGE.ItemLocations;
+    context.spellLocations = REDAGE.SpellLocations;
+
+    // casting preparation
+    if (this.item.type === "classCaster")
+      this._calculateCasting(context);
 
     return context;
   }
@@ -64,4 +69,39 @@ export class RedAgeItemSheet extends ItemSheet {
 
     // Roll handlers, click handlers, etc. would go here.
   }
+
+  _calculateCasting(context) {
+    const data = context.data;
+    let actorData = context.rollData;
+    actorData.level = data.classLevel;
+  
+    // half-casters get spell Power at half the rate of full casters
+    if (data.isHalfcaster)
+      data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 4);
+    else
+      data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 2);
+
+    // (arcane) preppable / innate spells OR (divine) world affinities (std) and divine bonds (bonus)
+    data.spellCapacity.standard = 0;
+    data.spellCapacity.bonus = 0;
+
+    if (Roll.validate(data.spellCapacity.standardFormula)) {
+      let val = new Roll(data.spellCapacity.standardFormula, actorData);
+      val.evaluate({async: false});
+      data.spellCapacity.standard = val.total;
+    }
+    if (Roll.validate(data.spellCapacity.bonusFormula)) {
+      let val = new Roll(data.spellCapacity.bonusFormula, actorData);
+      val.evaluate({async: false});
+      data.spellCapacity.bonus = val.total;
+    }
+  
+    // number of instruments of panoply equipped
+    let instruments = ["hand", "body", "token", "order", "sanctum", "patron", "transfiguration", "familiar"];
+    data.panoply.count = 0;
+    for (let i=0; i < instruments.length; i++) {
+      if (data.panoply[instruments[i]]) data.panoply.count++;
+    }
+  }
 }
+

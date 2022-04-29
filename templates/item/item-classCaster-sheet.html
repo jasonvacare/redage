@@ -1,0 +1,222 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="magic">Magic</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Attributes Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="attributes">
+      <div class="flexcol">
+        <div class="flexrow">
+          <label for="data.classLevel" class="resource-label">Level</label>
+          <input type="text" name="data.classLevel" value="{{data.classLevel}}" data-dtype="Number"/>
+        </div>
+        <div class="flexrow">
+          <label for="data.startingHealth" class="resource-label">Starting Health</label>
+          <input type="text" name="data.startingHealth" value="{{data.startingHealth}}" data-dtype="Number"/>
+        </div>
+        <div class="flexrow">
+          <label for="data.maxHealthPerLevel" class="resource-label">Max Health Per Level</label>
+          <input type="text" name="data.maxHealthPerLevel" value="{{data.maxHealthPerLevel}}" data-dtype="Number"/>
+        </div>
+        <div class="flexrow">
+          <label for="data.maxHealthPerLevelHeroic" class="resource-label">Max Health Per Level (Heroic)</label>
+          <input type="text" name="data.maxHealthPerLevelHeroic" value="{{data.maxHealthPerLevelHeroic}}" data-dtype="Number"/>
+        </div>
+        <div class="flexrow">
+          <label for="data.attackBonusPerLevel" class="resource-label">Attack Bonus Per Level</label>
+          <input type="text" name="data.attackBonusPerLevel" value="{{data.attackBonusPerLevel}}" data-dtype="Number"/>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+
+    {{!-- Magic Tab --}}
+    <div class="tab attributes" data-group="primary" data-tab="magic">
+
+      <div class="grid grid-3col">
+        <label for="data.manaLevel" class="resource-label">Mana Advancement Per Level</label>
+        <div class="item-prop align-center">
+          <input type="text" name="data.manaLevel" value="{{data.manaLevel}}" data-dtype="Number"/>
+        </div>
+        <div class="item-prop">
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <label class="resource-label">Arcane Magic</label>
+        <div class="item-prop align-center">
+          <input type="checkbox" name="data.isArcane" {{checked data.isArcane}} data-dtype="Boolean" />
+        </div>
+        <div class="item-prop">
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <label class="resource-label">Half Caster</label>
+        <div class="item-prop align-center">
+          <input type="checkbox" name="data.isHalfcaster" {{checked data.isHalfcaster}} data-dtype="Boolean" />
+        </div>
+        <div class="item-prop">
+        </div>
+      </div>
+      
+      <div class="grid grid-3col">
+        <label class="resource-label">Casting Stat</label>
+        <div class="item-prop align-center">
+          <select name="data.castingStat" data-dtype="String">
+            {{#select data.castingStat}}
+            <option value="Vigor" data-dtype="String">Vigor</option>
+            <option value="Dexterity" data-dtype="String">Dexterity</option>
+            <option value="Wits" data-dtype="String">Wits</option>
+            <option value="Spirit" data-dtype="String">Spirit</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="item-prop">
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <label class="resource-label">Max Power</label>
+        <div class="item-prop align-center">
+          <span>{{data.maxPower}}</span>
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        {{#if (ne item.data.data.isArcane true)}}
+        <label class="resource-label">Max World Affinities</label>
+        {{else}}
+        <label class="resource-label">Max Spells</label>
+        {{/if}}
+        <div class="item-prop">
+          <input type="text" name="data.spellCapacity.standardFormula" value="{{data.spellCapacity.standardFormula}}" data-dtype="String"/>
+        </div>
+        <div class="item-prop align-center">
+          <span>{{data.spellCapacity.standard}}</span>
+        </div>
+      </div>
+
+      {{#if (ne item.data.data.isArcane true)}}
+      <div class="grid grid-3col">
+        <label class="resource-label">Max Bonds</label>
+        <div class="item-prop">
+          <input type="text" name="data.spellCapacity.bonusFormula" value="{{data.spellCapacity.bonusFormula}}" data-dtype="String"/>
+        </div>
+        <div class="item-prop align-center">
+          <span>{{data.spellCapacity.bonus}}</span>
+        </div>
+      </div>      
+      {{/if}}
+
+      <ol class="items-list">  
+        <li class="item flexrow items-header">
+          <div class="item-name">Panoply</div>
+          <div class="item-prop">{{data.panoply.count}} equipped</div>
+          <div class="item-prop"></div>
+        </li>
+
+        <li class="item flexrow">
+          {{#if (ne item.data.data.isArcane true)}}
+          <div class="item-name">Symbol</div>
+          {{else}}
+          <div class="item-name">Implement</div>
+          {{/if}}
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.hand" {{checked data.panoply.hand}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          {{#if (ne item.data.data.isArcane true)}}
+          <div class="item-name">Vestments</div>
+          {{else}}
+          <div class="item-name">Raiment</div>
+          {{/if}}
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.body" {{checked data.panoply.body}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          {{#if (ne item.data.data.isArcane true)}}
+          <div class="item-name">Relic</div>
+          {{else}}
+          <div class="item-name">Talisman</div>
+          {{/if}}
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.token" {{checked data.panoply.token}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          <div class="item-name">Order</div>
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.order" {{checked data.panoply.order}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          {{#if (ne item.data.data.isArcane true)}}
+          <div class="item-name">Shrine</div>
+          {{else}}
+          <div class="item-name">Sanctum</div>
+          {{/if}}
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.sanctum" {{checked data.panoply.sanctum}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          <div class="item-name">Patron</div>
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.patron" {{checked data.panoply.patron}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          <div class="item-name">Familiar</div>
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.familiar" {{checked data.panoply.familiar}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+        <li class="item flexrow">
+          <div class="item-name">Transfiguration</div>
+          <div class="item-prop">
+            <input type="checkbox" name="data.panoply.transfiguration" {{checked data.panoply.transfiguration}} data-dtype="Boolean" />
+          </div>
+          <div class="item-prop">
+          </div>
+        </li>
+      </ol>
+
+    </div>
+
+  </section>
+
+</form>

@@ -10,7 +10,6 @@
     "systems/redage/templates/actor/parts/actor-features.html",
     "systems/redage/templates/actor/parts/actor-items.html",
     "systems/redage/templates/actor/parts/actor-spells.html",
-    "systems/redage/templates/actor/parts/actor-spellContainers.html",
     "systems/redage/templates/actor/parts/actor-effects.html",
 
 		// Item partials.
