@@ -181,12 +181,11 @@ export class RedAgeItem extends Item {
 		const form = html[0].querySelector("form");
 		const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
 
-		// handle advantage / disadvantage on attack roll
-		const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
-		var dice = (Math.abs(adShift)+1) + "d20";
-		if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
-		dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
-		if (adShift != 0) dialogData.attackNotes.push(adShiftLadder[adShift+3]);
+    // handle advantage / disadvantage on attack roll
+    let dice = REDAGE.getD20(actor, adShift);
+    dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
+    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+    if (adShift != 0) dialogData.attackNotes.push(adShiftLadder[adShift+3]);
 
 		// handle attack roll
 		const attackRoll = new Roll(dialogData.attackFormula, dialogData.rollData);

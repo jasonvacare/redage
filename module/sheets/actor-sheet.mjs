@@ -620,12 +620,11 @@ export class RedAgeActorSheet extends ActorSheet {
     if (dialogData.modifiers)
       dialogData.formula = dialogData.formula + " + " + dialogData.modifiers;
 
-		// handle advantage / disadvantage on roll
-		const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
-		var dice = (Math.abs(adShift)+1) + "d20";
-		if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
-		dialogData.formula = dice + " + " + dialogData.formula;
-		if (adShift != 0) dialogData.rollNotes.push(adShiftLadder[adShift+3]);
+    // handle advantage / disadvantage on roll
+    let dice = REDAGE.getD20(actor, adShift);
+    dialogData.formula = dice + " + " + dialogData.formula;
+    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+    if (adShift != 0) dialogData.rollNotes.push(adShiftLadder[adShift+3]);
 
 		// handle roll
 		const statRoll = new Roll(dialogData.formula, dialogData.rollData);

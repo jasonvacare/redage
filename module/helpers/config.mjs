@@ -121,8 +121,24 @@ REDAGE.ordinal = function(listElement, list) {
   return (result == -1) ? list.length+1 : result;
 }
 
+/**
+* Checks if item is of one of the types specified in the list
+*/
 REDAGE.isType = function(item, list) {
 
   let result = list.findIndex(element => element === item.type);
   return (result != -1);
+}
+
+/**
+* Composes the d20 roll for stat check / attacks / spell effects, applying conditions that grant +A/D and other modifiers
+*/
+REDAGE.getD20 = function(actor, adShift) {
+  // handle advantage / disadvantage on roll
+  var dice = (Math.abs(adShift)+1) + "d20";
+  if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
+
+  // apply fatigue
+
+  return dice;
 }
