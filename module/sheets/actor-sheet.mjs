@@ -484,7 +484,7 @@ export class RedAgeActorSheet extends ActorSheet {
   // Helper Functions
 
   _calculateClassLevels(items) {   
-    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster"]); });
+    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster", "classFighter"]); });
     if (classes.length === 0) return 0;
     let classLevels = classes.map(c => c.data.classLevel).reduce((a, b) => a + b);
     return classLevels;
@@ -495,7 +495,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
     var abhumanLevels = 0;
     for (let i of items) {
-      if (REDAGE.isType(i, ["class", "classCaster"])) {
+      if (REDAGE.isType(i, ["class", "classCaster", "classFighter"])) {
         if (i.name.toLowerCase() === "rogue")
           featPointsSpent.rogue.max = Math.min(15, i.data.classLevel + 5);
         else if (i.name.toLowerCase().includes("brute") || i.name.toLowerCase().includes("malison"))

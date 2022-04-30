@@ -139,6 +139,8 @@ REDAGE.getD20 = function(actor, adShift) {
   if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
 
   // apply fatigue
+  // apply encumbrance level
+  // TODO
 
   return dice;
 }

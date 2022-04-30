@@ -115,13 +115,10 @@ export class RedAgeActor extends Actor {
   _calculateFighterMasteries(items) {
     let masteries = { fighterLevel: 0, deedsNumber: 0 };
     for (let i of items) {
-
-    	if (i.type === 'class' && i.name.toLowerCase() === "fighter") {
+    	if (i.type === 'classFighter') {
 				masteries.fighterLevel = i.data.data.classLevel;
 				masteries.damage = Math.ceil(masteries.fighterLevel / 2);
-    	}
 
-      if (i.type === 'featureFighter') {
         let data = i.data.data;
         masteries.deedsNumber = data.deedsNumber;
 
@@ -211,7 +208,7 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateAttackBonus(items) {
-    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster"]); });
+    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster", "classFighter"]); });
     let returnValue = 0;
     let totalLevels = 1;
     if (classes.length === 0) return 0;
@@ -228,7 +225,7 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateMaxHealth(items, vigorMod, level) {
-    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster"]); });
+    let classes = items.filter((item) => { return REDAGE.isType(item, ["class", "classCaster", "classFighter"]); });
     let returnValue = 0;
     let totalLevels = 1;
     classes.sort((a, b) => { return b.data.data.startingHealth - a.data.data.startingHealth; });
