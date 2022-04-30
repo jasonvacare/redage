@@ -14,13 +14,14 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center box-title" title="{{data.health.tooltip}}">
+          {{#if (gt data.health.temp 0)}}
+          <label for="data.health.value" class="resource-label rollable" data-roll-type="healthManager" data-label="hp">Health ({{numberFormat data.health.temp decimals=0 sign=true}})</label>
+          {{else}}
           <label for="data.health.value" class="resource-label rollable" data-roll-type="healthManager" data-label="hp">Health</label>
+          {{/if}}
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/> &nbsp; / &nbsp;
             <input type="text" name="data.health.max" value="{{data.health.max}}" data-dtype="Number" readonly />
-            {{#if (gt data.health.temp 0)}}
-            <span>({{numberFormat data.health.temp decimals=0 sign=true}})</span>
-            {{/if}}
           </div>
         </div>
 
