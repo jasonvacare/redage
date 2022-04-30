@@ -26,7 +26,14 @@
 				</div>
 				<div class="resource">
 					<label class="resource-label">Type</label>
-					<input type="text" name="data.proficiencyGroup" value="{{data.proficiencyGroup}}" data-dtype="String" /> {{!-- @@@ read only for players, drop down for compendiumm building? --}}
+          <select name="data.proficiencyGroup" data-dtype="String">       {{!-- @@@ read only for players, drop down for compendiumm building? --}}
+            {{#select data.proficiencyGroup}}
+            <option value="Light" data-dtype="String">Light</option>
+            <option value="Medium" data-dtype="String">Medium</option>
+            <option value="Heavy" data-dtype="String">Heavy</option>
+            <option value="Shield" data-dtype="String">Shield</option>
+            {{/select}}
+          </select>
 				</div>
       </div>
 
