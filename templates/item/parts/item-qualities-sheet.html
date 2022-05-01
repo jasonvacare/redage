@@ -9,11 +9,13 @@
 
 <ol>
   {{#each data.tags as |tag id|}}
-  <li class="item flexrow" data-tag="{{tag}}" data-id="{{id}}">
+  <li class="item flexrow hide-until-hover" data-tag="{{tag}}" data-id="{{id}}">
     <div class="item-name">
       {{tag}}
     </div>
-    <div class="item-controls">
+    <div class="item-controls hide">
+      <a class="item-control item-text-up" data-array="tags" data-id="{{id}}" title="Move Up"><i class="fas fa-angle-up"></i></a>
+      <a class="item-control item-text-down" data-array="tags" data-id="{{id}}" title="Move Down"><i class="fas fa-angle-down"></i></a>
       <a class="item-control item-text-edit" data-array="tags" data-id="{{id}}" title="Edit Tag"><i class="fas fa-edit"></i></a>
       <a class="item-control item-text-pop" data-array="tags" data-id="{{id}}" title="Delete Tag"><i class="fa fa-trash"></i></a>
     </div>

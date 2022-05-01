@@ -93,6 +93,23 @@ export class RedAgeItemSheet extends ItemSheet {
       const index = header.dataset.id;
       REDAGE.popText(this.item, table, index);
     });
+
+    html.find(".item-text-up").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.moveText(this.item, table, index, -1);
+    });
+
+    html.find(".item-text-down").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.moveText(this.item, table, index, 1);
+    });
+
   }
 
   _calculateCasting(context) {

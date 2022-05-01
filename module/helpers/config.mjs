@@ -209,3 +209,21 @@ REDAGE.popText = async function (item, table, index) {
   newData[table] = update;
   return item.update({ data: newData });
 }
+
+REDAGE.moveText = async function (item, table, index, shift) {
+  const data = item.data.data;
+  let update = duplicate(data[table]);
+  index = Number(index);
+  shift = Number(shift);
+
+  if (index+shift < 0 || index+shift >= update.length)
+    return;
+
+  let text = update[index];
+  update.splice(index, 1);
+  update.splice(index+shift, 0, text);
+
+  let newData = {};
+  newData[table] = update;
+  return item.update({ data: newData });
+}
