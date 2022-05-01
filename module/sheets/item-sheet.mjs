@@ -67,7 +67,32 @@ export class RedAgeItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
-    // Roll handlers, click handlers, etc. would go here.
+    // Event handlers
+    
+    // Add and remove item tags
+    html.find(".item-text-push").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      REDAGE.pushText(this.item, table);
+    });
+
+    html.find(".item-text-edit").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      // const text = $(ev.currentTarget).closest(".item").data("tag");
+      REDAGE.pushText(this.item, table, index);
+    });
+
+    html.find(".item-text-pop").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.popText(this.item, table, index);
+    });
   }
 
   _calculateCasting(context) {

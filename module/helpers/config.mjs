@@ -144,3 +144,68 @@ REDAGE.getD20 = function(actor, adShift) {
 
   return dice;
 }
+
+REDAGE.enterText = async function (text) {
+  let templateData = { dialogText: text },
+    dlg = await renderTemplate("systems/redage/templates/dialogs/text-prompt.html", templateData);
+
+  return new Promise((resolve) => {
+    new Dialog({
+      title: "",
+      content: dlg,
+      buttons: {
+        ok: {
+          label: "Ok",
+          icon: '<i class="fas fa-check"></i>',
+          callback: (html) => {
+            resolve({
+              dialogText: html.find('input[name="dialogText"]').val(),
+            });
+          },
+        },
+        cancel: {
+          icon: '<i class="fas fa-times"></i>',
+          label: "Cancel",
+        },
+      },
+      default: "ok",
+    }).render(true);
+  });
+}
+
+REDAGE.pushText = async function (item, table, index = null) {
+  const data = item.data.data;
+  let update = duplicate(data[table]);
+  let initial = update[index];
+
+  REDAGE.enterText(initial).then((dialogInput) => {
+    const text = dialogInput.dialogText.trim();
+    if (text === null || text === "")
+      return;
+
+    if (update && text)
+    {
+      if (index === null)
+        update.push(text);
+      else if (index >= 0 && index < update.length)
+        update[index] = text;
+    }
+    else
+    {
+      update = [text];
+    }
+
+    let newData = {};
+    newData[table] = update;
+    return item.update({ data: newData });
+  });
+}
+
+REDAGE.popText = async function (item, table, index) {
+  const data = item.data.data;
+  let update = duplicate(data[table]);
+  update.splice(index, 1);
+  let newData = {};
+  newData[table] = update;
+  return item.update({ data: newData });
+}
