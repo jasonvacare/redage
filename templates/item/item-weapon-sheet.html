@@ -74,29 +74,7 @@
 
     {{!-- Qualities Tab --}}
     <div class="tab" data-group="primary" data-tab="qualities">
-
-      <div class="item-titles flexrow">
-        <div class="item-name">
-          <span>Qualities</span>
-        </div>
-        <div class="item-controls">
-          <a class="item-control item-text-push" data-array="tags" title="Add Tag"><i class="fa fa-plus"></i></a>
-        </div>
-      </div>
-
-      <ol>
-        {{#each data.tags as |tag id|}}
-        <li class="item flexrow" data-tag="{{tag}}" data-id="{{id}}">
-          <div class="item-name">
-            {{tag}}
-          </div>
-          <div class="item-controls">
-            <a class="item-control item-text-edit" data-array="tags" data-id="{{id}}" title="Edit Tag"><i class="fas fa-edit"></i></a>
-            <a class="item-control item-text-pop" data-array="tags" data-id="{{id}}" title="Delete Tag"><i class="fa fa-trash"></i></a>
-          </div>
-        </li>
-        {{/each}}
-      </ol>
+      {{> "systems/redage/templates/item/parts/item-qualities-sheet.html"}}
     </div>
 
     {{!-- Description Tab --}}

@@ -54,10 +54,10 @@
 	{{!-- Sheet Body --}}
 	<section class="sheet-body">
 
-		{{!-- Qualities Tab --}}
-		<div class="tab" data-group="primary" data-tab="qualities">
-			{{editor content=data.qualities target="data.qualities" rollData=rollData button=true owner=owner editable=editable}}
-		</div>
+    {{!-- Qualities Tab --}}
+    <div class="tab" data-group="primary" data-tab="qualities">
+      {{> "systems/redage/templates/item/parts/item-qualities-sheet.html"}}
+    </div>
 
 		{{!-- Description Tab --}}
 		<div class="tab" data-group="primary" data-tab="description">
