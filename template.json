@@ -57,7 +57,7 @@
       "weapon", "armor", "item", 
       "spell", "spellContainer",
       "class", "classCaster", "classFighter",
-      "feature", "featureSkill", "featureRollable", "featureResource"
+      "feature", "featureSkill", "featureRollable", "featureResource", "featureResourceRollable"
     ],
     "templates": {
       "base": {
@@ -222,10 +222,20 @@
         "recharge": ""
       }
     },
+    "featureResourceRollable": {
+      "templates": [ "base", "baseFeature" ],
+      "formula": "",
+      "resource": {
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "recharge": ""
+      }
+    },
 
     "spellContainer": {
       "templates": [ "base" ],
-      "group": "spell",
+      "group": "magic",
       "____spells": [],
       "____spellUuids": [],
       "origin": "",
@@ -236,19 +246,26 @@
       "____magnitudeBonus": "0"
     },
 
-    "____spell": {
-      "____templates": [ "base" ],
-      "group": "spell",
-      "____parent": null,
-      "____castingTime": "1 action",
-      "____duration": "Instant",
-      "____range": "None",
-      "____target": "Self",
-      "____components": "None",
+    "spell": {
+      "templates": [ "base" ],
+      "group": "magic",
 
-      "____effectFormula": "0",
-      "____magnitudeFormula": "0",
-      "____magnitudeType": ""
+      "castingTime": "1 action",
+      "duration": "Instant",
+      "range": "None",
+      "target": "Self",
+      "components": "None",
+
+      "effectFormula": "0",
+      "magnitudeFormula": "0",
+      "magnitudeType": "",
+
+      "powerMin": 0,
+      "powerMax": 5,
+      "origin": "",
+      "location": "Vessel",
+
+      "____parent": null
     }
   }
 }

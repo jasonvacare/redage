@@ -174,7 +174,7 @@ export class RedAgeActorSheet extends ActorSheet {
       }
 
       // Append to spells
-      else if (i.data.group === "spell")
+      else if (i.data.group === "magic")
       {
         i.data.spellLocations = REDAGE.SpellLocations;
         spells.push(i);

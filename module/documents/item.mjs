@@ -45,7 +45,7 @@ export class RedAgeItem extends Item {
     if (item.type === "weapon") {
 			return this._onWeaponAttackRoll(item, actor);
     }
-    else if (item.type === "featureRollable") {
+    else if (REDAGE.isType(item, ["featureRollable", "featureResourceRollable"])) {
       formula = item.data.formula;
       label = `${item.name}`;
     }

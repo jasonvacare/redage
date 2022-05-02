@@ -17,9 +17,17 @@
         <h4>{{item.name}}</h4>
       </div>
 
+      {{log item}}
+
+      {{#if (ne 'featureResourceRollable' item.type)}}
       <div class="item-prop">
-        <span>{{item.data.tags}}</span>
+        <!--span>{{item.data.tags}}</span-->
       </div>
+      {{else}}
+      <div class="item-prop">
+        {{item.data.formula}}
+      </div>
+    {{/if}}
 
       <!-- Class specifics -->
       {{#if (or (eq 'class' item.type) (eq 'classCaster' item.type) (eq 'classFighter' item.type))}}
@@ -53,7 +61,20 @@
       </div>
 
       <!-- Feat Resource -->
-      {{else if (eq 'featureResource' item.type)}}
+      {{else if (or (eq 'featureResource' item.type) (eq 'featureResourceRollable' item.type))}}
+      <div class="item-prop">
+        <span>
+          <a class="item-control item-dec" title="Decrement"> <i class="fas fa-angle-left"> </i> </a>
+          {{#if (ne item.data.resource.max null)}}
+          {{item.data.resource.value}} / {{item.data.resource.max}} 
+          {{else}}
+          {{item.data.resource.value}} 
+          {{/if}}
+          <a class="item-control item-inc" title="Increment"> <i class="fas fa-angle-right"> </i></a>
+        </span>
+      </div>
+
+      {{else if (eq 'featureResourceRollable' item.type)}}
       <div class="item-prop">
         <span>
           <a class="item-control item-dec" title="Decrement"> <i class="fas fa-angle-left"> </i> </a>
@@ -61,8 +82,8 @@
           <a class="item-control item-inc" title="Increment"> <i class="fas fa-angle-right"> </i></a>
         </span>
       </div>
-
       {{/if}}
+
       
 			<div class="item-controls">
         <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
