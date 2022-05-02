@@ -3,27 +3,109 @@
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+
+      <div class="grid grid-3col">
+        <div class="resource flex-group-left">
+          <label for="data.powerMin" class="resource-label">Power</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <select name="data.powerMin" data-dtype="Number">
+              {{#select data.powerMin}}
+              <option value="0" data-dtype="Number">0</option>
+              <option value="1" data-dtype="Number">1</option>
+              <option value="2" data-dtype="Number">2</option>
+              <option value="3" data-dtype="Number">3</option>
+              <option value="4" data-dtype="Number">4</option>
+              <option value="5" data-dtype="Number">5</option>
+              {{/select}}
+            </select> &nbsp; &ndash; &nbsp;
+            <select name="data.powerMax" data-dtype="Number">
+              {{#select data.powerMax}}
+              <option value="0" data-dtype="Number">0</option>
+              <option value="1" data-dtype="Number">1</option>
+              <option value="2" data-dtype="Number">2</option>
+              <option value="3" data-dtype="Number">3</option>
+              <option value="4" data-dtype="Number">4</option>
+              <option value="5" data-dtype="Number">5</option>
+              {{/select}}
+            </select>
+          </div>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Origin</label>
+          <input type="text" name="data.origin" value="{{data.origin}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Range</label>
+          <input type="text" name="data.range" value="{{data.range}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Duration</label>
+          <input type="text" name="data.duration" value="{{data.duration}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Target</label>
+          <input type="text" name="data.target" value="{{data.target}}" data-dtype="String" />
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Casting</label>
+          <input type="text" name="data.castingTime" value="{{data.castingTime}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Location</label>
+          <span>
+            <select name="data.location" data-dtype="String">
+              {{#select data.location}}
+              {{#each spellLocations }}
+              <option value="{{this}}" data-dtype="String">{{this}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-2col">
+        <div class="resource">
+          <label class="resource-label">Effect Formula</label>
+          <input type="text" name="data.effectFormula" value="{{data.effectFormula}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="resource-label">Magnitude Formula</label>
+          <input type="text" name="data.magnitudeFormula" value="{{data.magnitudeFormula}}" data-dtype="String" />
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Magnitude Type</label>
+          <input type="text" name="data.magnitudeType" value="{{data.magnitudeType}}" data-dtype="String" />
+        </div>
+      </div>
+
+      <div class="resource">
+        <label class="resource-label">Components</label>
+        <input type="text" name="data.components" value="{{data.components}}" data-dtype="String" />
+      </div>
+    
     </div>
   </header>
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="attributes">Attributes</a>
 		<a class="item" data-tab="qualities">Qualities</a>
     <a class="item" data-tab="description">Description</a>
   </nav>
 
   {{!-- Sheet Body --}}
   <section class="sheet-body">
-
-    {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
-      {{!-- As you add new fields, add them in here! --}}
-      <div class="resource">
-        <label class="resource-label">Spell Level</label>
-        <input type="text" name="data.spellLevel" value="{{data.spellLevel}}" data-dtype="Number"/>
-      </div>
-    </div>
 
     {{!-- Qualities Tab --}}
     <div class="tab" data-group="primary" data-tab="qualities">
