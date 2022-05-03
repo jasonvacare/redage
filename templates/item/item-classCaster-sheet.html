@@ -43,36 +43,15 @@
     {{!-- Magic Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="magic">
 
-      <div class="grid grid-3col">
-        <label for="data.manaLevel" class="resource-label">Mana Advancement Per Level</label>
-        <div class="item-prop align-center">
-          <input type="text" name="data.manaLevel" value="{{data.manaLevel}}" data-dtype="Number"/>
+      <div class="grid grid-4col">
+        <div class="resource flex-group-center">
+          <label class="resource-label align-center">Max Power</label>
+          <div class="resource">
+            <span>{{data.maxPower}}</span>
+          </div>
         </div>
-        <div class="item-prop">
-        </div>
-      </div>
-
-      <div class="grid grid-3col">
-        <label class="resource-label">Arcane Magic</label>
-        <div class="item-prop align-center">
-          <input type="checkbox" name="data.isArcane" {{checked data.isArcane}} data-dtype="Boolean" />
-        </div>
-        <div class="item-prop">
-        </div>
-      </div>
-
-      <div class="grid grid-3col">
-        <label class="resource-label">Half Caster</label>
-        <div class="item-prop align-center">
-          <input type="checkbox" name="data.isHalfcaster" {{checked data.isHalfcaster}} data-dtype="Boolean" />
-        </div>
-        <div class="item-prop">
-        </div>
-      </div>
-      
-      <div class="grid grid-3col">
-        <label class="resource-label">Casting Stat</label>
-        <div class="item-prop align-center">
+        <div class="resource flex-group-center">
+          <label class="resource-label">Casting Stat</label>
           <select name="data.castingStat" data-dtype="String">
             {{#select data.castingStat}}
             <option value="Vigor" data-dtype="String">Vigor</option>
@@ -82,44 +61,66 @@
             {{/select}}
           </select>
         </div>
-        <div class="item-prop">
+        <div class="resource flex-group-center">
+          <label class="resource-label">Half Caster</label>
+          <div class="resource">
+            <input type="checkbox" name="data.isHalfcaster" {{checked data.isHalfcaster}} data-dtype="Boolean" />
+          </div>
+        </div>
+        <div class="resource flex-group-center">
+          <label class="resource-label">Arcane Magic</label>
+          <div class="resource">
+            <input type="checkbox" name="data.isArcane" {{checked data.isArcane}} data-dtype="Boolean" />
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-3col">
-        <label class="resource-label">Max Power</label>
-        <div class="item-prop align-center">
-          <span>{{data.maxPower}}</span>
+      <div class="grid grid-4col">
+        <div class="resource flex-group-center grid-span-2">
+          <label for="data.manaLevel" class="resource-label">Mana Advancement Per Level</label>
+          <div class="resource">
+            <input type="text" name="data.manaLevel" value="{{data.manaLevel}}" data-dtype="Number"/>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-3col">
-        {{#if (ne item.data.data.isArcane true)}}
-        <label class="resource-label">Max World Affinities</label>
-        {{else}}
-        <label class="resource-label">Max Spells</label>
-        {{/if}}
-        <div class="item-prop">
-          <input type="text" name="data.spellCapacity.standardFormula" value="{{data.spellCapacity.standardFormula}}" data-dtype="String"/>
-        </div>
-        <div class="item-prop align-center">
-          <span>{{data.spellCapacity.standard}}</span>
+      <div class="grid grid-2col">
+        <div class="resource grid-span-2">
+          <ol class="items-list">
+            <li class="item flexrow items-header">
+              <div class="item-prop">Spell Group</div>
+              <div class="item-prop align-center">Formula</div>
+              <div class="item-prop align-center">Value</div>
+            </li>
+
+            <li class="item flexrow">
+              <div class="item-prop">
+                <input type="text" name="data.spells.primary.name" value="{{data.spells.primary.name}}" data-dtype="String"/>
+              </div>
+              <div class="item-prop align-center">
+                <input type="text" name="data.spells.primary.formula" value="{{data.spells.primary.formula}}" data-dtype="String"/>
+              </div>
+              <div class="item-prop align-center">
+                <span>{{data.spells.primary.count}}</span>
+              </div>
+            </li>
+
+            <li class="item flexrow">
+              <div class="item-prop">
+                <input type="text" name="data.spells.secondary.name" value="{{data.spells.secondary.name}}" data-dtype="String"/>
+              </div>
+              <div class="item-prop align-center">
+                <input type="text" name="data.spells.secondary.formula" value="{{data.spells.secondary.formula}}" data-dtype="String"/>
+              </div>
+              <div class="item-prop align-center">
+                <span>{{data.spells.secondary.count}}</span>
+              </div>
+            </li>
+          </ol>
         </div>
       </div>
 
-      {{#if (ne item.data.data.isArcane true)}}
-      <div class="grid grid-3col">
-        <label class="resource-label">Max Bonds</label>
-        <div class="item-prop">
-          <input type="text" name="data.spellCapacity.bonusFormula" value="{{data.spellCapacity.bonusFormula}}" data-dtype="String"/>
-        </div>
-        <div class="item-prop align-center">
-          <span>{{data.spellCapacity.bonus}}</span>
-        </div>
-      </div>      
-      {{/if}}
-
-      <ol class="items-list">  
+      <ol class="items-list">
         <li class="item flexrow items-header">
           <div class="item-name">Panoply</div>
           <div class="item-prop">{{data.panoply.count}} equipped</div>

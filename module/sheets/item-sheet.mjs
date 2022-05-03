@@ -122,20 +122,19 @@ export class RedAgeItemSheet extends ItemSheet {
       data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 4);
     else
       data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 2);
-
-    // (arcane) preppable / innate spells OR (divine) world affinities (std) and divine bonds (bonus)
-    data.spellCapacity.standard = 0;
-    data.spellCapacity.bonus = 0;
-
-    if (Roll.validate(data.spellCapacity.standardFormula)) {
-      let val = new Roll(data.spellCapacity.standardFormula, actorData);
+    
+    data.spells.primary.count = 0;
+    if (Roll.validate(data.spells.primary.formula)) {
+      let val = new Roll(data.spells.primary.formula, actorData);
       val.evaluate({async: false});
-      data.spellCapacity.standard = val.total;
+      data.spells.primary.count = val.total;
     }
-    if (Roll.validate(data.spellCapacity.bonusFormula)) {
-      let val = new Roll(data.spellCapacity.bonusFormula, actorData);
+
+    data.spells.secondary.count = 0;
+    if (Roll.validate(data.spells.primary.formula) && data.spells.secondary.name !== "") {
+      let val = new Roll(data.spells.secondary.formula, actorData);
       val.evaluate({async: false});
-      data.spellCapacity.bonus = val.total;
+      data.spells.secondary.count = val.total;
     }
   
     // number of instruments of panoply equipped

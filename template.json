@@ -133,9 +133,9 @@
       "isArcane": true,
       "isHalfcaster": false,
       "castingStat": "Spirit",
-      "spellCapacity": {
-        "standardFormula": "",
-        "bonusFormula": ""
+      "spells": {
+        "primary": { "name": "Spells", "formula": "0" },
+        "secondary": { "name": "", "formula": "0" }
       },
       "panoply": {
         "hand": false,
