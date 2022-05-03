@@ -78,6 +78,13 @@ export class RedAgeActor extends Actor {
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     data.life.value = Math.max(0, Math.min(data.life.max, data.life.value));
 
+    // TODO set value = sum of all fatigue status items (fatigue, hunger, thirst, drain, wind, etc)
+    // tooltip is penalty for this level of exhaustion
+    // fatigue penalty to be integrated into rolls via REDAGE.getD20()
+    data.fatigue.value = 0;
+    data.fatigue.exhaustion = Math.ceil(-data.fatigue.value / 10);
+    data.fatigue.tooltip = "";
+
 		// armor caps dexterity bonus and mod
 		const armorProperties = this._calculateDefenseBonus(items);
 		data.defenseBonus = armorProperties.defense;

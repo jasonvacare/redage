@@ -30,6 +30,10 @@
           "value": 5,
           "min": 0
         },
+        "fatigue": {
+          "min": 0,
+          "max": 60
+        },
         "mana": {
           "value": 0,
           "reserve": 0,
