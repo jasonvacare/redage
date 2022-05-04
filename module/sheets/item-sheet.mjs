@@ -123,20 +123,20 @@ export class RedAgeItemSheet extends ItemSheet {
     else
       data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 2);
     
-    data.spells.primary.count = 0;
+    data.spells.primary.max = 0;
     if (Roll.validate(data.spells.primary.formula)) {
       let val = new Roll(data.spells.primary.formula, actorData);
       val.evaluate({async: false});
-      data.spells.primary.count = val.total;
+      data.spells.primary.max = val.total;
     }
 
-    data.spells.secondary.count = 0;
-    if (Roll.validate(data.spells.primary.formula) && data.spells.secondary.name !== "") {
+    data.spells.secondary.max = 0;
+    if (Roll.validate(data.spells.secondary.formula)) {
       let val = new Roll(data.spells.secondary.formula, actorData);
       val.evaluate({async: false});
-      data.spells.secondary.count = val.total;
+      data.spells.secondary.max = val.total;
     }
-  
+
     // number of instruments of panoply equipped
     let instruments = ["hand", "body", "token", "order", "sanctum", "patron", "transfiguration", "familiar"];
     data.panoply.count = 0;

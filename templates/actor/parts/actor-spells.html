@@ -28,6 +28,15 @@
   </div>
 </div>
 
+<div class="resources grid grid-8col">
+  <div class="resource flex-group-center">
+    <span class="resource-label">Spells</span>
+  </div>
+  <div class="resource-content flexrow flex-left flex-between grid-span-7 {{data.spellPrep.color}}">
+    <span>{{data.spellPrep.text}}</span>
+  </div>
+</div>
+
 <ol class="items-list">
 	{{#each spellsByLoc as |spells loc|}}
 		<li class="item flexrow items-header">

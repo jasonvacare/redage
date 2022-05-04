@@ -66,7 +66,8 @@
     "templates": {
       "base": {
         "description": "",
-        "tags": []
+        "tags": [],
+        "lock": false
       },
       "baseClass": {
         "group": "feat",
@@ -247,7 +248,8 @@
       "powerMax": 5,
       "location": "Vessel",
       "____effectBonus": "0",
-      "____magnitudeBonus": "0"
+      "____magnitudeBonus": "0",
+      "size": 1
     },
 
     "spell": {
@@ -268,6 +270,8 @@
       "powerMax": 5,
       "origin": "",
       "location": "Vessel",
+      "origin": "",
+      "size": 1,
 
       "____parent": null
     }

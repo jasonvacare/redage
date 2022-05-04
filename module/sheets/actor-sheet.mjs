@@ -106,26 +106,77 @@ export class RedAgeActorSheet extends ActorSheet {
     let mundaneFP = Math.floor(Math.min(context.data.characterLevel, REDAGE.HeroicLevelThreshold) / 2);
     let heroicFP = (context.data.characterLevel - REDAGE.HeroicLevelThreshold > 0) ? context.data.characterLevel - REDAGE.HeroicLevelThreshold : 0;
  		fp.max = 2 + context.data.wits.mod + mundaneFP + heroicFP;
-    var overspent = (fp.value > fp.max);
+    let overspent = (fp.value > fp.max);
 
-    context.data.featPoints.tooltip = [ "General (" + fp.value + " / " + fp.max + ")" ];
+    context.data.featPoints.report = [ "General (" + fp.value + " / " + fp.max + ")" ];
 
     context.data.featPoints.rogue = fp = { value: fpSpent.rogue.spent, max: fpSpent.rogue.max };
     overspent = overspent || (fp.value > fp.max);
     if (fp.max > 0)
-      context.data.featPoints.tooltip.push("Rogue (" + fp.value + " / " + fp.max + ")");
+      context.data.featPoints.report.push("Rogue (" + fp.value + " / " + fp.max + ")");
 
     context.data.featPoints.mutation = fp = { value: fpSpent.mutation.spent, max: fpSpent.mutation.max };
     overspent = overspent || (fp.value > fp.max);
-    if (fp.max > 0) context.data.featPoints.tooltip.push("Mutation (" + fp.value + " / " + fp.max + ")");
+    if (fp.max > 0) context.data.featPoints.report.push("Mutation (" + fp.value + " / " + fp.max + ")");
 
     context.data.featPoints.skulk = fp = { value: fpSpent.skulk.spent, max: fpSpent.skulk.max };
     overspent = overspent || (fp.value > fp.max);
-    if (fp.max > 0) context.data.featPoints.tooltip.push("Skulk (" + fp.value + " / " + fp.max + ")");
+    if (fp.max > 0) context.data.featPoints.report.push("Skulk (" + fp.value + " / " + fp.max + ")");
 
-    context.data.featPoints.tooltip = context.data.featPoints.tooltip.join(", ");
-
+    context.data.featPoints.report = context.data.featPoints.report.join(", ");
     if (overspent) context.data.featPoints.basic.color = "red";
+
+    // Determine spells available and used (by type), highlight if overspent
+    let casters = context.items.filter((item) => { return item.type === "classCaster"; });
+    let spells = context.items.filter((item) => { return item.type === "spell" && 
+      (item.data.location === REDAGE.SPELL_PREPARED || item.data.location === REDAGE.SPELL_INNATE); });
+    let unknownSpells = spells.length;
+
+    overspent = false;
+    context.data.spellPrep = { text: [] };
+
+    for (let c of casters) {
+      context.data.level = c.data.classLevel;
+      let primary = c.data.spells.primary;
+      let secondary = c.data.spells.secondary;
+      primary.value = 0;
+      secondary.value = 0;
+
+      primary.max = 0;
+      if (Roll.validate(primary.formula)) {
+        let val = new Roll(primary.formula, context.data);
+        val.evaluate({async: false});
+        primary.max = val.total;
+      }
+  
+      secondary.max = 0;
+      if (Roll.validate(secondary.formula)) {
+        let val = new Roll(secondary.formula, context.data);
+        val.evaluate({async: false});
+        secondary.max = val.total;
+      }
+
+      for (let s of spells) {
+        let data = s.data;
+        if (primary.name !== "" && data.origin === primary.name) { unknownSpells--; primary.value += data.size; }
+        if (secondary.name !== "" && data.origin === secondary.name) { unknownSpells--; secondary.value += data.size; }
+      }
+
+      if (primary.name !== "" && primary.max > 0) {
+        context.data.spellPrep.text.push(primary.name + " (" + primary.value + " / " + primary.max + ")");
+        overspent = overspent || (primary.value > primary.max);
+      }
+      if (secondary.name !== "" && secondary.max > 0) {
+        context.data.spellPrep.text.push(secondary.name + " (" + secondary.value + " / " + secondary.max + ")");
+        overspent = overspent || (secondary.value > secondary.max);
+      }
+    }
+
+    if (unknownSpells > 0)
+      context.data.spellPrep.text.push("Other (" + unknownSpells + ")");
+
+    context.data.spellPrep.text = context.data.spellPrep.text.join(", ");
+    if (overspent) context.data.spellPrep.color = "red";
   }
 
   /*
