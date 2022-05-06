@@ -1,0 +1,63 @@
+<form class="{{cssClass}}" autocomplete="off" xmlns="http://www.w3.org/1999/html">
+
+  <h2>{{item.name}}</h2>
+
+  <div class="resource grid grid-9col">
+      <span class="resource-label grid-span-3">Spell Power ({{rollData.item.powerMin}}-{{rollData.item.powerMax}})</span>
+      <select class="grid-span-3" name="rollData.spell.power" data-dtype="Number">
+        {{#select rollData.spell.power}}
+        <option value="0" data-dtype="Number">Power 0  (1 cantrip)</option>
+        <option value="1" data-dtype="Number">Power 1  (2 mana)</option>
+        <option value="2" data-dtype="Number">Power 2  (3 mana)</option>
+        <option value="3" data-dtype="Number">Power 3  (5 mana)</option>
+        <option value="4" data-dtype="Number">Power 4  (6 mana)</option>
+        <option value="5" data-dtype="Number">Power 5  (7 mana)</option>
+        {{/select}}
+      </select>
+  </div>
+
+  <div class="grid grid-3col {{castingTooltipColor}}">
+    <span class="grid-span-3">Casting ({{rollData.casterMaxPower}} max Power, {{rollData.panoply}} panoply)</span>
+  </div>
+
+	<div class="grid grid-3col">
+    <span class="grid-span-3">Current Mana ({{rollData.mana.cantrip}} cantrips, {{rollData.mana.value}} mana)</span>
+  </div>
+
+	<div class="grid grid-12col">
+    {{#if (eq hasEffectRoll true)}}
+    <!--div class="box-title grid-span-3" title="{{effectFormula}}"-->
+      <span class="grid-span-2">Effect: {{numberFormat effectRoll.total decimals=0 sign=true}} &nbsp;</span>
+      <select class="grid-span-2" name="adShift" data-dtype="Number">
+        {{#select adShift}}
+        {{#each adLadder as |ad id|}}
+        <option value="{{id}}" data-dtype="Number">{{ad}}</option>
+        {{/each}}
+        {{/select}}
+      </select>
+    <!--/div-->
+    <div class="grid-span-3">
+      vs <select name="targetStat" data-dtype="String">
+        {{#select targetStat}}
+        <option value="Vigor" data-dtype="String">Vigor</option>
+        <option value="Dexterity" data-dtype="String">Dexterity</option>
+        <option value="Wits" data-dtype="String">Wits</option>
+        <option value="Spirit" data-dtype="String">Spirit</option>
+        <option value="Defense" data-dtype="String">Defense</option>
+        {{/select}}
+      </select>
+    </div>
+    <span class="grid-span-2 align-right">Targets: </span>
+    <input class="grid-span-3" type="text" name="targets" value="{{targets}}" data-dtype="Number" />
+    {{/if}}
+  </div>
+
+  <div class="grid grid-5col">
+    {{#if (eq hasMagnitudeRoll true)}}
+    <span>Magnitude: </span>
+    <input class="grid-span-3" type="text" name="magnitudeFormula" value="{{magnitudeFormula}}" data-dtype="String" />
+    <span>{{magnitudeType}}</span>
+    {{/if}}
+  </div>
+
+</form>

@@ -47,7 +47,21 @@ export class RedAgeItem extends Item {
     }
     else if (REDAGE.isType(item, ["featureRollable", "featureResourceRollable"])) {
       formula = item.data.formula;
-      label = `${item.name}`;
+      label = `${item.name}`;      
+    }
+    // else if (item.type === "spellContainer") {
+    else if (item.type === "spell") {
+      let origin = item.data.origin;
+      let items = Array.from(actor.items.values());
+      let casterClass = items.find((i) => { return (i.type === 'classCaster' && 
+        (i.data.data.spells.primary.name === origin || i.data.data.spells.secondary.name === origin)); });
+  
+      if (casterClass)
+        return this._onSpellCast(item, actor, casterClass);
+      else 
+        REDAGE.prompt("Unbound Spell", "Spell's origin doesn't match any class's spell type.");
+
+      return;
     }
 
     // If there's no roll data, send a chat message.
@@ -272,5 +286,95 @@ export class RedAgeItem extends Item {
 
 		this.tempData.chatMessage = chatMessage;
 		return chatMessage;
+	}
+
+  	/**
+	* Prep and display spell casting dialog
+	*/
+  async _onSpellCast(item, actor, casterClass) {
+
+		const rollData = this.getRollData();
+
+    // TODO apply warning color to mana when your selected power costs more mana than you have
+
+    let power = item.data.powerMin;
+    let manaCost = (power > 0) ? Math.floor(1 + ((4/3) * power)) : 0;
+
+    rollData.spell = { power: power, manaCost: manaCost, effectBonus: item.data.effectBonus, magnitudeBonus: item.data.magnitudeBonus };
+
+    let stat = casterClass.data.data.castingStat.toLowerCase();
+    rollData.stat = actor.data[stat];
+
+    rollData.casterLevel = casterClass.data.data.classLevel;
+    rollData.casterMaxPower = casterClass.data.data.maxPower;
+    rollData.panoply = casterClass.data.data.panoply.count;
+
+    let adShift = 3;
+
+    let effectFormula = "@casterMaxPower + @" + stat + ".mod"; // + @spell.effectBonus
+    let effectRoll = new Roll(effectFormula, rollData);
+    effectRoll.evaluate({async: false});
+    let targets = 1;
+
+    let magnitudeFormula = item.data.magnitude.formula; // + @spell.magnitudeBonus
+    let magnitudeType = item.data.magnitude.type;
+    // let magnitudeRoll = new Roll(magnitudeFormula, rollData);
+
+    const dialogData = {
+      actor: actor,
+      item: item,      
+      casterClass: casterClass,
+      spell: rollData.spell,
+
+      hasEffectRoll: item.data.effect.hasRoll,
+      effectFormula: effectFormula,
+      effectRoll: effectRoll,
+      adShift: adShift,
+      adLadder: ["+3D", "+2D", "+D", "A / D", "+A", "+2A", "+3A"],
+      targets: targets,
+      targetStat: item.data.effect.targetStat,
+
+      hasMagnitudeRoll: item.data.magnitude.hasRoll,
+      magnitudeFormula: magnitudeFormula,
+      magnitudeType: magnitudeType,
+
+      rollData: rollData,
+      castingTooltipColor: ((rollData.casterMaxPower > rollData.panoply) ? "red" : "")
+    };
+
+    const template = "systems/redage/templates/dialogs/roll-spell-cast.html";
+    const html = await renderTemplate(template, dialogData);
+
+    // this.tempData is a temporary place to store data for inter-function transport
+    // the dialog callback only passes its own html as text, so we need a way to move data
+    // it can be overwritten as needed
+    this.tempData = dialogData;
+
+    const _doRoll = async (html) => { return this._doSpellCast(html, this.tempData); };
+
+    this.popUpDialog = new Dialog({
+      title: actor.name + " - " + item.name,
+      content: html,
+      default: "roll",
+      buttons: {
+        roll: { label: "Cast", callback: (html) => _doRoll(html) },
+        cancel: { label: "Cancel", callback: () => { ; } }
+      },
+    });
+
+    this.popUpDialog.position.width = 470;
+
+    const s = this.popUpDialog.render(true);
+
+    if (s instanceof Promise)
+      await s;
+
+    return this.tempData.chatMessage;
+  }
+
+	/**
+	* Actual processing and output of spell casting
+	*/
+	async _doSpellCast(html, dialogData) {
 	}
 }

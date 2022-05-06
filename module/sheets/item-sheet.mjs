@@ -143,6 +143,14 @@ export class RedAgeItemSheet extends ItemSheet {
     for (let i=0; i < instruments.length; i++) {
       if (data.panoply[instruments[i]]) data.panoply.count++;
     }
+
+    // need this calculated when the sheet changes / closes, but has to be updated or it will be lost with context
+    this.item.update({ 
+      "data.maxPower": data.maxPower,
+      "data.spells.primary.max": data.spells.primary.max,
+      "data.spells.secondary.max": data.spells.secondary.max,
+      "data.panoply.count": data.panoply.count
+      }, {});
   }
 }
 
