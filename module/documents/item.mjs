@@ -298,9 +298,8 @@ export class RedAgeItem extends Item {
     // TODO apply warning color to mana when your selected power costs more mana than you have
 
     let power = item.data.powerMin;
-    let manaCost = (power > 0) ? Math.floor(1 + ((4/3) * power)) : 0;
 
-    rollData.spell = { power: power, manaCost: manaCost, effectBonus: item.data.effectBonus, magnitudeBonus: item.data.magnitudeBonus };
+    rollData.spell = { effectBonus: item.data.effectBonus, magnitudeBonus: item.data.magnitudeBonus };
 
     let stat = casterClass.data.data.castingStat.toLowerCase();
     rollData.stat = actor.data[stat];
@@ -326,6 +325,7 @@ export class RedAgeItem extends Item {
       casterClass: casterClass,
       spell: rollData.spell,
 
+      power: power,
       hasEffectRoll: item.data.effect.hasRoll,
       effectFormula: effectFormula,
       effectRoll: effectRoll,
@@ -372,9 +372,132 @@ export class RedAgeItem extends Item {
     return this.tempData.chatMessage;
   }
 
-	/**
-	* Actual processing and output of spell casting
-	*/
-	async _doSpellCast(html, dialogData) {
-	}
+  /**
+  * Actual processing and output of spell casting
+  */
+  async _doSpellCast(html, dialogData) {
+
+    const actor = dialogData.actor;
+    const item = dialogData.item;
+    const casterClass = dialogData.casterClass;
+    const rollData = dialogData.rollData;
+    const spell = dialogData.spell;
+
+    // get data from dialog
+    var _a;
+    const form = html[0].querySelector("form");
+
+    const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
+    const power = parseInt((_a = form.querySelector('[name="power"]')) === null || _a === void 0 ? void 0 : _a.value);
+    const manaCost = (power > 0) ? Math.floor(1 + ((4/3) * power)) : 0;
+    const targetStat = (_a = form.querySelector('[name="targetStat"]')) === null || _a === void 0 ? void 0 : _a.value;
+    const targets = parseInt((_a = form.querySelector('[name="targets"]')) === null || _a === void 0 ? void 0 : _a.value);
+    const magnitudeFormula = (_a = form.querySelector('[name="magnitudeFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
+
+    dialogData.power = power;
+    dialogData.manaCost = manaCost;
+
+    dialogData.castNotes = ["Power " + power, (manaCost > 0) ? (manaCost + " mana") : "1 cantrip"];
+
+    // decrement mana
+    if (manaCost == 0) {
+      if (actor.data.mana.cantrip <= 0) {
+        REDAGE.prompt("Cantrip Failed", "Insufficient cantrips (consider refreshing with mana)");
+        return;
+      }
+      this.actor.data.update({ "data.mana.cantrip": actor.data.mana.cantrip - 1 }, {});  
+    }
+    else {
+      if (actor.data.mana.value < manaCost) {
+        REDAGE.prompt("Spell Failed", "Insufficient mana (consider Overdrawing)");
+        return;
+      }
+      this.actor.data.update({ "data.mana.value": (actor.data.mana.value - manaCost) }, {});
+    }
+
+    // TODO the readings on the character sheet spell tab aren't updating when decremented
+    //???
+    //this.actor._sheet.render(false, {});
+
+
+    // make <target> effect rolls w/ single magnitude roll
+
+    // TODO compose effect notes
+    // TODO compose magnitude notes
+
+    dialogData.effectNotes = [];
+    dialogData.magnitudeNotes = [dialogData.magnitudeType];
+
+
+    // handle advantage / disadvantage on effect roll
+    let dice = REDAGE.getD20(actor, adShift);
+    dialogData.effectFormula = dice + " + " + dialogData.effectFormula;
+    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+    if (adShift != 0) dialogData.effectNotes.push(adShiftLadder[adShift+3]);
+
+    // handle effect roll
+    const effectRoll = new Roll(dialogData.effectFormula, dialogData.rollData);
+    await effectRoll.evaluate({async: true});
+
+    // TODO handle many effect rolls
+
+
+    // handle special effect rolls (crit, fumble)
+    const effectD20Result = effectRoll.terms[0].total;
+    let critThreshold = 20;
+    let fumbleThreshold = 1;
+
+    if (effectD20Result >= critThreshold)
+    {
+      dialogData.effectNotes.push("Crit");
+
+      // // add maximized damage die
+      // const magnitudeDie = dialogData.magnitudeRoll.terms[0];
+      // const magnitudeDieMax = Number(magnitudeDie.number) * Number(magnitudeDie.faces);
+      // dialogData.magnitudeFormula += " + " + magnitudeDieMax;
+    }
+    else if (effectD20Result <= fumbleThreshold)
+    {
+      dialogData.effectNotes.push("Fumble");
+    }
+
+    const magnitudeRoll = new Roll(dialogData.magnitudeFormula, dialogData.rollData);
+    await magnitudeRoll.evaluate({async: true});
+
+    const rollMode = game.settings.get("core", "rollMode");
+    const diceData = Roll.fromTerms([
+      PoolTerm.fromRolls([effectRoll, magnitudeRoll]),
+    ]);
+
+    const diceTooltip = {
+      effect: await effectRoll.render(),
+      magnitude: await magnitudeRoll.render(),
+    };
+
+    dialogData.effectRoll = effectRoll;
+    dialogData.magnitudeRoll = magnitudeRoll;
+    dialogData.diceTooltip = diceTooltip;
+
+    dialogData.castNotes = (dialogData.castNotes.length > 0) ? "(" + dialogData.castNotes.join(", ") + ")" : "";
+    dialogData.effectNotes = (dialogData.effectNotes.length > 0) ? "(" + dialogData.effectNotes.join(", ") + ")" : "";
+    dialogData.magnitudeNotes = (dialogData.magnitudeNotes.length > 0) ? "(" + dialogData.magnitudeNotes.join(", ") + ")" : "";
+
+    const template = "systems/redage/templates/chat/spell-cast-roll.html";
+    const chatContent = await renderTemplate(template, dialogData);
+    const chatMessage = getDocumentClass("ChatMessage");
+    chatMessage.create(
+      chatMessage.applyRollMode(
+      {
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        roll: JSON.stringify(diceData),
+        content: chatContent,
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      },
+      rollMode
+      )
+    );
+
+    this.tempData.chatMessage = chatMessage;
+    return chatMessage;
+  }
 }

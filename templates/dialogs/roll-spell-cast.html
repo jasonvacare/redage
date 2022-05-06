@@ -4,8 +4,8 @@
 
   <div class="resource grid grid-9col">
       <span class="resource-label grid-span-3">Spell Power ({{rollData.item.powerMin}}-{{rollData.item.powerMax}})</span>
-      <select class="grid-span-3" name="rollData.spell.power" data-dtype="Number">
-        {{#select rollData.spell.power}}
+      <select class="grid-span-3" name="power" data-dtype="Number">
+        {{#select power}}
         <option value="0" data-dtype="Number">Power 0  (1 cantrip)</option>
         <option value="1" data-dtype="Number">Power 1  (2 mana)</option>
         <option value="2" data-dtype="Number">Power 2  (3 mana)</option>
