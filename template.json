@@ -262,15 +262,20 @@
       "target": "Self",
       "components": "None",
 
-      "effectFormula": "0",
-      "magnitudeFormula": "0",
-      "magnitudeType": "",
+      "effect": {
+        "hasRoll": false,
+        "targetStat": "Dexterity"
+      },
+      "magnitude": {
+        "hasRoll": false,
+        "formula": "0",
+        "type": ""
+      },
 
       "powerMin": 0,
       "powerMax": 5,
       "origin": "",
       "location": "Vessel",
-      "origin": "",
       "size": 1,
 
       "____parent": null

@@ -39,26 +39,26 @@
       </div>
 
       <div class="grid grid-3col">
-        <div class="resource">
+        <div class="resource flex-group-left">
           <label class="resource-label">Range</label>
           <input type="text" name="data.range" value="{{data.range}}" data-dtype="String" />
         </div>
-        <div class="resource">
+        <div class="resource flex-group-left">
           <label class="resource-label">Duration</label>
           <input type="text" name="data.duration" value="{{data.duration}}" data-dtype="String" />
         </div>
-        <div class="resource">
+        <div class="resource flex-group-left">
           <label class="resource-label">Target</label>
           <input type="text" name="data.target" value="{{data.target}}" data-dtype="String" />
         </div>
       </div>
 
       <div class="grid grid-3col">
-        <div class="resource">
+        <div class="resource flex-group-left">
           <label class="resource-label">Casting</label>
           <input type="text" name="data.castingTime" value="{{data.castingTime}}" data-dtype="String" />
         </div>
-        <div class="resource">
+        <div class="resource flex-group-left">
           <label class="resource-label">Location</label>
           <span>
             <select name="data.location" data-dtype="String">
@@ -70,31 +70,53 @@
             </select>
           </span>
         </div>
-        <div class="resource">
+        <div class="resource flex-group-left">
           <label class="resource-label">Size</label>
           <input type="text" name="data.size" value="{{data.size}}" data-dtype="Number" />
         </div>
       </div>
 
-      <div class="grid grid-2col">
-        <div class="resource">
-          <label class="resource-label">Effect Formula</label>
-          <input type="text" name="data.effectFormula" value="{{data.effectFormula}}" data-dtype="String" />
+      <div class="grid grid-5col">
+        <div class="resource flex-group-left">
+          <label class="resource-label">Effect</label><br>
+          <input type="checkbox" name="data.effect.hasRoll" {{checked data.effect.hasRoll}} data-dtype="Boolean" />
         </div>
-        <div class="resource">
-          <label class="resource-label">Magnitude Formula</label>
-          <input type="text" name="data.magnitudeFormula" value="{{data.magnitudeFormula}}" data-dtype="String" />
+        <div class="resource flex-group-left grid-span-2">
+          {{#if (eq data.effect.hasRoll true)}}
+          <label class="resource-label">Target Stat</label>
+          <select name="data.effect.targetStat" data-dtype="String">
+            {{#select data.effect.targetStat}}
+            <option value="Vigor" data-dtype="String">Vigor</option>
+            <option value="Dexterity" data-dtype="String">Dexterity</option>
+            <option value="Wits" data-dtype="String">Wits</option>
+            <option value="Spirit" data-dtype="String">Spirit</option>
+            <option value="Defense" data-dtype="String">Defense</option>
+            {{/select}}
+          </select>
+          {{/if}}
         </div>
       </div>
 
-      <div class="grid grid-3col">
-        <div class="resource">
-          <label class="resource-label">Magnitude Type</label>
-          <input type="text" name="data.magnitudeType" value="{{data.magnitudeType}}" data-dtype="String" />
+      <div class="grid grid-5col">
+        <div class="resource flex-group-left">
+          <label class="resource-label">Magnitude</label><br>
+          <input type="checkbox" name="data.magnitude.hasRoll" {{checked data.magnitude.hasRoll}} data-dtype="Boolean" />
+        </div>
+        <div class="resource flex-group-left grid-span-3">
+          {{#if (eq data.magnitude.hasRoll true)}}
+          <label class="resource-label">Formula</label>
+          <input type="text" name="data.magnitude.formula" value="{{data.magnitude.formula}}" data-dtype="String" />
+          {{/if}}
+        </div>
+        <div class="resource flex-group-left">
+          {{#if (eq data.magnitude.hasRoll true)}}
+          <label class="resource-label">Type</label>
+          <input type="text" name="data.magnitude.type" value="{{data.magnitude.type}}" data-dtype="String" />
+          {{/if}}
         </div>
       </div>
 
-      <div class="resource">
+      <div class="resource flex-group-left">
         <label class="resource-label">Components</label>
         <input type="text" name="data.components" value="{{data.components}}" data-dtype="String" />
       </div>

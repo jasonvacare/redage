@@ -133,14 +133,20 @@ REDAGE.isType = function(item, list) {
 /**
 * Composes the d20 roll for stat check / attacks / spell effects, applying conditions that grant +A/D and other modifiers
 */
-REDAGE.getD20 = function(actor, adShift) {
+REDAGE.getD20 = function(actor, adShift, params = { noFatigue: false, noEncumbrance: false }) {
   // handle advantage / disadvantage on roll
   var dice = (Math.abs(adShift)+1) + "d20";
   if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
 
-  // apply fatigue
-  // apply encumbrance level
-  // TODO
+  if (!params || !params.noFatigue) {
+    // apply fatigue
+    // TODO
+  }
+
+  if (!params || !params.noEncumbrance) {
+    // apply encumbrance level
+    // TODO
+  }
 
   return dice;
 }
@@ -226,4 +232,8 @@ REDAGE.moveText = async function (item, table, index, shift) {
   let newData = {};
   newData[table] = update;
   return item.update({ data: newData });
+}
+
+REDAGE.prompt = async function (title, content, callback = () => { ; }) {
+  return Dialog.prompt({ title: title, content: content, callback: callback });
 }
