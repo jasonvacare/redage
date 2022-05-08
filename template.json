@@ -260,9 +260,7 @@
     "spell": {
       "templates": [ "base" ],
       "group": "magic",
-      "____effectFormula": "0",
-      "____magnitudeFormula": "0",
-      "____magnitudeType": "",
+
       "castingTime": "1 action",
       "duration": "Instant",
       "range": "None",

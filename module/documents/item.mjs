@@ -395,6 +395,7 @@ export class RedAgeItem extends Item {
     const magnitudeFormula = (_a = form.querySelector('[name="magnitudeFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
 
     dialogData.power = power;
+    rollData.power = power;
     dialogData.manaCost = manaCost;
 
     dialogData.castNotes = ["Power " + power, (manaCost > 0) ? (manaCost + " mana") : "1 cantrip"];
