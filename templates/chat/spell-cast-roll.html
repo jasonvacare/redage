@@ -1,0 +1,26 @@
+<div>
+	<h3>{{ item.name }}</h3>
+	<span>Cast {{{ castNotes }}}</span>
+
+  <!--
+	<span>Effect {{{ effectNotes }}}</span>
+  {{#each diceTooltip.effects as |effect id|}}
+	{{{ effect }}}
+  {{/each}}
+  -->
+  <div>
+	  <span>Effect {{{ effectNotes }}}</span>
+	  {{{ diceTooltip.effect }}}
+	  <span>Magnitude {{{ magnitudeNotes }}}</span>
+	  {{{ diceTooltip.magnitude }}}
+</div>
+</div>
+
+<!--
+caster
+spell notes
+mana / power, overcasting
+effect rolls vs defense defaultStat (if any), number of targets, +A/D
+magnitude roll + type (if any)
+effect text (maybe as tooltip?)
+-->

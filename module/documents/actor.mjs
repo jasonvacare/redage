@@ -78,29 +78,34 @@ export class RedAgeActor extends Actor {
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     data.life.value = Math.max(0, Math.min(data.life.max, data.life.value));
 
-		// armor caps dexterity bonus and mod
-		const armorProperties = this._calculateDefenseBonus(items);
-		data.defenseBonus = armorProperties.defense;
-		data.dexterity.bonus = Math.min(armorProperties.maxDexterityBonus, data.dexterity.bonus);
-		data.dexterity.mod = Math.min(armorProperties.maxDexterityMod, data.dexterity.mod);
-		data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+    // TODO set value = sum of all fatigue status items (fatigue, hunger, thirst, drain, wind, etc)
+    // tooltip is penalty for this level of exhaustion
+    // fatigue penalty to be integrated into rolls via REDAGE.getD20()
+    data.fatigue.value = 0;
+    data.fatigue.exhaustion = Math.ceil(-data.fatigue.value / 10);
+    data.fatigue.tooltip = "";
 
-    // TODO have some visual way of showing that your dex / mod have been capped down (color, small icon, etc) + tooltip?
+    // armor caps dexterity bonus and mod
+    const armorProperties = this._calculateDefenseBonus(items);
+    data.defenseBonus = armorProperties.defense;
+    data.dexterity.bonus = Math.min(armorProperties.maxDexterityBonus, data.dexterity.bonus);
+    data.dexterity.mod = Math.min(armorProperties.maxDexterityMod, data.dexterity.mod);
+    data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
- 		data.readied = { value: this._calculateReadiedItems(items) };
- 		data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0);
+    data.readied = { value: this._calculateReadiedItems(items) };
+    data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0);
 
- 		data.carried = { value: this._calculateCarriedItems(items) };
- 		data.carried.max = data.vigor.value;
+    data.carried = { value: this._calculateCarriedItems(items) };
+    data.carried.max = data.vigor.value;
 
-		if (data.carried.value <= (data.carried.max / 2))
-			data.carried.loadLevel = "Light";
-		else if (data.carried.value <= data.carried.max)
-			data.carried.loadLevel = "Medium";
-		else if (data.carried.value <= (1.5 * data.carried.max))
-			data.carried.loadLevel = "Heavy";
-		else
-			data.carried.loadLevel = "Overloaded";
+    if (data.carried.value <= (data.carried.max / 2))
+      data.carried.loadLevel = "Light";
+    else if (data.carried.value <= data.carried.max)
+      data.carried.loadLevel = "Medium";
+    else if (data.carried.value <= (1.5 * data.carried.max))
+      data.carried.loadLevel = "Heavy";
+    else
+      data.carried.loadLevel = "Overloaded";
 
     // fighter mastery preparation
     data.fighterMastery = this._calculateFighterMasteries(items);
@@ -174,13 +179,19 @@ export class RedAgeActor extends Actor {
   	let readiedItems = 0;
 
     for (let i of items) {
-      if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
-      	if (i.data.data.location == REDAGE.INV_READY)
-      		readiedItems++;
+      if (REDAGE.isType(i, ['item', 'weapon', 'armor']) && i.data.data.location == REDAGE.INV_READY) {
+        if (i.data.data.weight < 1.0) {
+          // multiple light items take up readied slots = total weight (min 1)
+          readiedItems += Math.max(1, Math.round(i.data.data.weight * i.data.data.quantity.value));
+        }
+        else {
+          // 1+ weight items take up readied slots = total quantity (regardless of weight)
+          readiedItems += i.data.data.quantity.value;
+        }
       }
     }
 
-    return readiedItems;
+    return Math.round(readiedItems);
   }
 
   _calculateCarriedItems(items) {

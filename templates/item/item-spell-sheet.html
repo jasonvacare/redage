@@ -3,25 +3,139 @@
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+
+      <div class="grid grid-3col">
+        <div class="resource flex-group-left">
+          <label for="data.powerMin" class="resource-label">Power</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <select name="data.powerMin" data-dtype="Number">
+              {{#select data.powerMin}}
+              <option value="0" data-dtype="Number">0</option>
+              <option value="1" data-dtype="Number">1</option>
+              <option value="2" data-dtype="Number">2</option>
+              <option value="3" data-dtype="Number">3</option>
+              <option value="4" data-dtype="Number">4</option>
+              <option value="5" data-dtype="Number">5</option>
+              {{/select}}
+            </select> &nbsp; &ndash; &nbsp;
+            <select name="data.powerMax" data-dtype="Number">
+              {{#select data.powerMax}}
+              <option value="0" data-dtype="Number">0</option>
+              <option value="1" data-dtype="Number">1</option>
+              <option value="2" data-dtype="Number">2</option>
+              <option value="3" data-dtype="Number">3</option>
+              <option value="4" data-dtype="Number">4</option>
+              <option value="5" data-dtype="Number">5</option>
+              {{/select}}
+            </select>
+          </div>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Origin</label>
+          <input type="text" name="data.origin" value="{{data.origin}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource flex-group-left">
+          <label class="resource-label">Range</label>
+          <input type="text" name="data.range" value="{{data.range}}" data-dtype="String" />
+        </div>
+        <div class="resource flex-group-left">
+          <label class="resource-label">Duration</label>
+          <input type="text" name="data.duration" value="{{data.duration}}" data-dtype="String" />
+        </div>
+        <div class="resource flex-group-left">
+          <label class="resource-label">Target</label>
+          <input type="text" name="data.target" value="{{data.target}}" data-dtype="String" />
+        </div>
+      </div>
+
+      <div class="grid grid-3col">
+        <div class="resource flex-group-left">
+          <label class="resource-label">Casting</label>
+          <input type="text" name="data.castingTime" value="{{data.castingTime}}" data-dtype="String" />
+        </div>
+        <div class="resource flex-group-left">
+          <label class="resource-label">Location</label>
+          <span>
+            <select name="data.location" data-dtype="String">
+              {{#select data.location}}
+              {{#each spellLocations }}
+              <option value="{{this}}" data-dtype="String">{{this}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+          </span>
+        </div>
+        <div class="resource flex-group-left">
+          <label class="resource-label">Size</label>
+          <input type="text" name="data.size" value="{{data.size}}" data-dtype="Number" />
+        </div>
+      </div>
+
+      <div class="grid grid-5col">
+        <div class="resource flex-group-left">
+          <label class="resource-label">Effect</label><br>
+          <input type="checkbox" name="data.effect.hasRoll" {{checked data.effect.hasRoll}} data-dtype="Boolean" />
+        </div>
+        <div class="resource flex-group-left grid-span-2">
+          {{#if (eq data.effect.hasRoll true)}}
+          <label class="resource-label">Target Stat</label>
+          <select name="data.effect.targetStat" data-dtype="String">
+            {{#select data.effect.targetStat}}
+            <option value="Vigor" data-dtype="String">Vigor</option>
+            <option value="Dexterity" data-dtype="String">Dexterity</option>
+            <option value="Wits" data-dtype="String">Wits</option>
+            <option value="Spirit" data-dtype="String">Spirit</option>
+            <option value="Defense" data-dtype="String">Defense</option>
+            {{/select}}
+          </select>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="grid grid-5col">
+        <div class="resource flex-group-left">
+          <label class="resource-label">Magnitude</label><br>
+          <input type="checkbox" name="data.magnitude.hasRoll" {{checked data.magnitude.hasRoll}} data-dtype="Boolean" />
+        </div>
+        <div class="resource flex-group-left grid-span-3">
+          {{#if (eq data.magnitude.hasRoll true)}}
+          <label class="resource-label">Formula</label>
+          <input type="text" name="data.magnitude.formula" value="{{data.magnitude.formula}}" data-dtype="String" />
+          {{/if}}
+        </div>
+        <div class="resource flex-group-left">
+          {{#if (eq data.magnitude.hasRoll true)}}
+          <label class="resource-label">Type</label>
+          <input type="text" name="data.magnitude.type" value="{{data.magnitude.type}}" data-dtype="String" />
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="resource flex-group-left">
+        <label class="resource-label">Components</label>
+        <input type="text" name="data.components" value="{{data.components}}" data-dtype="String" />
+      </div>
+    
     </div>
   </header>
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="attributes">Attributes</a>
+		<a class="item" data-tab="qualities">Qualities</a>
     <a class="item" data-tab="description">Description</a>
   </nav>
 
   {{!-- Sheet Body --}}
   <section class="sheet-body">
 
-    {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
-      {{!-- As you add new fields, add them in here! --}}
-      <div class="resource">
-        <label class="resource-label">Spell Level</label>
-        <input type="text" name="data.spellLevel" value="{{data.spellLevel}}" data-dtype="Number"/>
-      </div>
+    {{!-- Qualities Tab --}}
+    <div class="tab" data-group="primary" data-tab="qualities">
+      {{> "systems/redage/templates/item/parts/item-qualities-sheet.html"}}
     </div>
 
     {{!-- Description Tab --}}

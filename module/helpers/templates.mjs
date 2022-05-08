@@ -14,6 +14,8 @@
 
 		// Item partials.
 		"systems/redage/templates/item/parts/item-basics-sheet.html",
+		"systems/redage/templates/item/parts/item-qualities-sheet.html",
+		"systems/redage/templates/item/parts/item-class-core-sheet.html",
 
   ]);
 };

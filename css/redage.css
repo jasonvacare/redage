@@ -486,3 +486,11 @@
 
 .item-relocate {
 }
+
+.hide {
+  display: none;
+}
+
+.hide-until-hover:hover > .hide {
+  display: block;
+}

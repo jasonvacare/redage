@@ -67,7 +67,49 @@ export class RedAgeItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
-    // Roll handlers, click handlers, etc. would go here.
+    // Event handlers
+    
+    // Add and remove item tags
+    html.find(".item-text-push").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      REDAGE.pushText(this.item, table);
+    });
+
+    html.find(".item-text-edit").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      // const text = $(ev.currentTarget).closest(".item").data("tag");
+      REDAGE.pushText(this.item, table, index);
+    });
+
+    html.find(".item-text-pop").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.popText(this.item, table, index);
+    });
+
+    html.find(".item-text-up").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.moveText(this.item, table, index, -1);
+    });
+
+    html.find(".item-text-down").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.moveText(this.item, table, index, 1);
+    });
+
   }
 
   _calculateCasting(context) {
@@ -80,28 +122,35 @@ export class RedAgeItemSheet extends ItemSheet {
       data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 4);
     else
       data.maxPower = Math.ceil(Math.min(10, data.classLevel) / 2);
-
-    // (arcane) preppable / innate spells OR (divine) world affinities (std) and divine bonds (bonus)
-    data.spellCapacity.standard = 0;
-    data.spellCapacity.bonus = 0;
-
-    if (Roll.validate(data.spellCapacity.standardFormula)) {
-      let val = new Roll(data.spellCapacity.standardFormula, actorData);
+    
+    data.spells.primary.max = 0;
+    if (Roll.validate(data.spells.primary.formula)) {
+      let val = new Roll(data.spells.primary.formula, actorData);
       val.evaluate({async: false});
-      data.spellCapacity.standard = val.total;
+      data.spells.primary.max = val.total;
     }
-    if (Roll.validate(data.spellCapacity.bonusFormula)) {
-      let val = new Roll(data.spellCapacity.bonusFormula, actorData);
+
+    data.spells.secondary.max = 0;
+    if (Roll.validate(data.spells.secondary.formula)) {
+      let val = new Roll(data.spells.secondary.formula, actorData);
       val.evaluate({async: false});
-      data.spellCapacity.bonus = val.total;
+      data.spells.secondary.max = val.total;
     }
-  
+
     // number of instruments of panoply equipped
     let instruments = ["hand", "body", "token", "order", "sanctum", "patron", "transfiguration", "familiar"];
     data.panoply.count = 0;
     for (let i=0; i < instruments.length; i++) {
       if (data.panoply[instruments[i]]) data.panoply.count++;
     }
+
+    // need this calculated when the sheet changes / closes, but has to be updated or it will be lost with context
+    this.item.update({ 
+      "data.maxPower": data.maxPower,
+      "data.spells.primary.max": data.spells.primary.max,
+      "data.spells.secondary.max": data.spells.secondary.max,
+      "data.panoply.count": data.panoply.count
+      }, {});
   }
 }
 

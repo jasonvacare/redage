@@ -30,6 +30,10 @@
           "value": 5,
           "min": 0
         },
+        "fatigue": {
+          "min": 0,
+          "max": 60
+        },
         "mana": {
           "value": 0,
           "reserve": 0,
@@ -57,12 +61,13 @@
       "weapon", "armor", "item", 
       "spell", "spellContainer",
       "class", "classCaster", "classFighter",
-      "feature", "featureSkill", "featureRollable", "featureResource"
+      "feature", "featureSkill", "featureRollable", "featureResource", "featureResourceRollable"
     ],
     "templates": {
       "base": {
         "description": "",
-        "tags": []
+        "tags": [],
+        "lock": false
       },
       "baseClass": {
         "group": "feat",
@@ -134,9 +139,9 @@
       "isArcane": true,
       "isHalfcaster": false,
       "castingStat": "Spirit",
-      "spellCapacity": {
-        "standardFormula": "",
-        "bonusFormula": ""
+      "spells": {
+        "primary": { "name": "Spells", "formula": "0" },
+        "secondary": { "name": "", "formula": "0" }
       },
       "panoply": {
         "hand": false,
@@ -227,10 +232,20 @@
         "recharge": ""
       }
     },
+    "featureResourceRollable": {
+      "templates": [ "base", "baseFeature" ],
+      "formula": "",
+      "resource": {
+        "value": 0,
+        "min": 0,
+        "max": 0,
+        "recharge": ""
+      }
+    },
 
     "spellContainer": {
       "templates": [ "base" ],
-      "group": "spell",
+      "group": "magic",
       "____spells": [],
       "____spellUuids": [],
       "origin": "",
@@ -238,22 +253,39 @@
       "powerMax": 5,
       "location": "Vessel",
       "____effectBonus": "0",
-      "____magnitudeBonus": "0"
+      "____magnitudeBonus": "0",
+      "size": 1
     },
 
-    "____spell": {
-      "____templates": [ "base" ],
-      "group": "spell",
-      "____parent": null,
-      "____castingTime": "1 action",
-      "____duration": "Instant",
-      "____range": "None",
-      "____target": "Self",
-      "____components": "None",
-
+    "spell": {
+      "templates": [ "base" ],
+      "group": "magic",
       "____effectFormula": "0",
       "____magnitudeFormula": "0",
-      "____magnitudeType": ""
+      "____magnitudeType": "",
+      "castingTime": "1 action",
+      "duration": "Instant",
+      "range": "None",
+      "target": "Self",
+      "components": "None",
+
+      "effect": {
+        "hasRoll": false,
+        "targetStat": "Dexterity"
+      },
+      "magnitude": {
+        "hasRoll": false,
+        "formula": "0",
+        "type": ""
+      },
+
+      "powerMin": 0,
+      "powerMax": 5,
+      "origin": "",
+      "location": "Vessel",
+      "size": 1,
+
+      "____parent": null
     },
 
     "status": {

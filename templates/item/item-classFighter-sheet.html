@@ -3,12 +3,21 @@
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+
+      <div class="grid grid-2col">
+        <div class="resource">
+          <label for="data.classLevel" class="resource-label">Level</label>
+          <input type="text" name="data.classLevel" value="{{data.classLevel}}" data-dtype="Number"/>
+        </div>
+      </div>
+  
     </div>
   </header>
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="attributes">Attributes</a>
+		<a class="item" data-tab="qualities">Qualities</a>
     <a class="item" data-tab="description">Description</a>
 		<a class="item" data-tab="mastery">Weapon Mastery</a>
   </nav>
@@ -18,28 +27,12 @@
 
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
-      <div class="flexcol">
-        <div class="flexrow">
-          <label for="data.classLevel" class="resource-label">Level</label>
-          <input type="text" name="data.classLevel" value="{{data.classLevel}}" data-dtype="Number"/>
-        </div>
-        <div class="flexrow">
-          <label for="data.startingHealth" class="resource-label">Starting Health</label>
-          <input type="text" name="data.startingHealth" value="{{data.startingHealth}}" data-dtype="Number"/>
-        </div>
-        <div class="flexrow">
-          <label for="data.maxHealthPerLevel" class="resource-label">Max Health Per Level</label>
-          <input type="text" name="data.maxHealthPerLevel" value="{{data.maxHealthPerLevel}}" data-dtype="Number"/>
-        </div>
-        <div class="flexrow">
-          <label for="data.maxHealthPerLevelHeroic" class="resource-label">Max Health Per Level (Heroic)</label>
-          <input type="text" name="data.maxHealthPerLevelHeroic" value="{{data.maxHealthPerLevelHeroic}}" data-dtype="Number"/>
-        </div>
-        <div class="flexrow">
-          <label for="data.attackBonusPerLevel" class="resource-label">Attack Bonus Per Level</label>
-          <input type="text" name="data.attackBonusPerLevel" value="{{data.attackBonusPerLevel}}" data-dtype="Number"/>
-        </div>
-      </div>
+      {{> "systems/redage/templates/item/parts/item-class-core-sheet.html"}}
+    </div>
+
+    {{!-- Qualities Tab --}}
+    <div class="tab" data-group="primary" data-tab="qualities">
+      {{> "systems/redage/templates/item/parts/item-qualities-sheet.html"}}
     </div>
 
     {{!-- Description Tab --}}
