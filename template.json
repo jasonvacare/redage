@@ -77,6 +77,11 @@
         "cost": 0,
         "origin": ""
       },
+      "baseStatus": {
+        "group": "status",
+        "progress": 0,
+        "origin": ""
+      },
       "baseItem": {
         "group": "item",
         "isLoot": false,
@@ -249,6 +254,10 @@
       "____effectFormula": "0",
       "____magnitudeFormula": "0",
       "____magnitudeType": ""
+    },
+
+    "status": {
+      "templates": [ "baseStatus" ]
     }
   }
 }
