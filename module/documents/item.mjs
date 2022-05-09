@@ -299,7 +299,8 @@ export class RedAgeItem extends Item {
 
     let power = item.data.powerMin;
 
-    rollData.spell = { effectBonus: item.data.effectBonus, magnitudeBonus: item.data.magnitudeBonus };
+    rollData.spell = { hasEffect: item.data.effect.hasRoll, effectBonus: item.data.effectBonus, 
+      hasMagnitude: item.data.magnitude.hasRoll, magnitudeBonus: item.data.magnitudeBonus };
 
     let stat = casterClass.data.data.castingStat.toLowerCase();
     rollData.stat = actor.data[stat];
@@ -397,8 +398,22 @@ export class RedAgeItem extends Item {
     dialogData.power = power;
     rollData.power = power;
     dialogData.manaCost = manaCost;
+    dialogData.magnitudeFormula = magnitudeFormula;
 
+    // general casting notes
     dialogData.castNotes = ["Power " + power, (manaCost > 0) ? (manaCost + " mana") : "1 cantrip"];
+
+    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+    const adShiftNote = adShiftLadder[adShift+3];
+    if (adShiftNote)
+      dialogData.castNotes.push(adShiftNote);
+    if (targetStat)
+      dialogData.castNotes.push("vs " + targetStat);
+
+
+
+
+
 
     // decrement mana
     if (manaCost == 0) {
@@ -421,67 +436,74 @@ export class RedAgeItem extends Item {
     //this.actor._sheet.render(false, {});
 
 
-    // make <target> effect rolls w/ single magnitude roll
-
-    // TODO compose effect notes
-    // TODO compose magnitude notes
-
-    dialogData.effectNotes = [];
-    dialogData.magnitudeNotes = [dialogData.magnitudeType];
 
 
-    // handle advantage / disadvantage on effect roll
-    let dice = REDAGE.getD20(actor, adShift);
-    dialogData.effectFormula = dice + " + " + dialogData.effectFormula;
-    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
-    if (adShift != 0) dialogData.effectNotes.push(adShiftLadder[adShift+3]);
-
-    // handle effect roll
-    const effectRoll = new Roll(dialogData.effectFormula, dialogData.rollData);
-    await effectRoll.evaluate({async: true});
-
-    // TODO handle many effect rolls
 
 
-    // handle special effect rolls (crit, fumble)
-    const effectD20Result = effectRoll.terms[0].total;
-    let critThreshold = 20;
-    let fumbleThreshold = 1;
+    // if the spell requires effect rolls, handle for each target
+    dialogData.effects = [];
 
-    if (effectD20Result >= critThreshold)
+    if (spell.hasEffect && !isNaN(targets) && targets > 0)
     {
-      dialogData.effectNotes.push("Crit");
 
-      // // add maximized damage die
-      // const magnitudeDie = dialogData.magnitudeRoll.terms[0];
-      // const magnitudeDieMax = Number(magnitudeDie.number) * Number(magnitudeDie.faces);
-      // dialogData.magnitudeFormula += " + " + magnitudeDieMax;
+      // handle advantage / disadvantage on effect roll
+      let dice = REDAGE.getD20(actor, adShift);
+      dialogData.effectFormula = dice + " + " + dialogData.effectFormula;
+
+      for (let e=0; e < targets; e++)
+      {
+        let notes = [];
+
+        // handle effect roll
+        const effectRoll = new Roll(dialogData.effectFormula, dialogData.rollData);
+        await effectRoll.evaluate({async: true});
+
+        // handle special effect rolls (crit, fumble)
+        const effectD20Result = effectRoll.terms[0].total;
+        let critThreshold = 20;
+        let fumbleThreshold = 1;
+
+        if (effectD20Result >= critThreshold)
+        {
+          notes.push("Crit");
+        }
+        else if (effectD20Result <= fumbleThreshold)
+        {
+          notes.push("Fumble");
+        }
+
+        notes = (notes.length > 0) ? "(" + notes.join(", ") + ")" : "";
+        const rollRender = await effectRoll.render();
+  
+        dialogData.effects[e] = { notes: notes, roll: effectRoll, id: (e+1), rollRender: rollRender };
+      }
     }
-    else if (effectD20Result <= fumbleThreshold)
+
+    // if there is a magnitude formula...
+    if (spell.hasMagnitude && magnitudeFormula)
     {
-      dialogData.effectNotes.push("Fumble");
-    }
+      let notes = [];
+      if (dialogData.magnitudeType)
+        notes = [dialogData.magnitudeType];
+      const magRoll = new Roll(dialogData.magnitudeFormula, dialogData.rollData);
+      await magRoll.evaluate({async: true});
+      const rollRender = await magRoll.render();
 
-    const magnitudeRoll = new Roll(dialogData.magnitudeFormula, dialogData.rollData);
-    await magnitudeRoll.evaluate({async: true});
+      notes = (notes.length > 0) ? "(" + notes.join(", ") + ")" : "";
+
+      dialogData.magnitude = { notes: notes, roll: magRoll, rollRender: rollRender };
+    }
 
     const rollMode = game.settings.get("core", "rollMode");
+
+    const rollArray = dialogData.effects.map((x) => x.roll);
+    if (magnitudeFormula)
+      rollArray.push(dialogData.magnitude.roll);
     const diceData = Roll.fromTerms([
-      PoolTerm.fromRolls([effectRoll, magnitudeRoll]),
+      PoolTerm.fromRolls(rollArray),
     ]);
 
-    const diceTooltip = {
-      effect: await effectRoll.render(),
-      magnitude: await magnitudeRoll.render(),
-    };
-
-    dialogData.effectRoll = effectRoll;
-    dialogData.magnitudeRoll = magnitudeRoll;
-    dialogData.diceTooltip = diceTooltip;
-
     dialogData.castNotes = (dialogData.castNotes.length > 0) ? "(" + dialogData.castNotes.join(", ") + ")" : "";
-    dialogData.effectNotes = (dialogData.effectNotes.length > 0) ? "(" + dialogData.effectNotes.join(", ") + ")" : "";
-    dialogData.magnitudeNotes = (dialogData.magnitudeNotes.length > 0) ? "(" + dialogData.magnitudeNotes.join(", ") + ")" : "";
 
     const template = "systems/redage/templates/chat/spell-cast-roll.html";
     const chatContent = await renderTemplate(template, dialogData);
