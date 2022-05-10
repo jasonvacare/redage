@@ -42,4 +42,33 @@
     </div>
   </div>
 
+  {{#if (gt actor.data.data.mana.max 0)}}
+  <div class="grid grid-4col">
+    <div class="resource">
+      <label for="mana.value" class="resource-label">Mana</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="mana.value" value="{{actor.data.data.mana.value}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="mana.cantrip" class="resource-label">Cantrips</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="mana.cantrip" value="{{actor.data.data.mana.cantrip}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="mana.reserve" class="resource-label">Reserve</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <input type="text" name="mana.reserve" value="{{actor.data.data.mana.reserve}}" data-dtype="Number"/>
+      </div>
+    </div>
+    <div class="resource">
+      <label for="mana.max" class="resource-label">Max</label>
+      <div class="resource-content flexrow flex-center flex-between">
+        <span>{{actor.data.data.mana.max}}</span>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+
 </form>

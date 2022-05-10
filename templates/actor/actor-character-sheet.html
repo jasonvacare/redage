@@ -15,9 +15,9 @@
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center box-title grid-span-3" title="{{data.health.tooltip}}">
           {{#if (gt data.health.temp 0)}}
-          <label for="data.health.value" class="resource-label rollable" data-roll-type="healthManager" data-label="hp">Health ({{numberFormat data.health.temp decimals=0 sign=true}})</label>
+          <label for="data.health.value" class="resource-label rollable" data-roll-type="resourceManager" data-label="hp">Health ({{numberFormat data.health.temp decimals=0 sign=true}})</label>
           {{else}}
-          <label for="data.health.value" class="resource-label rollable" data-roll-type="healthManager" data-label="hp">Health</label>
+          <label for="data.health.value" class="resource-label rollable" data-roll-type="resourceManager" data-label="hp">Health</label>
           {{/if}}
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/> &nbsp; / &nbsp;
@@ -28,7 +28,7 @@
         <div class="resource flex-group-center"></div>
 
         <div class="resource flex-group-center grid-span-3">
-          <label for="data.life.value" class="resource-label rollable" data-roll-type="healthManager" data-label="hp">Life</label>
+          <label for="data.life.value" class="resource-label rollable" data-roll-type="resourceManager" data-label="hp">Life</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="data.life.value" value="{{data.life.value}}" data-dtype="Number"/> &nbsp; / &nbsp;
             <input type="text" name="data.life.max" value="{{data.life.max}}" data-dtype="Number" readonly />

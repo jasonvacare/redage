@@ -540,9 +540,9 @@ export class RedAgeActorSheet extends ActorSheet {
       else if (dataset.rollType == 'defense') {
         this._onStatRoll("Defense", "defenseBonus", "Save", "");
       }
-      // HP / reserve/ tHP / Life manager dialog
-      else if (dataset.rollType == 'healthManager') {
-        this._onHealthManager();
+      // HP / reserve/ tHP / Life / Mana manager dialog
+      else if (dataset.rollType == 'resourceManager') {
+        this._onResourceManager();
       }
     }
     
@@ -749,22 +749,22 @@ export class RedAgeActorSheet extends ActorSheet {
 		return chatMessage;
 	}
 
-  async _onHealthManager()
+  async _onResourceManager()
   {
     const actor = this.actor;
     const rollData = this.actor.getRollData();
 
     const dialogData = {
       actor: actor,
-      label: "Health & Life",
+      label: "Resources",
       rollData: rollData
     };
 
-    const template = "systems/redage/templates/dialogs/health-manager.html";
+    const template = "systems/redage/templates/dialogs/resource-manager.html";
     const html = await renderTemplate(template, dialogData);
     this.tempData = dialogData;
 
-    const _doHealthManagement = async (html) => {
+    const _doResourceManagement = async (html) => {
       let actor = this.tempData.actor.data;
       var _a;
       const form = html[0].querySelector("form");
@@ -773,11 +773,21 @@ export class RedAgeActorSheet extends ActorSheet {
       var hpRes = parseInt((_a = form.querySelector('[name="health.reserve"]')) === null || _a === void 0 ? void 0 : _a.value);
       var lifeVal = parseInt((_a = form.querySelector('[name="life.value"]')) === null || _a === void 0 ? void 0 : _a.value);
 
+      var manaVal = parseInt((_a = form.querySelector('[name="mana.value"]')) === null || _a === void 0 ? void 0 : _a.value);
+      var cantVal = parseInt((_a = form.querySelector('[name="mana.cantrip"]')) === null || _a === void 0 ? void 0 : _a.value);
+      var manaRes = parseInt((_a = form.querySelector('[name="mana.reserve"]')) === null || _a === void 0 ? void 0 : _a.value);
+
       hpVal = (!isNaN(hpVal)) ? Math.max(0, Math.min(hpVal, actor.data.health.max)) : 0;
       hpTemp = (!isNaN(hpTemp)) ? Math.max(0, hpTemp) : 0;
       hpRes = (!isNaN(hpRes)) ? Math.max(0, Math.min(hpRes, actor.data.health.max)) : 0;
       lifeVal = (!isNaN(lifeVal)) ? Math.max(0, Math.min(lifeVal, actor.data.life.max)) : 0;
-      this.actor.update( { "data.health.value": hpVal, "data.health.temp": hpTemp, "data.health.reserve": hpRes, "data.life.value": lifeVal }, {});
+
+      manaVal = (!isNaN(manaVal)) ? Math.max(0, Math.min(manaVal, actor.data.mana.max)) : 0;
+      cantVal = (!isNaN(cantVal)) ? Math.max(0, Math.min(cantVal, 5)) : 0;
+      manaRes = (!isNaN(manaRes)) ? Math.max(0, Math.min(manaRes, actor.data.mana.max)) : 0;
+
+      this.actor.update( { "data.health.value": hpVal, "data.health.temp": hpTemp, "data.health.reserve": hpRes, "data.life.value": lifeVal,
+        "data.mana.value": manaVal, "data.mana.cantrip": cantVal, "data.mana.reserve": manaRes }, {});
     };
 
     this.popUpDialog = new Dialog({
@@ -788,7 +798,7 @@ export class RedAgeActorSheet extends ActorSheet {
         close: {
           label: "Apply",
           // callback: async (html) => { return this._doHealthManagement(html, this.tempData); },
-					callback: (html) => _doHealthManagement(html),
+					callback: (html) => _doResourceManagement(html),
         },
         cancel: {
           label: "Cancel",
