@@ -410,35 +410,21 @@ export class RedAgeItem extends Item {
     if (targetStat)
       dialogData.castNotes.push("vs " + targetStat);
 
-
-
-
-
-
     // decrement mana
     if (manaCost == 0) {
       if (actor.data.mana.cantrip <= 0) {
         REDAGE.prompt("Cantrip Failed", "Insufficient cantrips (consider refreshing with mana)");
         return;
       }
-      this.actor.data.update({ "data.mana.cantrip": actor.data.mana.cantrip - 1 }, {});  
+      this.actor.update( { "data.mana.cantrip": actor.data.mana.cantrip - 1 }, {});
     }
     else {
       if (actor.data.mana.value < manaCost) {
         REDAGE.prompt("Spell Failed", "Insufficient mana (consider Overdrawing)");
         return;
       }
-      this.actor.data.update({ "data.mana.value": (actor.data.mana.value - manaCost) }, {});
+      this.actor.update( { "data.mana.value": (actor.data.mana.value - manaCost) }, {});
     }
-
-    // TODO the readings on the character sheet spell tab aren't updating when decremented
-    //???
-    //this.actor._sheet.render(false, {});
-
-
-
-
-
 
     // if the spell requires effect rolls, handle for each target
     dialogData.effects = [];
