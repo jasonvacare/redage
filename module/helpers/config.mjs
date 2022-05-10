@@ -99,19 +99,17 @@ REDAGE.SpellLocations = [
 	REDAGE.SPELL_TOWN
 ];
 
-REDAGE.ManaCost = [
-	0.2,
-	2,
-	3,
-	5,
-	6,
-	7,
-	9,
-	10,
-	11,
-	13
+REDAGE.StatusOrigins = [
+  "Condition",
+  "Benefit",
+  "Wound",
+  "Fatigue",
+  "Affliction",
+  "Other"
 ];
 
+
+// Helper Functions
 
 /**
 * Return index of element's location in list, or list.length+1 if not found
@@ -138,9 +136,10 @@ REDAGE.getD20 = function(actor, adShift, params = { noFatigue: false, noEncumbra
   var dice = (Math.abs(adShift)+1) + "d20";
   if (adShift < 0) dice += "kl1"; else if (adShift > 0) dice += "kh1";
 
+  // apply fatigue
   if (!params || !params.noFatigue) {
-    // apply fatigue
-    // TODO
+    if (actor.data.data.fatigue.exhaustion)
+      dice += "+@fatigue.exhaustion";
   }
 
   if (!params || !params.noEncumbrance) {

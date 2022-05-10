@@ -50,6 +50,7 @@ export class RedAgeItemSheet extends ItemSheet {
 
     context.locations = REDAGE.ItemLocations;
     context.spellLocations = REDAGE.SpellLocations;
+    context.statusOrigins = REDAGE.StatusOrigins;
 
     // casting preparation
     if (this.item.type === "classCaster")

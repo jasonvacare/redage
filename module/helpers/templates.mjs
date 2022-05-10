@@ -11,6 +11,7 @@
     "systems/redage/templates/actor/parts/actor-items.html",
     "systems/redage/templates/actor/parts/actor-spells.html",
     "systems/redage/templates/actor/parts/actor-effects.html",
+    "systems/redage/templates/actor/parts/actor-statuses.html",
 
 		// Item partials.
 		"systems/redage/templates/item/parts/item-basics-sheet.html",

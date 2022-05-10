@@ -51,11 +51,13 @@ export class RedAgeActor extends Actor {
     const data = actorData.data;
     const items = actorData.items;
 
+    // level
     data.characterLevel = this._calculateCharacterLevel(data.xp);
     data.proficiencyBonus = Math.min(Math.ceil(data.characterLevel / 2), 5);
     data.halfProficiencyBonus = Math.floor(data.proficiencyBonus / 2);
     data.attackBonus = this._calculateAttackBonus(items);
 
+    // stats
     data.vigor.mod = Math.floor(data.vigor.value / 3) - 3;
     data.dexterity.mod = Math.floor(data.dexterity.value / 3) - 3;
     data.wits.mod = Math.floor(data.wits.value / 3) - 3;
@@ -71,6 +73,7 @@ export class RedAgeActor extends Actor {
     data.wits.save = data.wits.mod + (data.wits.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.spirit.save = data.spirit.mod + (data.spirit.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
+    // health & life
     data.health.max = this._calculateMaxHealth(items, data.vigor.mod, data.characterLevel);
     data.health.value = Math.max(0, Math.min(data.health.max, data.health.value));
     data.health.reserve = Math.max(0, Math.min(data.health.max, data.health.reserve));
@@ -78,11 +81,12 @@ export class RedAgeActor extends Actor {
     data.life.max = 10 + data.vigor.mod + data.spirit.mod + data.proficiencyBonus;
     data.life.value = Math.max(0, Math.min(data.life.max, data.life.value));
 
-    // TODO set value = sum of all fatigue status items (fatigue, hunger, thirst, drain, wind, etc)
-    // tooltip is penalty for this level of exhaustion
-    // fatigue penalty to be integrated into rolls via REDAGE.getD20()
-    data.fatigue.value = 0;
+    // fatigue
+    data.fatigue.value = items.filter((i) => i.type === "status" && i.data.data.origin.toLowerCase() === "fatigue")
+      .map((f) => f.data.data.progress)
+      .reduce((currentTotal, newValue) => currentTotal + newValue, 0);
     data.fatigue.exhaustion = Math.ceil(-data.fatigue.value / 10);
+    // TODO tooltip is penalty for this level of exhaustion
     data.fatigue.tooltip = "";
 
     // armor caps dexterity bonus and mod
@@ -92,6 +96,7 @@ export class RedAgeActor extends Actor {
     data.dexterity.mod = Math.min(armorProperties.maxDexterityMod, data.dexterity.mod);
     data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
 
+    // inventory
     data.readied = { value: this._calculateReadiedItems(items) };
     data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0);
 

@@ -1,0 +1,54 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+  
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Progress</label>
+          <input type="text" name="data.progress" value="{{data.progress}}" data-dtype="Number" />
+        </div>
+
+        <!-- <div class="resource">
+          <label class="resource-label">Origin</label>
+          <input type="text" name="data.origin" value="{{data.origin}}" data-dtype="String" />
+        </div> -->
+
+        <div class="resource">
+          <label class="resource-label">Origin</label>
+          <select name="data.origin" data-dtype="String">
+          {{#select data.origin}}
+          {{#each statusOrigins }}
+            <option value="{{this}}" data-dtype="String">{{this}}</option>
+          {{/each}}
+          {{/select}}
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="qualities">Qualities</a>
+    <a class="item" data-tab="description">Description</a>
+  </nav>
+  
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+  
+    {{!-- Qualities Tab --}}
+    <div class="tab" data-group="primary" data-tab="qualities">
+      {{> "systems/redage/templates/item/parts/item-qualities-sheet.html"}}
+    </div>
+  
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+  
+  </section>
+  
+</form>
+  

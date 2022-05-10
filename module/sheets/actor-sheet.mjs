@@ -204,6 +204,12 @@ export class RedAgeActorSheet extends ActorSheet {
     	Town: []
     };
 
+    const statuses = [];
+    const statusesByOrigin = {};
+    for (let o=0; o < REDAGE.StatusOrigins.length; o++) {
+      statusesByOrigin[REDAGE.StatusOrigins[o]] = [];
+    }
+
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
@@ -227,6 +233,16 @@ export class RedAgeActorSheet extends ActorSheet {
         features.push(i);
       }
 
+      // Append to statuses
+      else if (i.data.group === "status")
+      {
+        statuses.push(i);
+        if (statusesByOrigin[i.data.origin])
+          statusesByOrigin[i.data.origin].push(i);
+        else 
+          statusesByOrigin["Other"].push(i);
+      }
+      
       // Append to spells
       else if (i.data.group === "magic")
       {
@@ -261,6 +277,10 @@ export class RedAgeActorSheet extends ActorSheet {
     context.features = features;
     context.spells = spells;
     context.spellsByLoc = spellsByLoc;
+    context.statuses = statuses;
+    context.statusesByOrigin = statusesByOrigin;
+
+    context.statusOrigins = REDAGE.StatusOrigins;
    }
 
   /* -------------------------------------------- */
@@ -327,10 +347,11 @@ export class RedAgeActorSheet extends ActorSheet {
     const header = event.currentTarget;
     // Get the type of item to create.
     const type = header.dataset.type;
+    const subtype = header.dataset.subtype;
     // Grab any data associated with this control.
     const data = duplicate(header.dataset);
     // Initialize a default name.
-    const name = `New ${type.capitalize()}`;
+    const name = (data.name) ? data.name : `New ${type.capitalize()}`;
     // Prepare the item object.
     const itemData = {
       name: name,
@@ -339,6 +360,10 @@ export class RedAgeActorSheet extends ActorSheet {
     };
     // Remove the type from the dataset since it's in the itemData.type prop.
     delete itemData.data["type"];
+
+    // Remove the name from the dataset since it's in the itemData.name prop.
+    if (data.name)
+      delete itemData.data["name"];
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});

@@ -7,13 +7,10 @@
   B. Need compendium of class features (display class features nested under class, similar to spells by level?)
 3. Spells
   A. Compendium of spells
-  B. Rollable spell entries (auto-decrement mana)
 4. Resources
-  A. Wounds
-  B. Fatigue
-  C. Effects / Statuses
-7. NPC / monster actor sheets
-8. Compendium-ize 
+  A. Compandiumize
+5. NPC / monster actor sheets
+6. Compendium-ize 
   A. Build the compendium of weapons and armor (and a few misc gear and example treasures)
 
 Bells & Whistles
@@ -31,9 +28,10 @@ Bells & Whistles
 7. Display info/controls on item entries in the actor list w/o going into the item sheet
   A. set location, see isProf / prof group, see weapon dmg, armor value, armor dex max
 8. Rest Button
-9. Separate "party actor type that can hold stuff
+9. Separate "party" actor type that can hold stuff
   A. "Return To Town" Button on party to calculate loot
   B. Can store monster and other sources of XP from the expedition
+10. Interstitial dialog for actor-features.  When you click the + to add a new item, it gives you a dialog to choose the type of feat (skill, rollable, resource, etc)
 
 Odds & Ends
 - Don't allow more than one copy of a class (also feature?) in your inventory.  When you drag a class in that you
