@@ -40,6 +40,11 @@
           "cantrip": 0,
           "min": 0
         },
+        "speed": {
+          "base": {
+            "max": 30
+          }
+        },
         "biography": ""
       }
     },

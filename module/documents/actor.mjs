@@ -85,9 +85,14 @@ export class RedAgeActor extends Actor {
     data.fatigue.value = items.filter((i) => i.type === "status" && i.data.data.origin.toLowerCase() === "fatigue")
       .map((f) => f.data.data.progress)
       .reduce((currentTotal, newValue) => currentTotal + newValue, 0);
-    data.fatigue.exhaustion = Math.ceil(-data.fatigue.value / 10);
-    // TODO tooltip is penalty for this level of exhaustion
-    data.fatigue.tooltip = "";
+    data.fatigue.exhaustion = Math.floor(data.fatigue.value / 10);
+
+    // speed
+    data.speed.base.value = Math.round(data.speed.base.max * ((6 - data.fatigue.exhaustion) / 6));
+
+    // tooltip is penalty for this level of exhaustion
+    data.fatigue.tooltip = (data.fatigue.exhaustion <= 0) ? "" : "Exhaustion " + data.fatigue.exhaustion + ":\n -" + data.fatigue.exhaustion + 
+      " to all stat-based rolls\n -" + data.fatigue.exhaustion + " max load\n Speed reduced by " + (data.speed.base.max - data.speed.base.value);
 
     // armor caps dexterity bonus and mod
     const armorProperties = this._calculateDefenseBonus(items);
@@ -101,7 +106,7 @@ export class RedAgeActor extends Actor {
     data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0);
 
     data.carried = { value: this._calculateCarriedItems(items) };
-    data.carried.max = data.vigor.value;
+    data.carried.max = data.vigor.value - data.fatigue.exhaustion;
 
     if (data.carried.value <= (data.carried.max / 2))
       data.carried.loadLevel = "Light";
