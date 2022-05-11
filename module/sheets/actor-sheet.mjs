@@ -65,6 +65,7 @@ export class RedAgeActorSheet extends ActorSheet {
       }
   
       const gear = context.items.filter((i) => i.data.group === "item");
+      gear.forEach(item => { item.data.locations = REDAGE.ItemLocations; });
       const gearByLoc = {
         Equipment: gear.filter((i) => !i.data.isLoot),
         Treasure: gear.filter((i) => i.data.isLoot)
@@ -347,6 +348,49 @@ export class RedAgeActorSheet extends ActorSheet {
       const item = this.actor.items.get(li.data("itemId"));
       item.data.data.location = ev.currentTarget.value;
 			item.update({ "data.location": item.data.data.location }, {});
+    });
+
+    // Event handlers
+    
+    // Add and remove item tags
+    html.find(".item-text-push").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      REDAGE.pushText(this.actor, table);
+    });
+
+    html.find(".item-text-edit").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      // const text = $(ev.currentTarget).closest(".item").data("tag");
+      REDAGE.pushText(this.actor, table, index);
+    });
+
+    html.find(".item-text-pop").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.popText(this.actor, table, index);
+    });
+
+    html.find(".item-text-up").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.moveText(this.actor, table, index, -1);
+    });
+
+    html.find(".item-text-down").click((ev) => {
+      ev.preventDefault();
+      const header = ev.currentTarget;
+      const table = header.dataset.array;
+      const index = header.dataset.id;
+      REDAGE.moveText(this.actor, table, index, 1);
     });
 
     // Drag events for macros.
