@@ -68,7 +68,8 @@ export class RedAgeActorSheet extends ActorSheet {
       gear.forEach(item => { item.data.locations = REDAGE.ItemLocations; });
       const gearByLoc = {
         Equipment: gear.filter((i) => !i.data.isLoot),
-        Treasure: gear.filter((i) => i.data.isLoot)
+        Treasure: gear.filter((i) => i.data.isLoot && i.data.location !== REDAGE.INV_TOWN),
+        Town: gear.filter((i) => i.data.location === REDAGE.INV_TOWN)
       };
 
       context.gear = gear;

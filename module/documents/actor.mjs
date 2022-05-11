@@ -337,7 +337,7 @@ export class RedAgeActor extends Actor {
       data.carried.loadLevel = "Heavy";
 
     // calculate treasure
-    data.treasure = items.filter((item) => item.data.data.group === 'item' && item.data.data.isLoot)
+    data.treasure = items.filter((item) => item.data.data.group === 'item' && item.data.data.isLoot && item.data.data.location !== REDAGE.INV_TOWN)
       .map((item) => item.data.data.quantity.value * item.data.data.value)
       .reduce((a,b) => a+b, 0);
     data.xp.total = data.xp.bonus + (data.xp.riskMultiplier * data.treasure);

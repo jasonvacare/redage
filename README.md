@@ -25,13 +25,15 @@ Bells & Whistles
    A. Weapon dialog needs to be fancied up a bit (supremacy, sneak attack, etc)
 5. Item / spell / class / feature icons
 6. Visually note on stat block when dex/DEX are lowered by armor.
-7. Display info/controls on item entries in the actor list w/o going into the item sheet
-  A. set location, see isProf / prof group, see weapon dmg, armor value, armor dex max
+7. Reconsider actor-items, -feats, and -spells line item displays; what info to display and how best to do so?
+  A. flag non-proficient weapons
+  B. weapon prof grounds?  damage?
+  C. armor value, dex max?
+  D. spell info?
 8. Rest Button
-9. Separate "party" actor type that can hold stuff
-  A. "Return To Town" Button on party to calculate loot
-  B. Can store monster and other sources of XP from the expedition
-10. Interstitial dialog for actor-features.  When you click the + to add a new item, it gives you a dialog to choose the type of feat (skill, rollable, resource, etc)
+  A. Refreshes feats / feat resources based on recharge type
+  B. Optionally handles fatigue removal (checkbox)
+9. Interstitial dialog for actor-features.  When you click the + to add a new item, it gives you a dialog to choose the type of feat (skill, rollable, resource, etc)
 
 Odds & Ends
 - Don't allow more than one copy of a class (also feature?) in your inventory.  When you drag a class in that you
