@@ -51,6 +51,29 @@ export class RedAgeActorSheet extends ActorSheet {
       this._prepareItems(context);
     }
 
+    // Prepare Party data and items.
+    if (actorData.type == 'party') {
+
+      switch (context.data.carried.loadLevel)
+      {
+      case "Standard": context.data.carried.color = "blue";
+        context.data.carried.tooltip = "";
+        break;
+      default: context.data.carried.color = "red";
+        context.data.carried.tooltip = "Each week including significant travel, roll the disaster check with +A";
+        break;
+      }
+  
+      const gear = context.items.filter((i) => i.data.group === "item");
+      const gearByLoc = {
+        Equipment: gear.filter((i) => !i.data.isLoot),
+        Treasure: gear.filter((i) => i.data.isLoot)
+      };
+
+      context.gear = gear;
+      context.gearByLoc = gearByLoc;
+    }
+    
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
 
@@ -347,7 +370,6 @@ export class RedAgeActorSheet extends ActorSheet {
     const header = event.currentTarget;
     // Get the type of item to create.
     const type = header.dataset.type;
-    const subtype = header.dataset.subtype;
     // Grab any data associated with this control.
     const data = duplicate(header.dataset);
     // Initialize a default name.
@@ -438,6 +460,10 @@ export class RedAgeActorSheet extends ActorSheet {
 
     const item = await Item.implementation.fromDropData(data);
     const itemData = item.toObject();
+
+    // party actors can only receive items (not spells, etc)
+    if (this.actor.type === "party" && itemData.data.group !== "item")
+      return;
 
     // Handle item sorting within the same actor
     const actor = this.actor;

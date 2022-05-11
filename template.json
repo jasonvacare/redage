@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc"],
+    "types": ["character", "npc", "party"],
 
     "templates": {
       "base": {
@@ -57,6 +57,20 @@
     "npc": {
       "templates": ["base"],
       "level": 1
+    },
+
+    "party": {
+      "description": "",
+      "chronicle": "",
+      "tags": [],
+      "adventurers": 4,
+      "xp": {
+        "bonus": 0,
+        "riskMultiplier": 1
+      },
+      "carried": {
+        "max": 80
+      }
     }
   },
 

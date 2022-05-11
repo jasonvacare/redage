@@ -39,6 +39,7 @@ export class RedAgeActor extends Actor {
     // things organized.
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
+    this._preparePartyData(actorData);
   }
 
   /**
@@ -310,9 +311,37 @@ export class RedAgeActor extends Actor {
   _prepareNpcData(actorData) {
     if (actorData.type !== 'npc') return;
 
-    // Make modifications to data here. For example:
     const data = actorData.data;
+    const items = actorData.items;
+
     data.xp = (data.cr * data.cr) * 100;
+  }
+
+  /**
+   * Prepare Party type specific data
+   */
+  _preparePartyData(actorData) {
+    if (actorData.type !== 'party') return;
+  
+    const data = actorData.data;
+    const items = actorData.items;
+
+    // clear out any accidental non-item items from the party
+    items.filter((item) => item.data.data.group !== "item").forEach(i => i.delete());
+    
+    data.carried.value = this._calculateCarriedItems(items);
+
+    if (data.carried.value <= data.carried.max)
+      data.carried.loadLevel = "Standard";
+    else
+      data.carried.loadLevel = "Heavy";
+
+    // calculate treasure
+    data.treasure = items.filter((item) => item.data.data.group === 'item' && item.data.data.isLoot)
+      .map((item) => item.data.data.quantity.value * item.data.data.value)
+      .reduce((a,b) => a+b, 0);
+    data.xp.total = data.xp.bonus + (data.xp.riskMultiplier * data.treasure);
+    data.xp.individual = data.xp.total / data.adventurers;
   }
 
   /**
