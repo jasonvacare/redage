@@ -236,3 +236,14 @@ REDAGE.moveText = async function (item, table, index, shift) {
 REDAGE.prompt = async function (title, content, callback = () => { ; }) {
   return Dialog.prompt({ title: title, content: content, callback: callback });
 }
+
+REDAGE.confirm = async function (title, content) {
+  return Dialog.confirm({
+    title: title,
+    content: content,
+    yes: () => { return true; },
+    no: () => { return false; },
+    defaultYes: true
+  });
+}
+

@@ -47,7 +47,7 @@ export class RedAgeItem extends Item {
     }
     else if (REDAGE.isType(item, ["featureRollable", "featureResourceRollable"])) {
       formula = item.data.formula;
-      label = `${item.name}`;      
+      label = `${item.name}`;
     }
     // else if (item.type === "spellContainer") {
     else if (item.type === "spell") {

@@ -764,7 +764,7 @@ export class RedAgeActorSheet extends ActorSheet {
     const html = await renderTemplate(template, dialogData);
     this.tempData = dialogData;
 
-    const _doResourceManagement = async (html) => {
+    const _doResourceManagement = async (html, action) => {
       let actor = this.tempData.actor.data;
       var _a;
       const form = html[0].querySelector("form");
@@ -772,33 +772,65 @@ export class RedAgeActorSheet extends ActorSheet {
       var hpTemp = parseInt((_a = form.querySelector('[name="health.temp"]')) === null || _a === void 0 ? void 0 : _a.value);
       var hpRes = parseInt((_a = form.querySelector('[name="health.reserve"]')) === null || _a === void 0 ? void 0 : _a.value);
       var lifeVal = parseInt((_a = form.querySelector('[name="life.value"]')) === null || _a === void 0 ? void 0 : _a.value);
-
       var manaVal = parseInt((_a = form.querySelector('[name="mana.value"]')) === null || _a === void 0 ? void 0 : _a.value);
       var cantVal = parseInt((_a = form.querySelector('[name="mana.cantrip"]')) === null || _a === void 0 ? void 0 : _a.value);
       var manaRes = parseInt((_a = form.querySelector('[name="mana.reserve"]')) === null || _a === void 0 ? void 0 : _a.value);
 
-      hpVal = (!isNaN(hpVal)) ? Math.max(0, Math.min(hpVal, actor.data.health.max)) : 0;
-      hpTemp = (!isNaN(hpTemp)) ? Math.max(0, hpTemp) : 0;
-      hpRes = (!isNaN(hpRes)) ? Math.max(0, Math.min(hpRes, actor.data.health.max)) : 0;
-      lifeVal = (!isNaN(lifeVal)) ? Math.max(0, Math.min(lifeVal, actor.data.life.max)) : 0;
+      if (action === "apply") {
+        hpVal = (!isNaN(hpVal)) ? Math.max(0, Math.min(hpVal, actor.data.health.max)) : 0;
+        hpTemp = (!isNaN(hpTemp)) ? Math.max(0, hpTemp) : 0;
+        hpRes = (!isNaN(hpRes)) ? Math.max(0, Math.min(hpRes, actor.data.health.max)) : 0;
+        lifeVal = (!isNaN(lifeVal)) ? Math.max(0, Math.min(lifeVal, actor.data.life.max)) : 0;
+        manaVal = (!isNaN(manaVal)) ? Math.max(0, Math.min(manaVal, actor.data.mana.max)) : 0;
+        cantVal = (!isNaN(cantVal)) ? Math.max(0, Math.min(cantVal, 5)) : 0;
+        manaRes = (!isNaN(manaRes)) ? Math.max(0, Math.min(manaRes, actor.data.mana.max)) : 0;
 
-      manaVal = (!isNaN(manaVal)) ? Math.max(0, Math.min(manaVal, actor.data.mana.max)) : 0;
-      cantVal = (!isNaN(cantVal)) ? Math.max(0, Math.min(cantVal, 5)) : 0;
-      manaRes = (!isNaN(manaRes)) ? Math.max(0, Math.min(manaRes, actor.data.mana.max)) : 0;
-
-      this.actor.update( { "data.health.value": hpVal, "data.health.temp": hpTemp, "data.health.reserve": hpRes, "data.life.value": lifeVal,
-        "data.mana.value": manaVal, "data.mana.cantrip": cantVal, "data.mana.reserve": manaRes }, {});
+        this.actor.update( { "data.health.value": hpVal, "data.health.temp": hpTemp, "data.health.reserve": hpRes, "data.life.value": lifeVal,
+          "data.mana.value": manaVal, "data.mana.cantrip": cantVal, "data.mana.reserve": manaRes }, {});
+      }
+      else if (action === "short") {
+        if (await REDAGE.confirm("Short Rest", "Restore all cantrip mana.  Handle abilities manually."))
+          this.actor.update( { "data.mana.cantrip": 5 }, {});
+      }
+      else if (action === "long") {
+        let hpFromReserve = Math.min((actor.data.health.max - actor.data.health.value), actor.data.health.reserve);        
+        let manaFromReserve = Math.min((actor.data.mana.max - actor.data.mana.value), actor.data.mana.reserve);
+        let lifeHeal = (actor.data.life.max > actor.data.life.value) ? "Heal 1 life.  " : "";
+        if (await REDAGE.confirm("Long Rest", "Restore " + hpFromReserve + " hp and " + manaFromReserve + " mana from reserve.  " + lifeHeal + "Handle abilities, fatigue, and wounds manually.")) {
+          this.actor.update( { "data.health.value": (actor.data.health.value + hpFromReserve), "data.health.reserve": (actor.data.health.reserve - hpFromReserve), 
+            "data.life.value": Math.min(actor.data.life.max, actor.data.life.value + 1),
+            "data.mana.value": (actor.data.mana.value + manaFromReserve), "data.mana.cantrip": 5, "data.mana.reserve": (actor.data.mana.reserve - manaFromReserve) }, {});
+        }
+      }
+      else if (action === "extended") {
+        if (await REDAGE.confirm("Extended Rest", "Restore all hp, life, mana, and reserve.  Handle abilities, fatigue, and wounds manually.")) {
+          this.actor.update( { "data.health.value": actor.data.health.max, "data.health.reserve": actor.data.health.max, "data.life.value": actor.data.life.max,
+            "data.mana.value": actor.data.mana.max, "data.mana.cantrip": 5, "data.mana.reserve": actor.data.mana.max }, {});
+        }
+      }
     };
 
     this.popUpDialog = new Dialog({
       title: dialogData.label,
       content: html,
-      default: "close",
+      default: "apply",
       buttons: {
-        close: {
-          label: "Apply",
+        apply: {
+          label: "Apply Changes",
           // callback: async (html) => { return this._doHealthManagement(html, this.tempData); },
-					callback: (html) => _doResourceManagement(html),
+					callback: (html) => _doResourceManagement(html, "apply"),
+        },
+        short: {
+          label: "Short Rest",
+          callback: (html) => _doResourceManagement(html, "short"),
+        },
+        long: {
+          label: "Long Rest",
+          callback: (html) => _doResourceManagement(html, "long"),
+        },
+        extended: {
+          label: "Extended Rest",
+          callback: (html) => _doResourceManagement(html, "extended"),
         },
         cancel: {
           label: "Cancel",
