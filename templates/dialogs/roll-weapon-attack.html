@@ -28,9 +28,9 @@
 --->
 
   {{#if (eq actor.type 'character')}}
-	<div class="grid grid-3col">
+	<div class="grid grid-3col box-title" title="{{attackFormula}}">
 		<label class="resource-label">Attack</label>
-		<span class="box-title" title="{{attackFormula}}">{{attackRoll.result}}</span>
+		<span>{{numberFormat attackRoll.total decimals=0 sign=true}}</span>
 		<div class="item-prop">
 		<span>
 			<select name="adShift" data-dtype="String" class="item-control item-relocate">
@@ -45,9 +45,9 @@
 
 	</div>
 
-	<div class="grid grid-3col">
+	<div class="grid grid-3col box-title" title="{{damageFormula}}">
 		<label class="resource-label">Damage</label>
-		<span class="box-title" title="{{damageFormula}}">{{damageRoll.result}}</span>
+		<span>{{item.data.damageDie}} + {{damageRoll.total}}</span>
 	</div>
 
 <!---
