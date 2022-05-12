@@ -138,7 +138,7 @@ REDAGE.getD20 = function(actor, adShift, params = { noFatigue: false, noEncumbra
 
   // apply fatigue
   if (!params || !params.noFatigue) {
-    if (actor.data.data.fatigue.exhaustion)
+    if (actor.data.fatigue.exhaustion)
       dice += "-@fatigue.exhaustion";
   }
 
