@@ -198,6 +198,8 @@ export class RedAgeItem extends Item {
     var _a;
     const form = html[0].querySelector("form");
     const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
+    let attackModifierFormula = (_a = form.querySelector('[name="attackModifierFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
+    let damageModifierFormula = (_a = form.querySelector('[name="damageModifierFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
 
     // handle advantage / disadvantage on attack roll
     let dice = REDAGE.getD20(actor, adShift);
@@ -206,6 +208,11 @@ export class RedAgeItem extends Item {
     if (adShift != 0) dialogData.attackNotes.push(adShiftLadder[adShift+3]);
 
     // handle attack roll
+    dialogData.attackFormula = dialogData.attackFormula + ((attackModifierFormula.trim()) ? "+" + attackModifierFormula.trim() : "");
+    if (!Roll.validate(dialogData.attackFormula)) {
+      REDAGE.prompt("Invalid Attack Formula", "Invalid: " + dialogData.attackFormula);
+      return;
+    }
     const attackRoll = new Roll(dialogData.attackFormula, dialogData.rollData);
     await attackRoll.evaluate({async: true});
 
@@ -253,6 +260,11 @@ export class RedAgeItem extends Item {
       dialogData.attackNotes.push("Mighty Deeds");
     }
 
+    dialogData.damageFormula = dialogData.damageFormula + ((damageModifierFormula.trim()) ? "+" + damageModifierFormula.trim() : "");
+    if (!Roll.validate(dialogData.damageFormula)) {
+      REDAGE.prompt("Invalid Damage Formula", "Invalid: " + dialogData.damageFormula);
+      return;
+    }
     const damageRoll = new Roll(dialogData.damageFormula, dialogData.rollData);
     await damageRoll.evaluate({async: true});
 

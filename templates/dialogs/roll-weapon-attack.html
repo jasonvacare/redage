@@ -1,82 +1,47 @@
 <form class="{{cssClass}}" autocomplete="off" xmlns="http://www.w3.org/1999/html">
 
 <!---
-	actor: this.actor.data,
-	weapon: item.data.data,
-	attackFormula: attackFormula,
-	damageFormula: damageFormula,
-	adShift: adShift
 
-
-
-	attack adv / disadv
-	attack formula
-	prof checkbox
-	extra attack formula modifier field
+  TODO
 	target defense (defense, vig, dex, wit, spt saves)
 
 	use flurry
-	range band selector
-	cover selector
 	lighting selector
 
-	damage formula
-	extra damage formula modifier field
-	brutal / deadly / cleave
-
+  indicate status of: deeds, brutal, cleave, deadly?  proficient?
+	range band and cover selectors / apply penalty
 
 --->
 
-  {{#if (eq actor.type 'character')}}
-	<div class="grid grid-3col box-title" title="{{attackFormula}}">
-		<label class="resource-label">Attack</label>
-		<span>{{numberFormat attackRoll.total decimals=0 sign=true}}</span>
-		<div class="item-prop">
-		<span>
-			<select name="adShift" data-dtype="String" class="item-control item-relocate">
-				{{#select adShift}}
-				{{#each adLadder as |ad id|}}
-					<option value="{{id}}" data-dtype="String">{{ad}}</option>
-				{{/each}}
-				{{/select}}
-			</select>
-		</span>
-		</div>
-
-	</div>
-
-	<div class="grid grid-3col box-title" title="{{damageFormula}}">
-		<label class="resource-label">Damage</label>
-		<span>{{item.data.damageDie}} + {{damageRoll.total}}</span>
-	</div>
-
-<!---
-    <label for="skill">{{localize 'swnr.sheet.skill'}}: </label>
-    <select name="skill" {{#if weapon.data.data.skill}} disabled {{else}} required {{/if}} 
-                class="px-1.5 border border-gray-800 bg-gray-400 bg-opacity-75 placeholder-blue-800 placeholder-opacity-75 rounded-md">
-      {{#select weapon.skill}}
-      <option value="">{{ localize 'swnr.weapon.noSetSkill'}}</option>
-      {{#each skills }}
-      <option value="{{this.id}}">{{this.name}} {{this.data.data.rank}}</option>
+	<div class="grid grid-4col">
+    <div class="box-title" title="{{attackFormula}}">
+      <label class="resource-label">Attack: </label>
+      <span>{{numberFormat attackRoll.total decimals=0 sign=true}}</span> &nbsp;&nbsp;
+    </div>
+    <select name="adShift" data-dtype="String" class="item-control item-relocate">
+      {{#select adShift}}
+      {{#each adLadder as |ad id|}}
+        <option value="{{id}}" data-dtype="String">{{ad}}</option>
       {{/each}}
       {{/select}}
     </select>
+    <!-- <span class="align-right">Targets: </span>
+    <input class="" type="text" name="targets" value="1" data-dtype="Number" /> -->
   </div>
 
-  {{else}}
-  <div class="flex flex-col">
-    <label for="skilled">{{localize 'swnr.npc.skilled-with-weapon'}}:</label>
-    <input type="checkbox" name="skilled" id="skilled" checked />
+	<div class="grid grid-4col">
+    <span class="">Modifiers: </span>
+    <input class="grid-span-3" type="text" name="attackModifierFormula" value="" data-dtype="String" />
   </div>
 
-  {{/if}}
+	<div class="box-title" title="{{damageFormula}}">
+		<label class="resource-label">Damage: </label>
+		<span>{{item.data.damageDie}} + {{damageRoll.total}} {{item.data.damageType}}</span>
+	</div>
 
-  <div class="flex flex-col">
-    <label for="modifier">{{localize 'swnr.chat.modifier'}}: </label>
-    <input name="modifier" type="number" step="1" value="0" 
-                class="w-10 text-center px-1.5 border border-gray-800 bg-gray-400 bg-opacity-75 placeholder-blue-800 placeholder-opacity-75 rounded-md"/>
+	<div class="grid grid-4col">
+    <span class="">Modifiers: </span>
+    <input class="grid-span-3" type="text" name="damageModifierFormula" value="" data-dtype="String" />
   </div>
-
---->
 
 </form>
