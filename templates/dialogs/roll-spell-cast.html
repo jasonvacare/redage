@@ -27,7 +27,7 @@
 	<div class="grid grid-12col">
     {{#if (eq hasEffectRoll true)}}
     <!--div class="box-title grid-span-3" title="{{effectFormula}}"-->
-      <span class="grid-span-2">Effect: {{numberFormat effectRoll.total decimals=0 sign=true}} &nbsp;</span>
+      <span class="grid-span-2 box-title" title="{{effectFormula}}">Effect: {{numberFormat effectRoll.total decimals=0 sign=true}} &nbsp;</span>
       <select class="grid-span-2" name="adShift" data-dtype="Number">
         {{#select adShift}}
         {{#each adLadder as |ad id|}}
