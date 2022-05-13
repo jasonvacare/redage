@@ -109,11 +109,11 @@ export class RedAgeActor extends Actor {
     data.carried = { value: this._calculateCarriedItems(items) };
     data.carried.max = data.vigor.value - data.fatigue.exhaustion;
 
-    if (data.carried.value <= (data.carried.max / 2))
+    if (data.carried.value <= Math.ceil(data.carried.max / 2))
       data.carried.loadLevel = "Light";
     else if (data.carried.value <= data.carried.max)
       data.carried.loadLevel = "Medium";
-    else if (data.carried.value <= (1.5 * data.carried.max))
+    else if (data.carried.value <= Math.ceil(1.5 * data.carried.max))
       data.carried.loadLevel = "Heavy";
     else
       data.carried.loadLevel = "Overloaded";
