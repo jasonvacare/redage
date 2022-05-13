@@ -97,10 +97,10 @@ export class RedAgeActor extends Actor {
 
     // armor caps dexterity bonus and mod
     const armorProperties = this._calculateDefenseBonus(items);
-    data.defenseBonus = armorProperties.defense;
     data.dexterity.bonus = Math.min(armorProperties.maxDexterityBonus, data.dexterity.bonus);
     data.dexterity.mod = Math.min(armorProperties.maxDexterityMod, data.dexterity.mod);
     data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
+    data.defenseBonus = armorProperties.defense + data.dexterity.mod;
 
     // inventory
     data.readied = { value: this._calculateReadiedItems(items) };
