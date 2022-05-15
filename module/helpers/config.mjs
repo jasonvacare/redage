@@ -131,6 +131,26 @@ REDAGE.isType = function(item, list) {
 }
 
 /**
+* Searches the item list and returns a list of all tags that match the filter function
+*/
+REDAGE.getTags = function (items, matchFunction) {
+  let tagList = items.map(i => i.data.data.tags).flat().filter(t => t !== null).map(t => t.toLowerCase());
+  return tagList.filter(matchFunction);
+}
+
+REDAGE.getCodeTags = function(items, codePrefix) {
+  return REDAGE.getTags(items, (tag) => tag.toLowerCase().startsWith(codePrefix))
+    .map(t => t.split(":", 2))
+    .filter(t => t.length == 2);
+}
+
+REDAGE.getCodeTagSum = function(items, codePrefix) {
+  return REDAGE.getCodeTags(items, codePrefix)
+    .map(t => Number( t[1] ))
+    .reduce((a,b) => a+b, 0);
+}
+
+/**
 * Composes the d20 roll for stat check / attacks / spell effects, applying conditions that grant +A/D and other modifiers
 */
 REDAGE.getD20 = function(actor, adShift, params = { noFatigue: false, noEncumbrance: false }) {

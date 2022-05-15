@@ -104,10 +104,12 @@ export class RedAgeActor extends Actor {
 
     // inventory
     data.readied = { value: this._calculateReadiedItems(items) };
-    data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0);
+    let bonusReadied = REDAGE.getCodeTagSum(items, "readied:");
+    data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0) + bonusReadied;
 
-    data.carried = { value: this._calculateCarriedItems(items) };
-    data.carried.max = data.vigor.value - data.fatigue.exhaustion;
+    data.carried = { value: (this._calculateCarriedItems(items) + data.fatigue.exhaustion) };
+    let bonusCarried = REDAGE.getCodeTagSum(items, "carried:");
+    data.carried.max = data.vigor.value + bonusCarried;
 
     if (data.carried.value <= Math.ceil(data.carried.max / 2))
       data.carried.loadLevel = "Light";
@@ -206,16 +208,10 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateCarriedItems(items) {
-  	let carriedWeight = 0;
-
-    for (let i of items) {
-      if (i.type === 'item' || i.type === 'weapon' || i.type === 'armor') {
-      	if (i.data.data.location == REDAGE.INV_READY || i.data.data.location == REDAGE.INV_WORN || i.data.data.location == REDAGE.INV_STOWED)
-      		carriedWeight += Math.round(i.data.data.quantity.value * i.data.data.weight);
-      }
-    }
-
-    return carriedWeight;
+    return items.filter(i => i.data.data.group == "item")
+      .filter(i => i.data.data.location == REDAGE.INV_READY || i.data.data.location == REDAGE.INV_WORN || i.data.data.location == REDAGE.INV_STOWED)
+      .map(i => Math.round(i.data.data.quantity.value * i.data.data.weight))
+      .reduce((a,b) => a+b, 0);
   }
 
   _calculateCharacterLevel(xpValue) {
