@@ -92,8 +92,19 @@ async function createItemMacro(data, slot) {
   if (!("data" in data)) return ui.notifications.warn("You can only create macro buttons for owned Items");
   const item = data.data;
 
+  let args = ['"' + item.name + '"'];
+  
+  // attach the character name if the speaker is bound to an actor, or has a token selected
+  const speaker = ChatMessage.getSpeaker();
+  let actor;
+  if (speaker.token) actor = game.actors.tokens[speaker.token];
+  if (!actor) actor = game.actors.get(speaker.actor);
+  if (actor && await REDAGE.confirm("Macro Actor", "Connect macro to '" + actor.name + "'?"))
+    args.push('"' + actor.name + '"');
+
   // Create the macro command
-  const command = `game.redage.rollItemMacro("${item.name}");`;
+  args = args.join(", ");
+  const command = `game.redage.rollItemMacro(${args});`;
   let macro = game.macros.find(m => (m.name === item.name) && (m.command === command));
   if (!macro) {
     macro = await Macro.create({
@@ -114,11 +125,19 @@ async function createItemMacro(data, slot) {
  * @param {string} itemName
  * @return {Promise}
  */
-function rollItemMacro(itemName) {
+function rollItemMacro(itemName, actor = null) {
   const speaker = ChatMessage.getSpeaker();
-  let actor;
-  if (speaker.token) actor = game.actors.tokens[speaker.token];
-  if (!actor) actor = game.actors.get(speaker.actor);
+
+  // if no actor name is given, use the selected token actor, or the speaker's bound actor
+  if (!actor) {
+    if (speaker.token) actor = game.actors.tokens[speaker.token];
+    if (!actor) actor = game.actors.get(speaker.actor);
+  }
+  // if an actor name is given, use that actor
+  else {
+    actor = Array.from(game.actors.values()).find(a => a.name === actor);
+  }
+
   const item = actor ? actor.items.find(i => i.name === itemName) : null;
   if (!item) return ui.notifications.warn(`Your controlled Actor does not have an item named ${itemName}`);
 
