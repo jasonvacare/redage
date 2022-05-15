@@ -34,8 +34,13 @@ Bells & Whistles
   A. Refreshes feats / feat resources based on recharge type
   B. Optionally handles fatigue removal (checkbox)
 9. Interstitial dialog for actor-features.  When you click the + to add a new item, it gives you a dialog to choose the type of feat (skill, rollable, resource, etc)
+10. Containers
+  A. Items can be "in a container", which itself has a location.  Containers don't themselves weigh anything
+  B. All items in the container have its location override their own, swapping the container location moves all the items in it
+  C. Add a "on the ground" item location below stowed (or in its own tier, like camp?), so you can put things down in the dungeon
 
 Odds & Ends
 - Don't allow more than one copy of a class (also feature?) in your inventory.  When you drag a class in that you
 already have, increment the level of the existing one.  (see DnD5e code for this)
 - Better UI design for feat point subtype tracking
+- Can you make a macro from a non-item (like defense, stat roll, resource manager, etc)?  Can you write a macro so it triggers a button / function?
