@@ -52,7 +52,7 @@ export class RedAgeItem extends Item {
     else if (REDAGE.isType(item, ["featureSkill"])) {
       // if you got here from an item roll, call the method on actor-sheet
       let featMod = (item.data.tier == 1) ? "@skilled" : ((item.data.tier == 2) ? "@expert" : "");
-      this.actor.sheet._onStatRoll(this.name, item.data.defaultStat, item.data.defaultRoll, featMod);
+      return this.actor.sheet._onStatRoll(this.name, item.data.defaultStat, item.data.defaultRoll, featMod);
     }
       // else if (item.type === "spellContainer") {
     else if (item.type === "spell") {
