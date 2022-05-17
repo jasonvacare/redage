@@ -51,6 +51,7 @@ export class RedAgeActor extends Actor {
     // Make modifications to data here. For example:
     const data = actorData.data;
     const items = actorData.items;
+    const tags = [...REDAGE.getTags(items), ...this.data.data.tags];
 
     // level
     data.characterLevel = this._calculateCharacterLevel(data.xp);
@@ -88,8 +89,24 @@ export class RedAgeActor extends Actor {
       .reduce((currentTotal, newValue) => currentTotal + newValue, 0);
     data.fatigue.exhaustion = Math.floor(data.fatigue.value / 10);
 
-    // speed
-    data.speed.base.value = Math.round(data.speed.base.max * ((6 - data.fatigue.exhaustion) / 6));
+    // base speed
+    let speedTags = REDAGE.getCodeTags(tags, "speed:");
+    let baseSpeedMod = REDAGE.getCodeTagSum(speedTags, "base:");
+    data.speed.base.value = Math.round((data.speed.base.max + baseSpeedMod) * ((6 - data.fatigue.exhaustion) / 6));
+    data.speed.base.color = (data.speed.base.value > data.speed.base.max) ? "green" : ((data.speed.base.value < data.speed.base.max) ? "red" : "");
+
+    // create other movemnt speeds
+    data.speed.tooltip = [];
+    speedTags.filter(t => !t.startsWith("base")).forEach(tag => {
+      let pair = tag.split(":");
+      if (pair.length != 2) return;
+      let type = pair[0].trim();
+      let val = new Roll(pair[1].trim(), { speed: data.speed.base.value });
+      val = val.evaluate({async: false}).total;
+      data.speed[type] = val;
+      data.speed.tooltip.push((type.capitalize() + ": " + val));
+    });
+    data.speed.tooltip = data.speed.tooltip.join("\n");
 
     // tooltip is penalty for this level of exhaustion
     data.fatigue.tooltip = (data.fatigue.exhaustion <= 0) ? "" : "Exhaustion " + data.fatigue.exhaustion + ":\n -" + data.fatigue.exhaustion + 
@@ -104,11 +121,11 @@ export class RedAgeActor extends Actor {
 
     // inventory
     data.readied = { value: this._calculateReadiedItems(items) };
-    let bonusReadied = REDAGE.getCodeTagSum(items, "readied:");
+    let bonusReadied = REDAGE.getCodeTagSum(tags, "readied:");
     data.readied.max = Math.round(Math.max(data.dexterity.value, data.wits.value) / 2.0) + bonusReadied;
 
     data.carried = { value: (this._calculateCarriedItems(items) + data.fatigue.exhaustion) };
-    let bonusCarried = REDAGE.getCodeTagSum(items, "carried:");
+    let bonusCarried = REDAGE.getCodeTagSum(tags, "carried:");
     data.carried.max = data.vigor.value + bonusCarried;
 
     if (data.carried.value <= Math.ceil(data.carried.max / 2))

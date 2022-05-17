@@ -131,22 +131,40 @@ REDAGE.isType = function(item, list) {
 }
 
 /**
-* Searches the item list and returns a list of all tags that match the filter function
+* Returns a list of all tags on the items in the given list.
 */
-REDAGE.getTags = function (items, matchFunction) {
-  let tagList = items.map(i => i.data.data.tags).flat().filter(t => t !== null).map(t => t.toLowerCase());
-  return tagList.filter(matchFunction);
+REDAGE.getTags = function (items) {
+  return items.map(i => i.data.data.tags).flat().filter(t => t !== null).map(t => t.trim().toLowerCase());
 }
 
-REDAGE.getCodeTags = function(items, codePrefix) {
-  return REDAGE.getTags(items, (tag) => tag.toLowerCase().startsWith(codePrefix))
-    .map(t => t.split(":", 2))
-    .filter(t => t.length == 2);
+/**
+* Returns a list of all strings (tags) in a given list which match the given function.  If given an item list, they are first converted to lists of their tags.
+*/
+REDAGE.getTagMatch = function (input, matchFunction) {
+  // get the tags from any items or actors in the input list, output a pure list of string tags
+  input = input.map(i => (typeof i !== "string") ? i.data.data.tags : i).flat().filter(t => t !== null).map(t => t.trim().toLowerCase());
+  return input.filter(matchFunction);
 }
 
-REDAGE.getCodeTagSum = function(items, codePrefix) {
-  return REDAGE.getCodeTags(items, codePrefix)
-    .map(t => Number( t[1] ))
+/**
+* Parses a list of strings (tags) that begin with a specified prefix and have a : in them.  Returns a list of the post : substring from these tags.
+*/
+REDAGE.getCodeTags = function(input, codePrefix) {
+  codePrefix = codePrefix.trim().toLowerCase();
+  return REDAGE.getTagMatch(input, (tag) => tag.startsWith(codePrefix) && tag.includes(":"))
+    .map(t => {
+      const [first, ...rest] = t.split(":");
+      return rest.join(":");
+    })
+    .filter(t => t.trim() !== "")
+}
+
+/**
+* Parses a list of strings (tags) that begin with a specified prefix and have a : in them.  Returns the sum of the post : values in these tags.
+*/
+REDAGE.getCodeTagSum = function(input, codePrefix) {
+  return REDAGE.getCodeTags(input, codePrefix)
+    .map(t => Number(t))
     .reduce((a,b) => a+b, 0);
 }
 
