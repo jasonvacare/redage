@@ -1,32 +1,25 @@
 <form class="{{cssClass}}" autocomplete="off" xmlns="http://www.w3.org/1999/html">
 
-<!---
-
-  TODO
-	target defense (defense, vig, dex, wit, spt saves)
-
-	use flurry
-	lighting selector
-
-  indicate status of: deeds, brutal, cleave, deadly?  proficient?
-	range band and cover selectors / apply penalty
-
---->
-
-	<div class="grid grid-4col">
-    <div class="box-title" title="{{attackFormula}}">
-      <label class="resource-label">Attack: </label>
-      <span>{{numberFormat attackRoll.total decimals=0 sign=true}}</span> &nbsp;&nbsp;
-    </div>
-    <select name="adShift" data-dtype="String" class="item-control item-relocate">
+  <div class="grid grid-12col">
+    <span class="grid-span-2 box-title" title="{{attackFormula}}">Attack: {{numberFormat attackRoll.total decimals=0 sign=true}} &nbsp;</span>
+    <select class="grid-span-2" name="adShift" data-dtype="Number">
       {{#select adShift}}
       {{#each adLadder as |ad id|}}
-        <option value="{{id}}" data-dtype="String">{{ad}}</option>
+      <option value="{{id}}" data-dtype="Number">{{ad}}</option>
       {{/each}}
       {{/select}}
     </select>
-    <!-- <span class="align-right">Targets: </span>
-    <input class="" type="text" name="targets" value="1" data-dtype="Number" /> -->
+    <div class="grid-span-3">
+      vs <select name="targetStat" data-dtype="String">
+        <option value="Vigor" data-dtype="String">Vigor</option>
+        <option value="Dexterity" data-dtype="String">Dexterity</option>
+        <option value="Wits" data-dtype="String">Wits</option>
+        <option value="Spirit" data-dtype="String">Spirit</option>
+        <option value="Defense" data-dtype="String" selected>Defense</option>
+      </select>
+    </div>
+    <span class="grid-span-2 align-right">Targets: </span>
+    <input class="grid-span-3" type="text" name="targets" value="1" data-dtype="Number" />
   </div>
 
 	<div class="grid grid-4col">

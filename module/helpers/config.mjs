@@ -190,6 +190,40 @@ REDAGE.getD20 = function(actor, adShift, params = { noFatigue: false, noEncumbra
   return dice;
 }
 
+REDAGE.getDialogField = function(form, fieldname, asNumber = false) {
+  var _a;
+  let val = (_a = form.querySelector('[name="' + fieldname + '"]')) === null || _a === void 0 ? void 0 : _a.value;
+  return (asNumber) ? Number(val) : val;
+}
+
+REDAGE.d20Roll = async function(formula, numRolls, rollData, specials = { Crit: [20, 1000], Fumble: [-1000, 1] })
+{
+  let outcomes = [];
+
+  if (Roll.validate(formula) && numRolls >= 1)
+  {
+    for (let i=0; i < numRolls; i++)
+    {
+      let notes = [];
+
+      // handle roll
+      const roll = new Roll(formula, rollData);
+      await roll.evaluate({async: true});
+      const d20 = roll.terms[0].total;
+      
+      // handle special effect rolls (crit, fumble, etc)
+      for (const [key, val] of Object.entries(specials)) {
+        if ((val.length == 2 && d20 >= val[0] && d20 <= val[1]) || (val.length == 1 && d20 == val))
+          notes.push(key);
+      }
+      
+      notes = (notes.length > 0) ? "(" + notes.join(", ") + ")" : "";
+      outcomes[i] = { notes: notes, roll: roll, d20: d20, id: (i+1), rollRender: await roll.render(), formula: formula };
+    }
+  }
+  return outcomes;
+}
+
 REDAGE.enterText = async function (text) {
   let templateData = { dialogText: text },
     dlg = await renderTemplate("systems/redage/templates/dialogs/text-prompt.html", templateData);

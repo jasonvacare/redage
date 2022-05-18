@@ -104,30 +104,30 @@ export class RedAgeItem extends Item {
     var adShift = 3;
     if (!item.data.isProficient) adShift--;
 
-    var attackFormula = "@attackBonus";
+    var attackFormula = "@attackBonus ";
     var damageFormula = "";
 
     if (item.data.isForceful && item.data.isFinesse) {
-      attackFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
-      damageFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+@vigor.mod" : "+@dexterity.mod";
+      attackFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+ @vigor.mod " : "+ @dexterity.mod ";
+      damageFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+ @vigor.mod " : "+ @dexterity.mod ";
     }
     else if (item.data.isForceful) {
-      attackFormula += "+@vigor.mod";
-      damageFormula += "+@vigor.mod";
+      attackFormula += "+ @vigor.mod ";
+      damageFormula += "+ @vigor.mod ";
     }
     else if (item.data.isFinesse) {
-      attackFormula += "+@dexterity.mod";
-      damageFormula += "+@dexterity.mod";
+      attackFormula += "+ @dexterity.mod ";
+      damageFormula += "+ @dexterity.mod ";
     }
 
-    attackFormula += "+@item.attackBonus";
-    damageFormula += "+@item.damageBonus";
+    attackFormula += "+ @item.attackBonus ";
+    damageFormula += "+ @item.damageBonus ";
 
     // fighter feature check
     if (actor.data.fighterMastery) {
       if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
         let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-        if (m.damage) damageFormula += "+@fighterMastery.damage";
+        if (m.damage) damageFormula += "+ @fighterMastery.damage ";
       }
     }
 
@@ -140,7 +140,7 @@ export class RedAgeItem extends Item {
     const damageRoll = new Roll(damageFormula, rollData);
     await damageRoll.evaluate({async: true});
 
-    damageFormula = "@item.damageDie" + damageFormula;
+    damageFormula = "@item.damageDie " + damageFormula;
 
     const dialogData = {
       actor: actor,
@@ -150,7 +150,7 @@ export class RedAgeItem extends Item {
       damageFormula: damageFormula,
       damageRoll: damageRoll,
       adShift: adShift,
-      adLadder: ["+3D", "+2D", "+D", "Normal", "+A", "+2A", "+3A"],
+      adLadder: ["+3D", "+2D", "+D", "A / D", "+A", "+2A", "+3A"],
       rollData: rollData
     };
 
@@ -165,7 +165,7 @@ export class RedAgeItem extends Item {
     const _doRoll = async (html) => { return this._doWeaponAttackRoll(html, this.tempData); };
 
     this.popUpDialog = new Dialog({
-      title: actor.name + " - " + item.name + "Attack",
+      title: actor.name + " - " + item.name + " Attack",
       content: html,
       default: "roll",
       buttons: {
@@ -179,6 +179,8 @@ export class RedAgeItem extends Item {
         }
       },
     });
+
+    this.popUpDialog.position.width = 500;
 
     const s = this.popUpDialog.render(true);
 
@@ -197,98 +199,107 @@ export class RedAgeItem extends Item {
     const item = dialogData.item;
 
     dialogData.attackNotes = [];
-    dialogData.damageNotes = [item.data.damageType];
 
     // get data from dialog
-    var _a;
     const form = html[0].querySelector("form");
-    const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
-    let attackModifierFormula = (_a = form.querySelector('[name="attackModifierFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
-    let damageModifierFormula = (_a = form.querySelector('[name="damageModifierFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
+    const adShift = REDAGE.getDialogField(form, "adShift", true) - 3;
+    let attackModifierFormula = REDAGE.getDialogField(form, "attackModifierFormula");
+    let damageModifierFormula = REDAGE.getDialogField(form, "damageModifierFormula");
+    const targets = Math.max(1, REDAGE.getDialogField(form, "targets", true));
+    const targetStat = REDAGE.getDialogField(form, "targetStat");
 
-    // handle advantage / disadvantage on attack roll
-    let dice = REDAGE.getD20(actor, adShift);
-    dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
-    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
-    if (adShift != 0) dialogData.attackNotes.push(adShiftLadder[adShift+3]);
-
-    // handle attack roll
+    let baseAttackFormula = dialogData.attackFormula;
     dialogData.attackFormula = dialogData.attackFormula + ((attackModifierFormula.trim()) ? "+" + attackModifierFormula.trim() : "");
     if (!Roll.validate(dialogData.attackFormula)) {
       REDAGE.prompt("Invalid Attack Formula", "Invalid: " + dialogData.attackFormula);
       return;
     }
-    const attackRoll = new Roll(dialogData.attackFormula, dialogData.rollData);
-    await attackRoll.evaluate({async: true});
+    let dice = REDAGE.getD20(actor, adShift);
+    dialogData.attackFormula = dice + " + " + dialogData.attackFormula;
 
-    // handle special attack rolls (crit, fumble, deeds)
-    const attackD20Result = attackRoll.terms[0].total;
-    var critThreshold = 20;
-    var fumbleThreshold = 1;
-    var deedsNumber = 0;
-
-    // apply fighter brutal crit threat range and deeds number
-    if (actor.data.fighterMastery) {
-      deedsNumber = actor.data.fighterMastery.deedsNumber;
-
-      if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
-        let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-        if (m.brutal && actor.data.fighterMastery.fighterLevel >= 5) critThreshold = 19;
-      }
-    }
-
-    if (attackD20Result >= critThreshold)
-    {
-      dialogData.attackNotes.push("Crit");
-
-      // add maximized damage die
-      const damageDie = dialogData.damageRoll.terms[0];
-      const damageDieMax = Number(damageDie.number) * Number(damageDie.faces);
-      dialogData.damageFormula += " + " + damageDieMax;
-
-      // apply fighter brutal crit damage
-      if (actor.data.fighterMastery) {
-        if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
-          let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
-          if (m.brutal) dialogData.damageFormula += " + " + damageDieMax;
-        }
-      }
-    }
-    else if (attackD20Result <= fumbleThreshold)
-    {
-      dialogData.attackNotes.push("Fumble");
-    }
-
-    // deeds number may overlap with crit / fumble
-    if (attackD20Result == deedsNumber)
-    {
-      dialogData.attackNotes.push("Mighty Deeds");
-    }
+    const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
+    if (adShift != 0) dialogData.attackNotes.push(adShiftLadder[adShift+3]);
+    if (targetStat !== "Defense") dialogData.attackNotes.push("vs " + targetStat);
 
     dialogData.damageFormula = dialogData.damageFormula + ((damageModifierFormula.trim()) ? "+" + damageModifierFormula.trim() : "");
     if (!Roll.validate(dialogData.damageFormula)) {
       REDAGE.prompt("Invalid Damage Formula", "Invalid: " + dialogData.damageFormula);
       return;
     }
-    const damageRoll = new Roll(dialogData.damageFormula, dialogData.rollData);
-    await damageRoll.evaluate({async: true});
+
+    let brutal = false;
+    let damage = false;
+    let flurry = false;
+    let cleave = false;
+    let specials = { Crit: [20, 1000], Fumble: [-1000, 1] };
+    // apply fighter mastery benefits
+    if (actor.data.fighterMastery) {
+      specials.Deed = [actor.data.fighterMastery.deedsNumber];
+
+      if (actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()]) {
+        let m = actor.data.fighterMastery[item.data.proficiencyGroup.toLowerCase()];
+        brutal = m.brutal;
+        damage = m.damage;
+        flurry = m.supremacy;
+        cleave = m.cleave;
+        if (brutal && actor.data.fighterMastery.fighterLevel >= 5) specials.Crit[0] = 19;
+      }
+    }
+
+    // apply flurry penalty (equivalent to dividing attack bonus among multiple targets, rounded normally)
+    if (targets > 1) {
+      let roll = new Roll(baseAttackFormula, dialogData.rollData);
+      await roll.evaluate({async: true});
+      dialogData.rollData.flurryPenalty = roll.total - Math.round(roll.total / targets);
+      dialogData.attackFormula += " - @flurryPenalty ";
+      dialogData.attackNotes.push("Flurry " + targets);
+    }
+
+    if (cleave) dialogData.attackNotes.push("Cleave");
+
+    dialogData.attacks = await REDAGE.d20Roll(dialogData.attackFormula, targets, dialogData.rollData, specials);
+    if (dialogData.attacks.length <= 0) {
+      REDAGE.prompt("Attack Handling Failed", "No attacks were processed.");
+      return;
+    }
+
+    for (let a=0; a < dialogData.attacks.length; a++) {
+      let notes = [item.data.damageType];
+      let formula = dialogData.damageFormula;
+
+      // handle crit damage
+      if (dialogData.attacks[a].notes.includes("Crit")) {
+
+        let roll = new Roll(formula, dialogData.rollData);
+        const damageDie = roll.terms[0];
+        const damageDieMax = Number(damageDie.number) * Number(damageDie.faces);
+        dialogData.rollData.critBonus = damageDieMax;
+        formula += " + @critBonus "
+  
+        if (brutal) {
+          dialogData.rollData.brutalBonus = damageDieMax;
+          formula += " + @brutalBonus ";
+          dialogData.attacks[a].notes = dialogData.attacks[a].notes.replace("Crit", "Brutal Crit");
+        }
+      }
+
+      let roll = new Roll(formula, dialogData.rollData);
+      await roll.evaluate({async: true});
+  
+      notes = (notes.length > 0) ? "(" + notes.join(", ") + ")" : "";
+      dialogData.attacks[a].damage = { notes: notes, roll: roll, rollRender: await roll.render(), formula: formula };
+    }
 
     const rollMode = game.settings.get("core", "rollMode");
+
+    const rollArray = dialogData.attacks.map((x) => {
+      return [x.roll, x.damage.roll];
+    }).flat();
     const diceData = Roll.fromTerms([
-      PoolTerm.fromRolls([attackRoll, damageRoll]),
+      PoolTerm.fromRolls(rollArray),
     ]);
 
-    const diceTooltip = {
-      attack: await attackRoll.render(),
-      damage: await damageRoll.render(),
-    };
-
-    dialogData.attackRoll = attackRoll;
-    dialogData.damageRoll = damageRoll;
-    dialogData.diceTooltip = diceTooltip;
-
     dialogData.attackNotes = (dialogData.attackNotes.length > 0) ? "(" + dialogData.attackNotes.join(", ") + ")" : "";
-    dialogData.damageNotes = (dialogData.damageNotes.length > 0) ? "(" + dialogData.damageNotes.join(", ") + ")" : "";
 
     const template = "systems/redage/templates/chat/weapon-attack-roll.html";
     const chatContent = await renderTemplate(template, dialogData);
@@ -406,15 +417,13 @@ export class RedAgeItem extends Item {
     const spell = dialogData.spell;
 
     // get data from dialog
-    var _a;
     const form = html[0].querySelector("form");
-
-    const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
-    const power = parseInt((_a = form.querySelector('[name="power"]')) === null || _a === void 0 ? void 0 : _a.value);
+    const adShift = REDAGE.getDialogField(form, "adShift", true) - 3;
+    const power = REDAGE.getDialogField(form, "power", true);
     const manaCost = (power > 0) ? Math.floor(1 + ((4/3) * power)) : 0;
-    const targetStat = (_a = form.querySelector('[name="targetStat"]')) === null || _a === void 0 ? void 0 : _a.value;
-    const targets = parseInt((_a = form.querySelector('[name="targets"]')) === null || _a === void 0 ? void 0 : _a.value);
-    const magnitudeFormula = (_a = form.querySelector('[name="magnitudeFormula"]')) === null || _a === void 0 ? void 0 : _a.value;
+    const targetStat = REDAGE.getDialogField(form, "targetStat");
+    const targets = REDAGE.getDialogField(form, "targets", true);
+    const magnitudeFormula = REDAGE.getDialogField(form, "magnitudeFormula");
 
     dialogData.power = power;
     rollData.power = power;
@@ -452,38 +461,10 @@ export class RedAgeItem extends Item {
 
     if (spell.hasEffect && !isNaN(targets) && targets > 0)
     {
-
       // handle advantage / disadvantage on effect roll
       let dice = REDAGE.getD20(actor, adShift);
       dialogData.effectFormula = dice + " + " + dialogData.effectFormula;
-
-      for (let e=0; e < targets; e++)
-      {
-        let notes = [];
-
-        // handle effect roll
-        const effectRoll = new Roll(dialogData.effectFormula, dialogData.rollData);
-        await effectRoll.evaluate({async: true});
-
-        // handle special effect rolls (crit, fumble)
-        const effectD20Result = effectRoll.terms[0].total;
-        let critThreshold = 20;
-        let fumbleThreshold = 1;
-
-        if (effectD20Result >= critThreshold)
-        {
-          notes.push("Crit");
-        }
-        else if (effectD20Result <= fumbleThreshold)
-        {
-          notes.push("Fumble");
-        }
-
-        notes = (notes.length > 0) ? "(" + notes.join(", ") + ")" : "";
-        const rollRender = await effectRoll.render();
-  
-        dialogData.effects[e] = { notes: notes, roll: effectRoll, id: (e+1), rollRender: rollRender };
-      }
+      dialogData.effects = await REDAGE.d20Roll(dialogData.effectFormula, targets, dialogData.rollData);
     }
 
     // if there is a magnitude formula...

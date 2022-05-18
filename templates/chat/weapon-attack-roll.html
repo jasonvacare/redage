@@ -1,7 +1,15 @@
 <div>
-	<h3>{{ item.name }}</h3>
+  <h3>{{ item.name }}</h3>
 	<span>Attack {{{ attackNotes }}}</span>
-	{{{ diceTooltip.attack }}}
-	<span>Damage {{{ damageNotes }}}</span>
-	{{{ diceTooltip.damage }}}
+  <div>
+    {{#each attacks as |attack id|}}
+    <br>
+    <hr>
+  	<span class="box-title" title="{{attack.formula}}">Target {{attack.id}} {{{ attack.notes }}}</span>
+  	{{{ attack.rollRender }}}
+	  <span class="box-title" title="{{attack.damage.formula}}">Damage {{{ attack.damage.notes }}}</span>
+	  {{{ attack.damage.rollRender }}}
+    {{/each}}
+  </div>
+
 </div>
