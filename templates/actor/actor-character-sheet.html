@@ -48,7 +48,7 @@
 
       <hr>
 
-      <div class="resources grid grid-4col">
+      <div class="resources grid grid-5col">
 
         <div class="resource flex-group-center">
           <label for="data.xp" class="resource-label">XP</label>
@@ -75,6 +75,13 @@
 					<label for="data.defenseBonus" class="resource-label">Defense</label>
 					<div class="resource-content flexrow flex-center flex-between">
 						<span class="rollable" data-roll-type="defense" data-label="defenseBonus Save">{{numberFormat data.defenseBonus decimals=0 sign=true}}</span>
+					</div>
+				</div>
+
+        <div class="resource flex-group-center">
+					<label for="data.init" class="resource-label">Init</label>
+					<div class="resource-content flexrow flex-center flex-between">
+						<span class="rollable" data-roll-type="init" data-label="init">{{numberFormat data.init decimals=0 sign=true}}</span>
 					</div>
 				</div>
 

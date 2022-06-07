@@ -611,7 +611,22 @@ export class RedAgeActorSheet extends ActorSheet {
       else if (dataset.rollType == 'defense') {
         this._onStatRoll("Defense", "defenseBonus", "Save", "");
       }
-      // HP / reserve/ tHP / Life / Mana manager dialog
+      // Handle init rolls
+      else if (dataset.rollType == 'init') {
+        let die = "1d6"
+        if (this.actor.data.data.carried.value > this.actor.data.data.carried.max) {
+          // heavy or greater load = +D on ish
+          die = "2d6kl1"
+        }
+        let roll = new Roll(die + "+" + this.actor.data.data.init, this.actor.getRollData());
+        roll.toMessage({
+          speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+          flavor: "Initiative",
+          rollMode: game.settings.get('core', 'rollMode'),
+        });
+        return roll;
+      }
+      // Handle  HP / reserve/ tHP / Life / Mana manager dialog
       else if (dataset.rollType == 'resourceManager') {
         this._onResourceManager();
       }

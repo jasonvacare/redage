@@ -119,6 +119,9 @@ export class RedAgeActor extends Actor {
     data.dexterity.save = data.dexterity.mod + (data.dexterity.proficientSave ? data.proficiencyBonus : data.halfProficiencyBonus);
     data.defenseBonus = armorProperties.defense + data.dexterity.mod;
 
+    // ish
+    data.init = Math.max(data.dexterity.mod, data.wits.mod) - data.fatigue.exhaustion;
+
     // inventory
     data.readied = { value: this._calculateReadiedItems(items) };
     let bonusReadied = REDAGE.getCodeTagSum(tags, "readied:");
