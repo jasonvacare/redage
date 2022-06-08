@@ -256,6 +256,10 @@ export class RedAgeActorSheet extends ActorSheet {
       else if (i.data.group === "feat")
       {
         features.push(i);
+
+        // parse display tags
+        let displayTags = REDAGE.getCodeTags(i.data.tags, "display:").map(tag => Roll.replaceFormulaData(tag, context));
+        i.data.display = displayTags.join(", ");
       }
 
       // Append to statuses
@@ -279,6 +283,10 @@ export class RedAgeActorSheet extends ActorSheet {
         	spellsByLoc.Town.push(i);
         else
         	spellsByLoc.Inventory.push(i);
+        
+        // parse display tags
+        let displayTags = REDAGE.getCodeTags(i.data.tags, "display:").map(tag => Roll.replaceFormulaData(tag, context));
+        i.data.display = displayTags.join(", ");
       }
     }
 
