@@ -882,12 +882,20 @@ export class RedAgeActorSheet extends ActorSheet {
         this.actor.update( { "data.health.value": hpVal, "data.health.temp": hpTemp, "data.health.reserve": hpRes, "data.life.value": lifeVal,
           "data.mana.value": manaVal, "data.mana.cantrip": cantVal, "data.mana.reserve": manaRes }, {});
       }
+      else if (action === "cantrips") {
+        if (actor.data.mana.cantrip > 0)
+          REDAGE.prompt("Refresh Unnecessary", "You still have cantrips.");
+        else if (actor.data.mana.value < 1)
+          REDAGE.prompt("Refresh Failed", "Insufficient mana.");
+        else if (await REDAGE.confirm("Refresh Cantrips", "Spend 1 mana to restore all cantrip mana."))
+          this.actor.update( { "data.mana.cantrip": 5, "data.mana.value": actor.data.mana.value-1 }, {});
+      }
       else if (action === "short") {
         if (await REDAGE.confirm("Short Rest", "Restore all cantrip mana.  Handle abilities manually."))
           this.actor.update( { "data.mana.cantrip": 5 }, {});
       }
       else if (action === "long") {
-        let hpFromReserve = Math.min((actor.data.health.max - actor.data.health.value), actor.data.health.reserve);        
+        let hpFromReserve = Math.min((actor.data.health.max - actor.data.health.value), actor.data.health.reserve);
         let manaFromReserve = Math.min((actor.data.mana.max - actor.data.mana.value), actor.data.mana.reserve);
         let lifeHeal = (actor.data.life.max > actor.data.life.value) ? "Heal 1 life.  " : "";
         if (await REDAGE.confirm("Long Rest", "Restore " + hpFromReserve + " hp and " + manaFromReserve + " mana from reserve.  " + lifeHeal + "Handle abilities, fatigue, and wounds manually.")) {
@@ -914,6 +922,10 @@ export class RedAgeActorSheet extends ActorSheet {
           // callback: async (html) => { return this._doHealthManagement(html, this.tempData); },
 					callback: (html) => _doResourceManagement(html, "apply"),
         },
+        cantripRefresh: {
+          label: "Refresh Cantrips",
+          callback: (html) => _doResourceManagement(html, "cantrips"),
+        },
         short: {
           label: "Short Rest",
           callback: (html) => _doResourceManagement(html, "short"),
@@ -932,6 +944,8 @@ export class RedAgeActorSheet extends ActorSheet {
         }
       },
     });
+
+    this.popUpDialog.position.width = 400;
 
     const s = this.popUpDialog.render(true);
     if (s instanceof Promise)

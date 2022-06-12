@@ -21,7 +21,7 @@
           {{/if}}
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/> &nbsp; / &nbsp;
-            <input type="text" name="data.health.max" value="{{data.health.max}}" data-dtype="Number" readonly />
+            <span>{{data.health.max}}</span>
           </div>
         </div>
 
@@ -31,7 +31,7 @@
           <label for="data.life.value" class="resource-label rollable" data-roll-type="resourceManager" data-label="hp">Life</label>
           <div class="resource-content flexrow flex-center flex-between">
             <input type="text" name="data.life.value" value="{{data.life.value}}" data-dtype="Number"/> &nbsp; / &nbsp;
-            <input type="text" name="data.life.max" value="{{data.life.max}}" data-dtype="Number" readonly />
+            <span>{{data.life.max}}</span>
           </div>
         </div>
 
