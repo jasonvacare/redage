@@ -3,9 +3,26 @@
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" data-dtype="String" /></h1>
-      <div class="grid grid-2col">
+
+      <div class="grid grid-3col">
+        <label class="resource-label">Attack</label>
+      </div>
+
+      <div class="grid grid-4col">
         <div class="resource">
-          <label class="resource-label">Attack Bonus</label>
+          <label class="resource-label">Stat</label>
+          <select name="data.attackStat" data-dtype="String">
+            {{#select data.attackStat}}
+            <option value="None" data-dtype="String">None</option>
+            <option value="Vigor" data-dtype="String">Vigor</option>
+            <option value="Dexterity" data-dtype="String">Dexterity</option>
+            <option value="Wits" data-dtype="String">Wits</option>
+            <option value="Spirit" data-dtype="String">Spirit</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Bonus</label>
           <input type="text" name="data.attackBonus" value="{{data.attackBonus}}" data-dtype="String" />
         </div>
         <div class="resource">
@@ -14,22 +31,7 @@
         </div>
       </div>
 
-      <div class="grid grid-3col">
-        <div class="resource">
-          <label class="resource-label">Damage Die</label>
-          <input type="text" name="data.damageDie" value="{{data.damageDie}}" data-dtype="String" /> {{!-- @@@ ideally a drop dow --}}
-        </div>
-        <div class="resource">
-          <label class="resource-label">Damage Bonus</label>
-          <input type="text" name="data.damageBonus" value="{{data.damageBonus}}" data-dtype="String" />
-        </div>
-        <div class="resource">
-          <label class="resource-label">Damage Type</label>
-          <input type="text" name="data.damageType" value="{{data.damageType}}" data-dtype="String" /> {{!-- @@@ ideally a drop dow --}}
-        </div>
-      </div>
-
-      <div class="grid grid-3col">
+      <div class="grid grid-4col">
         <div class="resource">
           <label class="resource-label">Forceful</label>
           <input type="checkbox" name="data.isForceful" {{checked data.isForceful}} data-dtype="Boolean" /> {{!-- @@@ ideally a radio for players, but checkboxes for compendium building --}}
@@ -40,20 +42,59 @@
           <input type="checkbox" name="data.isFinesse" {{checked data.isFinesse}} data-dtype="Boolean" /> {{!-- @@@ ideally a radio for players, but checkboxes for compendium building --}}
           {{!-- @@@ nice list view UI: a toggle between the two states? dropdown? --}}
         </div>
-        <div class="resource">
-          <label class="resource-label">Proficient</label>
-          <input type="checkbox" name="data.isProficient" {{checked data.isProficient}} data-dtype="Boolean" /> 
-        </div>
+      </div>
 
+      <hr>
+
+      <div class="grid grid-3col">
+        <label class="resource-label">Damage</label>
+      </div>
+
+      <div class="grid grid-4col">
+        <div class="resource">
+          <label class="resource-label">Die</label>
+          <input type="text" name="data.damageDie" value="{{data.damageDie}}" data-dtype="String" /> {{!-- @@@ ideally a drop dow --}}
+        </div>
+        <div class="resource">
+          <label class="resource-label">Stat</label>
+          <select name="data.damageStat" data-dtype="String">
+            {{#select data.damageStat}}
+            <option value="None" data-dtype="String">None</option>
+            <option value="Vigor" data-dtype="String">Vigor</option>
+            <option value="Dexterity" data-dtype="String">Dexterity</option>
+            <option value="Wits" data-dtype="String">Wits</option>
+            <option value="Spirit" data-dtype="String">Spirit</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="resource-label">Bonus</label>
+          <input type="text" name="data.damageBonus" value="{{data.damageBonus}}" data-dtype="String" />
+        </div>
         <div class="resource">
           <label class="resource-label">Type</label>
+          <input type="text" name="data.damageType" value="{{data.damageType}}" data-dtype="String" /> {{!-- @@@ ideally a drop dow --}}
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="grid grid-3col">
+        <div class="resource">
+          <label class="resource-label">Proficiency</label>
           <input type="text" name="data.proficiencyGroup" value="{{data.proficiencyGroup}}" data-dtype="String" /> {{!-- @@@ read only for players, drop down for compendiumm building? --}}
         </div>
         <div class="resource">
           <label class="resource-label">Handedness</label>
           <input type="text" name="data.handedness" value="{{data.handedness}}" data-dtype="Number" /> {{!-- @@@ read only for players, drop down for compendiumm building? --}}
         </div>
+        <div class="resource">
+          <label class="resource-label">Proficient</label>
+          <input type="checkbox" name="data.isProficient" {{checked data.isProficient}} data-dtype="Boolean" /> 
+        </div>
       </div>
+
+      <hr>
 
 			<!-- Standard Item Properties -->
 			<div class="grid grid-3col">

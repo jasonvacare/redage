@@ -104,24 +104,11 @@ export class RedAgeItem extends Item {
     var adShift = 3;
     if (!item.data.isProficient) adShift--;
 
-    var attackFormula = "@attackBonus ";
-    var damageFormula = "";
+    var attackStatMod = (item.data.attackStat !== "None") ? "@" + item.data.attackStat.toLowerCase() + ".mod + " : "";
+    var damageStatMod = (item.data.damageStat !== "None") ? "@" + item.data.damageStat.toLowerCase() + ".mod + " : "";
 
-    if (item.data.isForceful && item.data.isFinesse) {
-      attackFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+ @vigor.mod " : "+ @dexterity.mod ";
-      damageFormula += (actor.data.vigor.mod > actor.data.dexterity.mod) ? "+ @vigor.mod " : "+ @dexterity.mod ";
-    }
-    else if (item.data.isForceful) {
-      attackFormula += "+ @vigor.mod ";
-      damageFormula += "+ @vigor.mod ";
-    }
-    else if (item.data.isFinesse) {
-      attackFormula += "+ @dexterity.mod ";
-      damageFormula += "+ @dexterity.mod ";
-    }
-
-    attackFormula += "+ @item.attackBonus ";
-    damageFormula += "+ @item.damageBonus ";
+    var attackFormula = "@attackBonus + " + attackStatMod + "@item.attackBonus ";
+    var damageFormula = "+ " + damageStatMod + "@item.damageBonus ";
 
     // fighter feature check
     if (actor.data.fighterMastery) {

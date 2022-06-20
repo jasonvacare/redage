@@ -326,6 +326,10 @@ export class RedAgeActorSheet extends ActorSheet {
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
+
+      if (item.type == "weapon")
+        item.sheet.position.height = 650;
+
       item.sheet.render(true);
     });
 
