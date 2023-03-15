@@ -2,7 +2,7 @@
   {{#each statusesByOrigin as |statuses origin|}}
   <li class="item flexrow items-header">
     <div class="item-name">{{origin}}</div>
-    <div class="item-prop">Progress</div>
+    <div class="item-prop"></div>
     <div class="item-prop">Description</div>
     <div class="item-controls">
       <a class="item-control item-create" title="Add {{origin}}" data-type="status" data-origin="{{origin}}" data-name="{{origin}}"><i class="fas fa-plus"></i></a>
@@ -19,8 +19,10 @@
       </div>
 
       <div class="item-prop">
-        {{#if (gt status.data.progress 0)}}
-        <span>{{status.data.progress}}</span>
+        {{#if (eq 'Fatigue' status.data.origin)}}
+        <span><a class="item-control item-dec" title="Decrement"> <i class="fas fa-angle-left"> </i> </a></span>
+        <span>{{status.data.progress.value}}</span>
+        <span><a class="item-control item-inc" title="Increment"> <i class="fas fa-angle-right"> </i></a></span>
         {{/if}}
       </div>
 

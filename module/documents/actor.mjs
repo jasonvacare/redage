@@ -85,7 +85,7 @@ export class RedAgeActor extends Actor {
 
     // fatigue
     data.fatigue.value = items.filter((i) => i.type === "status" && i.data.data.origin.toLowerCase() === "fatigue")
-      .map((f) => f.data.data.progress)
+      .map((f) => f.data.data.progress.value)
       .reduce((currentTotal, newValue) => currentTotal + newValue, 0);
     data.fatigue.exhaustion = Math.floor(data.fatigue.value / 10);
 

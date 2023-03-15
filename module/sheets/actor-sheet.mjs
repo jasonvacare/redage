@@ -575,6 +575,10 @@ export class RedAgeActorSheet extends ActorSheet {
       entry = item.data.data.resource;
       quantityName = "data.resource.value";
     }
+    else if (item.data.data.group === "status") {
+      entry = item.data.data.progress;
+      quantityName = "data.progress.value";
+    }
 
     entry.value = entry.value + delta;
     if (entry.max != null)
