@@ -720,6 +720,7 @@ export class RedAgeActorSheet extends ActorSheet {
       modifiers: modifiers,
 			adShift: adShift,
 			adLadder: ["+3D", "+2D", "+D", "Normal", "+A", "+2A", "+3A"],
+			targets: 1,
 			rollData: rollData
 		};
 
@@ -769,9 +770,10 @@ export class RedAgeActorSheet extends ActorSheet {
 		// get data from dialog
 		var _a;
 		const form = html[0].querySelector("form");
-		const adShift = parseInt((_a = form.querySelector('[name="adShift"]')) === null || _a === void 0 ? void 0 : _a.value) - 3;
-    dialogData.defaultStat = (_a = form.querySelector('[name="defaultStat"]')) === null || _a === void 0 ? void 0 : _a.value;
-    dialogData.defaultRoll = (_a = form.querySelector('[name="defaultRoll"]')) === null || _a === void 0 ? void 0 : _a.value;
+		const adShift = REDAGE.getDialogField(form, "adShift", true) - 3;
+		dialogData.defaultStat = REDAGE.getDialogField(form, "defaultStat");
+		dialogData.defaultRoll = REDAGE.getDialogField(form, "defaultRoll");
+		dialogData.targets = Math.max(1, REDAGE.getDialogField(form, "targets", true));
 
     if (!dialogData.defaultRoll) dialogData.defaultRoll = "mod";
 
@@ -801,36 +803,40 @@ export class RedAgeActorSheet extends ActorSheet {
     if (dialogData.modifiers)
       dialogData.formula = dialogData.formula + " + " + dialogData.modifiers;
 
+    if (!Roll.validate(dialogData.formula)) {
+      REDAGE.prompt("Invalid Roll Formula", "Invalid: " + dialogData.formula);
+      return;
+    }
+  
     // handle advantage / disadvantage on roll
     let dice = REDAGE.getD20(actor.data, adShift);
     dialogData.formula = dice + " + " + dialogData.formula;
     const adShiftLadder = ["+3D", "+2D", "+D", "", "+A", "+2A", "+3A"];
     if (adShift != 0) dialogData.rollNotes.push(adShiftLadder[adShift+3]);
 
-		// handle roll
-		const statRoll = new Roll(dialogData.formula, dialogData.rollData);
-		await statRoll.evaluate({async: true});
+    let specials = { Crit: [20, 1000], Fumble: [-1000, 1] };
 
-		// handle special rolls (crit, fumble)
-		const rollD20Result = statRoll.terms[0].total;
-		var critThreshold = 20;
-		var fumbleThreshold = 1;
+    dialogData.rolls = await REDAGE.d20Roll(dialogData.formula, dialogData.targets, dialogData.rollData, specials);
+    if (dialogData.rolls.length <= 0) {
+      REDAGE.prompt("Roll Handling Failed", "No rolls were processed.");
+      return;
+    }
 
-		if (rollD20Result >= critThreshold)
-			dialogData.rollNotes.push("Crit");
-		else if (rollD20Result <= fumbleThreshold)
-			dialogData.rollNotes.push("Fumble");
+    for (let a=0; a < dialogData.rolls.length; a++) {
+      const diceTooltip = { roll: await dialogData.rolls[a].roll.render() };
+      dialogData.rolls[a].diceTooltip = diceTooltip;
+    }
 
     const rollMode = game.settings.get("core", "rollMode");
-		const diceData = Roll.fromTerms([
-			PoolTerm.fromRolls([statRoll]),
-		]);
+    const rollArray = dialogData.rolls.map((x) => {
+      return [x.roll];
+    }).flat();
+    const diceData = Roll.fromTerms([
+      PoolTerm.fromRolls(rollArray),
+    ]);
 
-		const diceTooltip = { roll: await statRoll.render() };
-
-		dialogData.statRoll = statRoll;
-		dialogData.diceTooltip = diceTooltip;
-		dialogData.rollNotes = (dialogData.rollNotes.length > 0) ? "(" + dialogData.rollNotes.join(", ") + ")" : "";
+    dialogData.rollNotes = (dialogData.rollNotes.length > 0) ? "(" + dialogData.rollNotes.join(", ") + ")" : "";
+    dialogData.diceTooltip = { rollRender: await dialogData.rolls[0].roll.render() };
 
 		const template = "systems/redage/templates/chat/stat-roll.html";
 		const chatContent = await renderTemplate(template, dialogData);

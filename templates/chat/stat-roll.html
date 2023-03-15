@@ -1,4 +1,11 @@
 <div>
 	<h3>{{ label }} {{{ rollNotes }}}</h3>
-	{{{ diceTooltip.roll }}}
+	<div>
+		{{#each rolls as |roll id|}}
+		<hr>
+		<span class="box-title" title="{{roll.formula}}">Roll {{roll.id}} {{{ roll.notes }}}</span>
+		{{{ roll.rollRender }}}
+		<br>
+		{{/each}}
+    </div>
 </div>
