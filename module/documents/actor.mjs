@@ -131,14 +131,24 @@ export class RedAgeActor extends Actor {
     let bonusCarried = REDAGE.getCodeTagSum(tags, "carried:");
     data.carried.max = data.vigor.value + bonusCarried;
 
+    // update party load
+    var party = Actors.instance.contents.find(actor => actor.type === "party" && data.tags.includes('party:' + actor.name));
+    if (party !== undefined) {
+      party.update({ "data.carried": {} }, {});
+    }
+
     if (data.carried.value <= Math.ceil(data.carried.max / 2))
-      data.carried.loadLevel = "Light";
+      data.carried.loadLevelVal = 0;
     else if (data.carried.value <= data.carried.max)
-      data.carried.loadLevel = "Medium";
+      data.carried.loadLevelVal = 1;
     else if (data.carried.value <= Math.ceil(1.5 * data.carried.max))
-      data.carried.loadLevel = "Heavy";
+      data.carried.loadLevelVal = 2;
     else
-      data.carried.loadLevel = "Overloaded";
+      data.carried.loadLevelVal = 3;
+
+    let suffix = (data.carried.loadLevelVal < party.data.data.carried.loadLevelVal) ? " (P)" : "";
+    data.carried.loadLevelVal = Math.max(data.carried.loadLevelVal, party.data.data.carried.loadLevelVal);
+    data.carried.loadLevel = ["Light", "Medium", "Heavy", "Overloaded"][data.carried.loadLevelVal] + suffix;
 
     // fighter mastery preparation
     data.fighterMastery = this._calculateFighterMasteries(items);
@@ -345,12 +355,29 @@ export class RedAgeActor extends Actor {
     // clear out any accidental non-item items from the party
     items.filter((item) => item.data.data.group !== "item").forEach(i => i.delete());
     
-    data.carried.value = this._calculateCarriedItems(items);
-
-    if (data.carried.value <= data.carried.max)
-      data.carried.loadLevel = "Standard";
+    let carriedRaw = this._calculateCarriedItems(items);
+    data.carried = { value: carriedRaw, max: 0, carriedRaw: carriedRaw };
+    
+    var partyMembers = Actors.instance.contents.filter(actor => actor.data.data.tags.includes('party:' + actorData.name));
+    partyMembers.forEach(actor => {
+      data.carried.max += actor.data.data.carried.max
+      data.carried.value += actor.data.data.carried.value;
+    });
+    
+    if (data.carried.value <= Math.ceil(data.carried.max / 2))
+      data.carried.loadLevelVal = 0;
+    else if (data.carried.value <= data.carried.max)
+      data.carried.loadLevelVal = 1;
+    else if (data.carried.value <= Math.ceil(1.5 * data.carried.max))
+      data.carried.loadLevelVal = 2;
     else
-      data.carried.loadLevel = "Heavy";
+      data.carried.loadLevelVal = 3;
+
+    data.carried.loadLevel = ["Light", "Medium", "Heavy", "Overloaded"][data.carried.loadLevelVal];
+
+    partyMembers.forEach(actor => {
+      actor.update({ "data.carried.loadLevelVal": data.carried.loadLevelVal }, {});
+    });
 
     // calculate treasure
     data.treasure = items.filter((item) => item.data.data.group === 'item' && item.data.data.isLoot && item.data.data.location !== REDAGE.INV_TOWN)

@@ -54,13 +54,20 @@ export class RedAgeActorSheet extends ActorSheet {
     // Prepare Party data and items.
     if (actorData.type == 'party') {
 
-      switch (context.data.carried.loadLevel)
-      {
-      case "Standard": context.data.carried.color = "blue";
+    // Highlight load level and supply tooltip
+    switch (context.data.carried.loadLevelVal)
+    {
+      case 0: context.data.carried.color = "blue";
         context.data.carried.tooltip = "";
         break;
+      case 1: context.data.carried.color = "green";
+        context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
+        break;
+      case 2: context.data.carried.color = "yellow";
+        context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
+        break;
       default: context.data.carried.color = "red";
-        context.data.carried.tooltip = "Each week including significant travel, roll the disaster check with +A";
+        context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed 6x\nCan't swim\nFatigue every 10 min";
         break;
       }
   
@@ -96,15 +103,15 @@ export class RedAgeActorSheet extends ActorSheet {
     context.data.classLevels = this._calculateClassLevels(context.items);
 
     // Highlight load level and supply tooltip
-    switch (context.data.carried.loadLevel)
+    switch (context.data.carried.loadLevelVal)
     {
-    case REDAGE.LOAD_LIGHT: context.data.carried.color = "blue";
+    case 0: context.data.carried.color = "blue";
       context.data.carried.tooltip = "";
       break;
-    case REDAGE.LOAD_MEDIUM: context.data.carried.color = "green";
+    case 1: context.data.carried.color = "green";
       context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
       break;
-    case REDAGE.LOAD_HEAVY: context.data.carried.color = "yellow";
+    case 2: context.data.carried.color = "yellow";
       context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
       break;
     default: context.data.carried.color = "red";
