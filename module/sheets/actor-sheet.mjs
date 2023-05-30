@@ -103,6 +103,11 @@ export class RedAgeActorSheet extends ActorSheet {
     context.data.classLevels = this._calculateClassLevels(context.items);
 
     // Highlight load level and supply tooltip
+    let loadLevelVal = context.data.carried.loadLevelVal;
+    if (loadLevelVal === undefined) {
+      this.actor.prepareData();
+      context.data.carried = foundry.utils.deepClone(this.actor.data.data.carried);
+    }
     switch (context.data.carried.loadLevelVal)
     {
     case 0: context.data.carried.color = "blue";
