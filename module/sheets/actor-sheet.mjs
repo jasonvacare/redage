@@ -54,33 +54,33 @@ export class RedAgeActorSheet extends ActorSheet {
     // Prepare Party data and items.
     if (actorData.type == 'party') {
 
-    // Highlight load level and supply tooltip
-    switch (context.data.carried.loadLevelVal)
-    {
-      case 0: context.data.carried.color = "blue";
-        context.data.carried.tooltip = "";
-        break;
-      case 1: context.data.carried.color = "green";
-        context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
-        break;
-      case 2: context.data.carried.color = "yellow";
-        context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
-        break;
-      default: context.data.carried.color = "red";
-        context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed 6x\nCan't swim\nFatigue every 10 min";
-        break;
-      }
-  
-      const gear = context.items.filter((i) => i.data.group === "item");
-      gear.forEach(item => { item.data.locations = REDAGE.ItemLocations; });
-      const gearByLoc = {
-        Equipment: gear.filter((i) => !i.data.isLoot && i.data.location !== REDAGE.INV_TOWN),
-        Treasure: gear.filter((i) => i.data.isLoot && i.data.location !== REDAGE.INV_TOWN),
-        Town: gear.filter((i) => i.data.location === REDAGE.INV_TOWN)
-      };
+      // Highlight load level and supply tooltip
+      switch (context.data.carried.loadLevelVal)
+      {
+        case 0: context.data.carried.color = "blue";
+          context.data.carried.tooltip = "";
+          break;
+        case 1: context.data.carried.color = "green";
+          context.data.carried.tooltip = "+D to swimming, climbing, jumping, and acrobatics";
+          break;
+        case 2: context.data.carried.color = "yellow";
+          context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed\nCan't swim";
+          break;
+        default: context.data.carried.color = "red";
+          context.data.carried.tooltip = "+D to Dex and Vigor stat, save, attack, and effect checks\n+D to initiative\nSlowed 6x\nCan't swim\nFatigue every 10 min";
+          break;
+        }
+    
+        const gear = context.items.filter((i) => i.data.group === "item");
+        gear.forEach(item => { item.data.locations = REDAGE.ItemLocations; });
+        const gearByLoc = {
+          Equipment: gear.filter((i) => !i.data.isLoot && i.data.location !== REDAGE.INV_TOWN),
+          Treasure: gear.filter((i) => i.data.isLoot && i.data.location !== REDAGE.INV_TOWN),
+          Town: gear.filter((i) => i.data.location === REDAGE.INV_TOWN)
+        };
 
-      context.gear = gear;
-      context.gearByLoc = gearByLoc;
+        context.gear = gear;
+        context.gearByLoc = gearByLoc;
     }
     
     // Add roll data for TinyMCE editors.
@@ -272,6 +272,19 @@ export class RedAgeActorSheet extends ActorSheet {
         // parse display tags
         let displayTags = REDAGE.getCodeTags(i.data.tags, "display:").map(tag => Roll.replaceFormulaData(tag, context));
         i.data.display = displayTags.join(", ");
+
+        if (i.type === 'featureResource' || i.type === 'featureResourceRollable')
+        {
+          // calculate resource max
+          i.data.resource.max = 0;
+          const item = context.actor.items.get(i._id);
+          const rollData = item.getRollData();
+          const roll = new Roll(i.data.resource.maxFormula, rollData);
+          if (Roll.validate(i.data.resource.maxFormula)) {
+            roll.evaluate({ async: false });
+            i.data.resource.max = Number(roll.total);
+          }
+        }
       }
 
       // Append to statuses
@@ -596,7 +609,7 @@ export class RedAgeActorSheet extends ActorSheet {
     if (entry.max != null)
       entry.value = Math.min(entry.max, entry.value);
     if (entry.min != null)
-    entry.value = Math.max(entry.min, entry.value);
+      entry.value = Math.max(entry.min, entry.value);
 
     const val = { };
     val[quantityName] = entry.value;

@@ -64,7 +64,7 @@
       <div class="item-prop">
         <span>
           <a class="item-control item-dec" title="Decrement"> <i class="fas fa-angle-left"> </i> </a>
-          {{#if (ne item.data.resource.max null)}}
+          {{#if (ne item.data.resource.max 0)}}
           {{item.data.resource.value}} / {{item.data.resource.max}} 
           {{else}}
           {{item.data.resource.value}} 

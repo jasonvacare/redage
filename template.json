@@ -253,7 +253,7 @@
       "resource": {
         "value": 0,
         "min": 0,
-        "max": 0,
+        "maxFormula": "1",
         "recharge": ""
       }
     },
@@ -263,7 +263,7 @@
       "resource": {
         "value": 0,
         "min": 0,
-        "max": 0,
+        "maxFormula": "1",
         "recharge": ""
       }
     },
