@@ -102,12 +102,16 @@ export class RedAgeActorSheet extends ActorSheet {
   _prepareCharacterData(context) {
     context.data.classLevels = this._calculateClassLevels(context.items);
 
-    // Highlight load level and supply tooltip
-    let loadLevelVal = context.data.carried.loadLevelVal;
-    if (loadLevelVal === undefined) {
-      this.actor.prepareData();
-      context.data.carried = foundry.utils.deepClone(this.actor.data.data.carried);
+    // check party load level and replace if higher than character load level
+    var party = game.actors.contents.find(actor => actor.type === "party" && context.data.tags.includes('party:' + actor.name));
+    if (party !== undefined) {
+      if (context.data.carried.loadLevelVal < party.data.data.carried.loadLevelVal) {
+        context.data.carried.loadLevelVal = party.data.data.carried.loadLevelVal;
+        context.data.carried.loadLevel = party.data.data.carried.loadLevel + " (P)";
+      }
     }
+
+    // Highlight load level and supply tooltip
     switch (context.data.carried.loadLevelVal)
     {
     case 0: context.data.carried.color = "blue";
