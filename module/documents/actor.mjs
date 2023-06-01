@@ -131,12 +131,6 @@ export class RedAgeActor extends Actor {
     let bonusCarried = REDAGE.getCodeTagSum(tags, "carried:");
     data.carried.max = data.vigor.value + bonusCarried;
 
-    // update party load
-    var party = Actors.instance.contents.find(actor => actor.type === "party" && data.tags.includes('party:' + actor.name));
-    if (party !== undefined) {
-      party.update({ "data.carried": {} }, {});
-    }
-
     if (data.carried.value <= Math.ceil(data.carried.max / 2))
       data.carried.loadLevelVal = 0;
     else if (data.carried.value <= data.carried.max)
@@ -146,8 +140,20 @@ export class RedAgeActor extends Actor {
     else
       data.carried.loadLevelVal = 3;
 
-    let suffix = (data.carried.loadLevelVal < party.data.data.carried.loadLevelVal) ? " (P)" : "";
-    data.carried.loadLevelVal = Math.max(data.carried.loadLevelVal, party.data.data.carried.loadLevelVal);
+    // update party load
+    let suffix = "";
+    if (Actors.instance !== undefined) {
+      var party = game.actors.contents.find(actor => actor.type === "party" && data.tags.includes('party:' + actor.name));
+      if (party !== undefined) {
+        party.update({ "data.carried": {} }, {});
+      }
+
+      if (data.carried.loadLevelVal < party.data.data.carried.loadLevelVal) {
+        suffix = " (P)";
+        data.carried.loadLevelVal = party.data.data.carried.loadLevelVal;
+      }
+    }
+
     data.carried.loadLevel = ["Light", "Medium", "Heavy", "Overloaded"][data.carried.loadLevelVal] + suffix;
 
     // fighter mastery preparation
@@ -358,26 +364,28 @@ export class RedAgeActor extends Actor {
     let carriedRaw = this._calculateCarriedItems(items);
     data.carried = { value: carriedRaw, max: 0, carriedRaw: carriedRaw };
     
-    var partyMembers = Actors.instance.contents.filter(actor => actor.data.data.tags.includes('party:' + actorData.name));
-    partyMembers.forEach(actor => {
-      data.carried.max += actor.data.data.carried.max
-      data.carried.value += actor.data.data.carried.value;
-    });
-    
-    if (data.carried.value <= Math.ceil(data.carried.max / 2))
-      data.carried.loadLevelVal = 0;
-    else if (data.carried.value <= data.carried.max)
-      data.carried.loadLevelVal = 1;
-    else if (data.carried.value <= Math.ceil(1.5 * data.carried.max))
-      data.carried.loadLevelVal = 2;
-    else
-      data.carried.loadLevelVal = 3;
+    if (Actors.instance !== undefined) {
+      var partyMembers = game.actors.contents.filter(actor => actor.data.data.tags.includes('party:' + actorData.name));
+      partyMembers.forEach(actor => {
+        data.carried.max += actor.data.data.carried.max
+        data.carried.value += actor.data.data.carried.value;
+      });
 
-    data.carried.loadLevel = ["Light", "Medium", "Heavy", "Overloaded"][data.carried.loadLevelVal];
+      if (data.carried.value <= Math.ceil(data.carried.max / 2))
+        data.carried.loadLevelVal = 0;
+      else if (data.carried.value <= data.carried.max)
+        data.carried.loadLevelVal = 1;
+      else if (data.carried.value <= Math.ceil(1.5 * data.carried.max))
+        data.carried.loadLevelVal = 2;
+      else
+        data.carried.loadLevelVal = 3;
 
-    partyMembers.forEach(actor => {
-      actor.update({ "data.carried.loadLevelVal": data.carried.loadLevelVal }, {});
-    });
+      data.carried.loadLevel = ["Light", "Medium", "Heavy", "Overloaded"][data.carried.loadLevelVal];
+
+      partyMembers.forEach(actor => {
+        actor.update({ "data.carried.loadLevelVal": data.carried.loadLevelVal }, {});
+      });
+    }
 
     // calculate treasure
     data.treasure = items.filter((item) => item.data.data.group === 'item' && item.data.data.isLoot && item.data.data.location !== REDAGE.INV_TOWN)
