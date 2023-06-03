@@ -235,18 +235,29 @@ export class RedAgeActorSheet extends ActorSheet {
       statusesByOrigin[REDAGE.StatusOrigins[o]] = [];
     }
 
-    // Iterate through items, allocating to containers
+    // Iterate through items, allocating to containers (avoid container name collision w/ base location options)
+    let containers = {};
+    context.items.filter(i => i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
 
       // Append to gear
       if (i.data.group === "item")
       {
+        // add containers to location list, not including self, it this item is a container
         i.data.locations = REDAGE.ItemLocations;
+        i.data.containers = Object.keys(containers).filter(key => i.name !== key);
+
+        // walk up the list of possibly-nested containers to reach a base location 
+        // FIXME (could cause recusion w/ one bag inside another which is inside the first)
+        let thisLocation = i.data.location;
+        while (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation]; }
+        
         gear.push(i);
-        if (i.data.location == REDAGE.INV_CAMP)
+        if (thisLocation == REDAGE.INV_CAMP)
         	gearByLoc.Camp.push(i);
-        else if (i.data.location == REDAGE.INV_TOWN)
+        else if (thisLocation == REDAGE.INV_TOWN)
         	gearByLoc.Town.push(i);
         else
         	gearByLoc.Inventory.push(i);

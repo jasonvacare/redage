@@ -14,11 +14,18 @@
 <div>
 	<label class="resource-label">Location</label>
 	<span>
-		<select name="data.location" data-dtype="String">
+		<select name="data.location" style="width:100px" data-dtype="String">
 			{{#select data.location}}
-			{{#each locations }}
-			<option value="{{this}}" data-dtype="String">{{this}}</option>
+			{{#each locations as |loc|}}
+			<option value="{{loc}}" data-dtype="String">{{loc}}</option>
 			{{/each}}
+
+			{{#if (gt containers.length 0)}}
+			<option disabled>---------------</option>
+			{{#each containers as |con|}}
+			<option value="{{con}}" data-dtype="String">{{con}}</option>
+			{{/each}}
+			{{/if}}
 			{{/select}}
 		</select>
 	</span>

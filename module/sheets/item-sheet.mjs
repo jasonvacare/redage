@@ -49,6 +49,13 @@ export class RedAgeItemSheet extends ItemSheet {
     context.flags = itemData.flags;
 
     context.locations = REDAGE.ItemLocations;
+
+    // Iterate through items, allocating to containers (avoid container name collision w/ base location options)
+    // add containers to location list, not including self, it this item is a container
+    let containers = {};
+    actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+    context.containers = Object.keys(containers).filter(key => context.title !== key)
+
     context.spellLocations = REDAGE.SpellLocations;
     context.statusOrigins = REDAGE.StatusOrigins;
 
