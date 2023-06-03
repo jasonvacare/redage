@@ -228,8 +228,18 @@ export class RedAgeActor extends Actor {
   }
 
   _calculateCarriedItems(items) {
-    return items.filter(i => i.data.data.group == "item")
-      .filter(i => i.data.data.location == REDAGE.INV_READY || i.data.data.location == REDAGE.INV_WORN || i.data.data.location == REDAGE.INV_STOWED)
+    let containers = {};
+    items.contents.filter(i => 
+        i.data.data.tags.includes("container") && !i.data.data.tags.includes("weightless") && 
+        !REDAGE.ItemLocations.includes(i.name) && i.data.data.group == "item")
+      .forEach(i => containers[i.name] = i);
+
+    return items.contents.filter(i => i.data.data.group == "item")
+      .filter(i => {
+        let loc = i.data.data.location;
+        while (containers[loc] !== undefined) { loc = containers[loc].data.data.location; }
+        return (loc == REDAGE.INV_READY || loc == REDAGE.INV_WORN || loc == REDAGE.INV_STOWED);
+      })
       .map(i => Math.round(i.data.data.quantity.value * i.data.data.weight))
       .reduce((a,b) => a+b, 0);
   }

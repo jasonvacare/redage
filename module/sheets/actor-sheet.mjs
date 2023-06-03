@@ -252,7 +252,7 @@ export class RedAgeActorSheet extends ActorSheet {
         // walk up the list of possibly-nested containers to reach a base location 
         // FIXME (could cause recusion w/ one bag inside another which is inside the first)
         let thisLocation = i.data.location;
-        while (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation]; }
+        while (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.location; }
         
         gear.push(i);
         if (thisLocation == REDAGE.INV_CAMP)
