@@ -260,6 +260,19 @@ export class RedAgeActorSheet extends ActorSheet {
         // parse display tags
         let displayTags = REDAGE.getCodeTags(i.data.tags, "display:").map(tag => Roll.replaceFormulaData(tag, context));
         i.data.display = displayTags.join(", ");
+
+        if (i.type === 'featureResource' || i.type === 'featureResourceRollable')
+        {
+          // calculate resource max
+          i.data.resource.max = 0;
+          const item = context.actor.items.get(i._id);
+          const rollData = item.getRollData();
+          const roll = new Roll(i.data.resource.maxFormula, rollData);
+          if (Roll.validate(i.data.resource.maxFormula)) {
+            roll.evaluate({ async: false });
+            i.data.resource.max = Number(roll.total);
+          }
+        }
       }
 
       // Append to statuses
@@ -584,7 +597,7 @@ export class RedAgeActorSheet extends ActorSheet {
     if (entry.max != null)
       entry.value = Math.min(entry.max, entry.value);
     if (entry.min != null)
-    entry.value = Math.max(entry.min, entry.value);
+      entry.value = Math.max(entry.min, entry.value);
 
     const val = { };
     val[quantityName] = entry.value;
