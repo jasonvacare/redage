@@ -249,6 +249,9 @@ export class RedAgeActorSheet extends ActorSheet {
         i.data.locations = REDAGE.ItemLocations;
         i.data.containers = Object.keys(containers).filter(key => i.name !== key);
 
+        i.data.isContainer = (i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name));
+        i.data.isExpanded = (i.data.tags.includes("expanded") && i.data.isContainer);
+
         // walk up the list of possibly-nested containers to reach a base location 
         // FIXME (could cause recusion w/ one bag inside another which is inside the first)
         let thisLocation = i.data.location;
