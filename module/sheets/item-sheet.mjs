@@ -48,6 +48,7 @@ export class RedAgeItemSheet extends ItemSheet {
     context.data = itemData.data;
     context.flags = itemData.flags;
 
+    context.location = itemData.data.location;
     context.locations = REDAGE.ItemLocations;
 
     // Iterate through items, allocating to containers (avoid container name collision w/ base location options)
@@ -118,6 +119,38 @@ export class RedAgeItemSheet extends ItemSheet {
       REDAGE.moveText(this.item, table, index, 1);
     });
 
+    // Relocate item in inventory
+    html.find(".item-relocate").on("change", ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const item = this.item;
+
+      let loc = ev.currentTarget.value;
+      let containers = {};
+      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+
+      // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
+      let thisLocation = loc;
+      let validRelocation = false;
+      for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
+        // if we've reached a base location, allow the relocation
+        if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
+
+        if (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.data.location; } else { thisLocation = undefined; }
+      }
+
+      if (validRelocation) {
+        item.data.data.location = loc;
+        item.update({ "data.location": item.data.data.location }, {});
+      }
+      else {
+        ev.currentTarget.value = item.data.data.location;
+        if (thisLocation === item.name)
+          ui.notifications.warn("Relocate failed: recursive containers!");
+        else
+          ui.notifications.warn("Relocate failed!");
+      }
+    });    
   }
 
   _calculateCasting(context) {

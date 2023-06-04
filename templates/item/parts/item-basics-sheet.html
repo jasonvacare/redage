@@ -14,8 +14,8 @@
 <div>
 	<label class="resource-label">Location</label>
 	<span>
-		<select name="data.location" style="width:100px" data-dtype="String">
-			{{#select data.location}}
+		<select name="location" data-dtype="String" style="width:100px" class="item-control item-relocate">
+			{{#select location}}
 			{{#each locations as |loc|}}
 			<option value="{{loc}}" data-dtype="String">{{loc}}</option>
 			{{/each}}
