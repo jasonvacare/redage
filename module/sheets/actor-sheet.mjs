@@ -382,12 +382,36 @@ export class RedAgeActorSheet extends ActorSheet {
 
     // Relocate item in inventory
     html.find(".item-relocate").on("change", ev => {
-	    ev.preventDefault();
+      ev.preventDefault();
       ev.stopPropagation();
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
-      item.data.data.location = ev.currentTarget.value;
-			item.update({ "data.location": item.data.data.location }, {});
+
+      let loc = ev.currentTarget.value;
+      let containers = {};
+      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+
+      // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
+      let thisLocation = loc;
+      let validRelocation = false;
+      for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
+        // if we've reached a base location, allow the relocation
+        if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
+
+        if (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.data.location; } else { thisLocation = undefined; }
+      }
+
+      if (validRelocation) {
+        item.data.data.location = loc;
+        item.update({ "data.location": item.data.data.location }, {});
+      }
+      else {
+        ev.currentTarget.value = item.data.data.location;
+        if (thisLocation === item.name)
+          ui.notifications.warn("Relocate failed: recursive containers!");
+        else
+          ui.notifications.warn("Relocate failed!");
+      }
     });
 
     // Event handlers
