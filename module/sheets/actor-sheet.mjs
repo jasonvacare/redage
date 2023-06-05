@@ -257,6 +257,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
         gear.push(i);
         i.displayName = i.name;
+        i.data.isVisible = "";
 
         if (!REDAGE.ItemLocations.includes(i.data.location))
           containedGear.push(i);
@@ -347,6 +348,15 @@ export class RedAgeActorSheet extends ActorSheet {
 
         if (container !== undefined && gearArray !== undefined)
         {
+          // contents of collapsed containers are hidden
+          let visContainer = container;
+          while (visContainer != undefined) {
+            if (!visContainer.data.tags.includes("expanded")) { 
+              containedGear[cnt].data.isVisible = "hide"; break;
+            }
+            visContainer = containers[visContainer.data.location];
+          }
+
           containedGear[cnt].displayName = indent + containedGear[cnt].displayName;
           placement++;
           let index = gearArray.indexOf(container);
@@ -355,9 +365,6 @@ export class RedAgeActorSheet extends ActorSheet {
         }
       }
   
-      // TODO determine container depth for indentation purposes
-      // create displayName for items
-
       // TODO handle unplaced items (drop in town for accessibility?)
   
     }
