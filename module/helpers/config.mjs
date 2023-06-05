@@ -121,6 +121,14 @@ REDAGE.ordinal = function(listElement, list) {
   return (result == -1) ? list.length+1 : result;
 }
 
+REDAGE.locationSort = function(locationSet) {
+  return (first, second) => {
+    let one = REDAGE.ordinal(first.data.location, locationSet);
+    let two = REDAGE.ordinal(second.data.location, locationSet);
+    return one - two;
+  };
+}
+
 /**
 * Checks if item is of one of the types specified in the list
 */

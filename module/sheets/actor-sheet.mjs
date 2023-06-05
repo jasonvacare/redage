@@ -239,6 +239,9 @@ export class RedAgeActorSheet extends ActorSheet {
     let containers = {};
     context.items.filter(i => i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
 
+    // collection of non-base location gear for post-sorting
+    const containedGear = [];
+
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
 
@@ -252,14 +255,14 @@ export class RedAgeActorSheet extends ActorSheet {
         i.data.isContainer = (i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name));
         i.data.isExpanded = (i.data.tags.includes("expanded") && i.data.isContainer);
 
-        // walk up the list of possibly-nested containers to reach a base location 
-        let thisLocation = i.data.location;
-        while (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.location; }
-        
         gear.push(i);
-        if (thisLocation == REDAGE.INV_CAMP)
+        i.displayName = i.name;
+
+        if (!REDAGE.ItemLocations.includes(i.data.location))
+          containedGear.push(i);
+        else if (i.data.location == REDAGE.INV_CAMP)
         	gearByLoc.Camp.push(i);
-        else if (thisLocation == REDAGE.INV_TOWN)
+        else if (i.data.location == REDAGE.INV_TOWN)
         	gearByLoc.Town.push(i);
         else
         	gearByLoc.Inventory.push(i);
@@ -316,19 +319,50 @@ export class RedAgeActorSheet extends ActorSheet {
       }
     }
 
-		// sort gear by location
-    gearByLoc.Inventory.sort((first, second) => {
-   		let one = REDAGE.ordinal(first.data.location, REDAGE.ItemLocations);
-   		let two = REDAGE.ordinal(second.data.location, REDAGE.ItemLocations);
-   		return one - two;
-    });
+		// sort gear and spells by location
+    gearByLoc.Inventory.sort(REDAGE.locationSort(REDAGE.ItemLocations));
+    spellsByLoc.Inventory.sort(REDAGE.locationSort(REDAGE.SpellLocations));
 
-		// sort spells by location
-    spellsByLoc.Inventory.sort((first, second) => {
-      let one = REDAGE.ordinal(first.data.location, REDAGE.SpellLocations);
-      let two = REDAGE.ordinal(second.data.location, REDAGE.SpellLocations);
-      return one - two;
-   });
+    // put contained gear after its container
+    let placement = 0;
+    let indent = "";
+    do {
+      placement = 0;
+      indent += "- ";
+      let cnt = containedGear.length;
+      let tempGearByLoc = { Inventory: [...gearByLoc.Inventory], Camp: [...gearByLoc.Camp], Town: [...gearByLoc.Town] };
+      while (cnt--)
+      {
+        let gearArray = undefined;
+        let container = tempGearByLoc.Inventory.find(i => i.name === containedGear[cnt].data.location);
+        if (container !== undefined) gearArray = gearByLoc.Inventory;
+        else {
+          container = tempGearByLoc.Camp.find(i => i.name === containedGear[cnt].data.location);
+          if (container !== undefined) gearArray = gearByLoc.Camp;
+          else {
+            container = tempGearByLoc.Town.find(i => i.name === containedGear[cnt].data.location);
+            if (container !== undefined) gearArray = gearByLoc.Town;
+          }
+        }
+
+        if (container !== undefined && gearArray !== undefined)
+        {
+          containedGear[cnt].displayName = indent + containedGear[cnt].displayName;
+          placement++;
+          let index = gearArray.indexOf(container);
+          gearArray.splice(index+1, 0, containedGear[cnt]);
+          containedGear.splice(cnt, 1);
+        }
+      }
+  
+      // TODO determine container depth for indentation purposes
+      // create displayName for items
+
+      // TODO handle unplaced items (drop in town for accessibility?)
+  
+    }
+    while (placement != 0);
+
 
     // Assign and return
     context.gear = gear;
@@ -380,45 +414,9 @@ export class RedAgeActorSheet extends ActorSheet {
     html.find('.item-dec').click(ev => { this._incdec(ev, -1); });
 
     // Relocate item in inventory
-    html.find(".item-relocate").on("change", ev => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
+    html.find(".item-relocate").on("change", ev => { this._relocate(ev); });
 
-      let validRelocation = false;
-      let loc = ev.currentTarget.value;
-      let thisLocation = loc;
-
-      if (item.data.data.group === "item") {
-        let containers = {};
-        item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
-
-        // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
-        for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
-          // if we've reached a base location, allow the relocation
-          if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
-
-          if (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.data.location; } else { thisLocation = undefined; }
-        }
-      }
-      else {
-        validRelocation = true;
-      }
-
-      if (validRelocation) {
-        item.data.data.location = loc;
-        item.update({ "data.location": item.data.data.location }, {});
-      }
-      else {
-        ev.currentTarget.value = item.data.data.location;
-        if (thisLocation === item.name)
-          ui.notifications.warn("Relocate failed: recursive containers!");
-        else
-          ui.notifications.warn("Relocate failed!");
-      }
-    });
-
+    // Expand / collapse display of container contents
     html.find('.item-expand').click(ev => { 
       ev.preventDefault();
       ev.stopPropagation();
@@ -665,6 +663,44 @@ export class RedAgeActorSheet extends ActorSheet {
     item.update(val, {});
   }
 
+  _relocate(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const li = $(ev.currentTarget).parents(".item");
+    const item = this.actor.items.get(li.data("itemId"));
+
+    let validRelocation = false;
+    let loc = ev.currentTarget.value;
+    let thisLocation = loc;
+
+    if (item.data.data.group === "item") {
+      let containers = {};
+      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+
+      // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
+      for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
+        // if we've reached a base location, allow the relocation
+        if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
+
+        if (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.data.location; } else { thisLocation = undefined; }
+      }
+    }
+    else {
+      validRelocation = true;
+    }
+
+    if (validRelocation) {
+      item.data.data.location = loc;
+      item.update({ "data.location": item.data.data.location }, {});
+    }
+    else {
+      ev.currentTarget.value = item.data.data.location;
+      if (thisLocation === item.name)
+        ui.notifications.warn("Relocate failed: recursive containers!");
+      else
+        ui.notifications.warn("Relocate failed!");
+    }
+  }
 
   /**
    * Handle clickable rolls.
