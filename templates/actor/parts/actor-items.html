@@ -19,10 +19,10 @@
 					</div>
 					<h4>
 						{{item.name}}
-						{{#if (eq item.data.isExpanded true)}}
-						&nbsp; <i class="fas fa-angle-down"> </i>
+						{{#if (eq item.data.isExpanded true)}}						
+						<a class="item-control item-expand"> &nbsp; <i class="fas fa-angle-down"> </i> </a>
 						{{else if (eq item.data.isContainer true)}}
-						&nbsp; <i class="fas fa-angle-right"> </i>
+						<a class="item-control item-expand"> &nbsp; <i class="fas fa-angle-right"> </i> </a>
 						{{/if}}
 					</h4>
 				</div>

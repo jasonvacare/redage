@@ -414,6 +414,24 @@ export class RedAgeActorSheet extends ActorSheet {
       }
     });
 
+    html.find('.item-expand').click(ev => { 
+      ev.preventDefault();
+      ev.stopPropagation();
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      let array = item.data.data.tags;
+
+      if (item.data.data.tags.includes("expanded")) {
+        const index = array.indexOf("expanded");
+        if (index != -1) array.splice(index, 1);
+      }
+      else {
+        array.push("expanded");
+      }
+
+      item.update({ data: { tags: array } });
+    });
+
     // Event handlers
     
     // Add and remove item tags
