@@ -253,7 +253,6 @@ export class RedAgeActorSheet extends ActorSheet {
         i.data.isExpanded = (i.data.tags.includes("expanded") && i.data.isContainer);
 
         // walk up the list of possibly-nested containers to reach a base location 
-        // FIXME (could cause recusion w/ one bag inside another which is inside the first)
         let thisLocation = i.data.location;
         while (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.location; }
         
@@ -387,18 +386,24 @@ export class RedAgeActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.items.get(li.data("itemId"));
 
-      let loc = ev.currentTarget.value;
-      let containers = {};
-      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
-
-      // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
-      let thisLocation = loc;
       let validRelocation = false;
-      for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
-        // if we've reached a base location, allow the relocation
-        if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
+      let loc = ev.currentTarget.value;
+      let thisLocation = loc;
 
-        if (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.data.location; } else { thisLocation = undefined; }
+      if (item.data.data.group === "item") {
+        let containers = {};
+        item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+
+        // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
+        for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
+          // if we've reached a base location, allow the relocation
+          if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
+
+          if (containers[thisLocation] !== undefined) { thisLocation = containers[thisLocation].data.data.location; } else { thisLocation = undefined; }
+        }
+      }
+      else {
+        validRelocation = true;
       }
 
       if (validRelocation) {
