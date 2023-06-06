@@ -19,13 +19,15 @@
 					</div>
 					<h4>
 						{{item.displayName}}
-						{{#if (eq item.data.isExpanded true)}}						
+						{{#if (eq item.data.isExpanded true)}}
 						<a class="item-control item-expand"> &nbsp; <i class="fas fa-angle-down"> </i> </a>
 						{{else if (eq item.data.isContainer true)}}
 						<a class="item-control item-expand"> &nbsp; <i class="fas fa-angle-right"> </i> </a>
 						{{/if}}
 					</h4>
 				</div>
+
+				{{#if (eq item.data.noInfoFields false)}}
 
 				<!-- Weapon Specifics -->
 				{{#if (eq 'weapon' item.type)}}
@@ -74,6 +76,15 @@
 						</select>
 					</span>
 				</div>
+
+				{{else}}
+				<!-- Empty fields for noInfoFields header items -->
+				<div class="item-prop"><span></span></div>
+				<div class="item-prop"><span></span></div>
+				<div class="item-prop"><span></span></div>
+				<div class="item-prop"><span></span></div>
+
+				{{/if}}
 
 				<div class="item-controls">
 					<a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>

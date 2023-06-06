@@ -254,6 +254,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
         i.data.isContainer = (i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name));
         i.data.isExpanded = (i.data.tags.includes("expanded") && i.data.isContainer);
+        i.data.noInfoFields = i.data.tags.includes("no_info_fields");
 
         gear.push(i);
         i.displayName = i.name;
