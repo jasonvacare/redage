@@ -350,6 +350,8 @@ export class RedAgeActorSheet extends ActorSheet {
           }
         }
 
+        container = containers[container._id];
+
         if (container !== undefined && gearArray !== undefined)
         {
           // contents of collapsed containers are hidden
