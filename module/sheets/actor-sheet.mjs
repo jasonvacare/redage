@@ -214,7 +214,7 @@ export class RedAgeActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const gear = [];
-    const gearByLoc = {
+    let gearByLoc = {
     	Inventory: [],
     	Camp: [],
     	Town: []
@@ -241,6 +241,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
     // collection of non-base location gear for post-sorting
     const containedGear = [];
+    const limbo = [];
 
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
@@ -262,6 +263,8 @@ export class RedAgeActorSheet extends ActorSheet {
 
         if (!REDAGE.ItemLocations.includes(i.data.location))
           containedGear.push(i);
+        else if (i.data.location == REDAGE.INV_NONE)
+          limbo.push(i);
         else if (i.data.location == REDAGE.INV_CAMP)
         	gearByLoc.Camp.push(i);
         else if (i.data.location == REDAGE.INV_TOWN)
@@ -371,6 +374,15 @@ export class RedAgeActorSheet extends ActorSheet {
     }
     while (placement != 0);
 
+    if (containedGear.length > 0)
+      limbo.push(...containedGear);
+    if (limbo.length > 0) {
+      limbo.forEach(i => {
+        let item = context.actor.items.get(i._id);
+        item.update({ "data.location": REDAGE.INV_NONE }, {})
+      });
+      gearByLoc = { Limbo: limbo, Inventory: gearByLoc.Inventory, Camp: gearByLoc.Camp, Town: gearByLoc.Town };
+    }
 
     // Assign and return
     context.gear = gear;
