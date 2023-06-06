@@ -232,7 +232,7 @@ export class RedAgeActor extends Actor {
     items.contents.filter(i => 
         i.data.data.tags.includes("container") && !i.data.data.tags.includes("weightless") && 
         !REDAGE.ItemLocations.includes(i.name) && i.data.data.group == "item")
-      .forEach(i => containers[i.name] = i);
+      .forEach(i => containers[i._id] = i);
 
     return items.contents.filter(i => i.data.data.group == "item")
       .filter(i => {

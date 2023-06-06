@@ -69,7 +69,7 @@
 								{{#if (gt data.containers.length 0)}}
 								<option disabled>---------------</option>
 								{{#each data.containers as |con|}}
-								<option value="{{con}}" data-dtype="String">{{con}}</option>
+								<option value="{{con.id}}" data-dtype="String">{{con.name}}</option>
 								{{/each}}
 								{{/if}}
 							{{/select}}

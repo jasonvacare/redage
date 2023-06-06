@@ -54,8 +54,8 @@ export class RedAgeItemSheet extends ItemSheet {
     // Iterate through items, allocating to containers (avoid container name collision w/ base location options)
     // add containers to location list, not including self, it this item is a container
     let containers = {};
-    actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
-    context.containers = Object.keys(containers).filter(key => context.title !== key)
+    actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.id] = i);
+    context.containers = Object.values(containers).filter(val => context.item.id !== val.id).map(val => { return { name: val.name, id: val.id }; });
 
     context.spellLocations = REDAGE.SpellLocations;
     context.statusOrigins = REDAGE.StatusOrigins;
@@ -127,12 +127,12 @@ export class RedAgeItemSheet extends ItemSheet {
 
       let loc = ev.currentTarget.value;
       let containers = {};
-      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.id)).forEach(i => containers[i.id] = i);
 
       // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
       let thisLocation = loc;
       let validRelocation = false;
-      for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
+      for (let cnt=0; cnt < 10 && thisLocation !== item.id && thisLocation !== undefined; cnt++) {
         // if we've reached a base location, allow the relocation
         if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
 

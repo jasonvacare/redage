@@ -237,7 +237,7 @@ export class RedAgeActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers (avoid container name collision w/ base location options)
     let containers = {};
-    context.items.filter(i => i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+    context.items.filter(i => i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i._id] = i);
 
     // collection of non-base location gear for post-sorting
     const containedGear = [];
@@ -251,7 +251,7 @@ export class RedAgeActorSheet extends ActorSheet {
       {
         // add containers to location list, not including self, it this item is a container
         i.data.locations = REDAGE.ItemLocations;
-        i.data.containers = Object.keys(containers).filter(key => i.name !== key);
+        i.data.containers = Object.values(containers).filter(val => i._id !== val._id).map(val => { return { name: val.name, id: val._id }; });
 
         i.data.isContainer = (i.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name));
         i.data.isExpanded = (i.data.tags.includes("expanded") && i.data.isContainer);
@@ -339,7 +339,7 @@ export class RedAgeActorSheet extends ActorSheet {
       while (cnt--)
       {
         let gearArray = undefined;
-        let container = tempGearByLoc.Inventory.find(i => i.name === containedGear[cnt].data.location);
+        let container = tempGearByLoc.Inventory.find(i => i._id === containedGear[cnt].data.location);
         if (container !== undefined) gearArray = gearByLoc.Inventory;
         else {
           container = tempGearByLoc.Camp.find(i => i.name === containedGear[cnt].data.location);
@@ -368,9 +368,6 @@ export class RedAgeActorSheet extends ActorSheet {
           containedGear.splice(cnt, 1);
         }
       }
-  
-      // TODO handle unplaced items (drop in town for accessibility?)
-  
     }
     while (placement != 0);
 
@@ -702,10 +699,10 @@ export class RedAgeActorSheet extends ActorSheet {
 
     if (item.data.data.group === "item") {
       let containers = {};
-      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.name] = i);
+      item.actor.items.filter(i => i.data.data.tags.includes("container") && !REDAGE.ItemLocations.includes(i.name)).forEach(i => containers[i.id] = i);
 
       // walk up the layers of containment, failing in relocation if more than depth 10 passes, or you reach yourself (recursive placement) or an undefined holder
-      for (let cnt=0; cnt < 10 && thisLocation !== item.name && thisLocation !== undefined; cnt++) {
+      for (let cnt=0; cnt < 10 && thisLocation !== item.id && thisLocation !== undefined; cnt++) {
         // if we've reached a base location, allow the relocation
         if (REDAGE.ItemLocations.includes(thisLocation)) { validRelocation = true; break; }
 
