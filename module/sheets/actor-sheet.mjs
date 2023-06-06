@@ -350,7 +350,7 @@ export class RedAgeActorSheet extends ActorSheet {
           }
         }
 
-        container = containers[container._id];
+        if (container !== undefined) container = containers[container._id];
 
         if (container !== undefined && gearArray !== undefined)
         {
