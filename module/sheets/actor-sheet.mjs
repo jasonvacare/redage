@@ -555,6 +555,13 @@ export class RedAgeActorSheet extends ActorSheet {
     if (!performDelete)
       return;
 
+    // deleted item containers drop their contents into their parent container or base inventory location
+    if (item.data.data.group === "item" && item.data.data.tags.includes("container"))
+    {
+      let loc = item.data.data.location;
+      item.actor.items.filter(i => i.data.data.location == item.name).forEach(i => i.update({ "data.location": loc }, {}));
+    }
+
     item.delete();
     li.slideUp(200, () => this.render(false));
   }
