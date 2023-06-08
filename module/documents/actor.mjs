@@ -236,7 +236,11 @@ export class RedAgeActor extends Actor {
     return items.contents.filter(i => i.data.data.group == "item")
       .filter(i => {
         let loc = i.data.data.location;
-        while (!REDAGE.ItemLocations.includes(loc) && loc !== undefined) { loc = containers[loc].data.data.location; }
+        let weightless = (containers[loc] !== undefined) ? containers[loc].data.data.tags.includes("weightless") : false;
+        while (!REDAGE.ItemLocations.includes(loc) && loc !== undefined && !weightless) {
+          loc = containers[loc].data.data.location;
+          weightless = (containers[loc] !== undefined) ? containers[loc].data.data.tags.includes("weightless") : false;
+        }
         return (loc == REDAGE.INV_READY || loc == REDAGE.INV_WORN || loc == REDAGE.INV_STOWED);
       })
       .map(i => Math.round(i.data.data.quantity.value * i.data.data.weight))
